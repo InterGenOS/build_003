@@ -176,7 +176,8 @@ GET_PARTITION () {
     BOLD
     printf "OS"
     WHITE
-    printf " in "$TARGET_PARTITION", correct "
+    printf " in %s" "$TARGET_PARTITION"
+    printf ", correct "
     BOLD
     printf "(y/N)"
     WHITE
@@ -301,25 +302,11 @@ SETUP_BUILD () {
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
 
     # Sets build user bash.profile
-    cat > /home/igos/.bash_profile << "igos_bash_profile"
-    exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
-    igos_bash_profile
+    mv tmp.bash_profile /home/igos/.bash_profile
 
-    # Sets build user .bashrc, sets temporary system build script to launch on shell login
-    cat > /home/igos/.bashrc << "igos_bashrc"
-    set +h
-    umask 022
-    IGos=/mnt/igos
-    LC_ALL=POSIX
-    IGos_TGT=$(uname -m)-igos-linux-gnu
-    PATH=/tools/bin:/bin:/usr/bin
-    export IGos LC_ALL IGos_TGT PATH
-    cd $IGos
-    ./build_temporary_system.sh
-    igos_bashrc
-
-    # Log into shell for build user
-    su - igos
+    # Sets build user .bashrc
+    mv tmp.bashrc /home/igos/.bashrc
+    chown -v igos:igos /home/igos/.bashrc /home/igos/.bash_profile
 }
 
 ############################
@@ -364,13 +351,34 @@ fi
 ##---------------------##
 #########################
 
+# Sets build user bash.profile
+cat > tmp.bash_profile << "igos_bash_profile"
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+igos_bash_profile
+
+# Sets build user .bashrc, sets temporary system build script to launch on shell login
+cat > tmp.bashrc << "igos_bashrc"
+set +h
+umask 022
+IGos=/mnt/igos
+LC_ALL=POSIX
+IGos_TGT=$(uname -m)-igos-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+export IGos LC_ALL IGos_TGT PATH
+cd $IGos
+./build_temporary_system.sh
+igos_bashrc
+
 mkdir -p /var/log/InterGenOS/BuildLogs
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
-mv build_log /var/log/InterGenOS/BuildLogs/build_log_"$TIMESTAMP"
+mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 
 #######################
 ##-------------------##
 ## END - CORE SCRIPT ##
 ##-------------------##
 #######################
+
+# Log into shell for build user
+su - igos
