@@ -193,9 +193,9 @@ BUILD_BINUTILS_PASS1 () {
     cd ../binutils-build
     ../binutils-2.25/configure     \
         --prefix=/tools            \
-        --with-sysroot="$IGos"       \
+        --with-sysroot=$IGos       \
         --with-lib-path=/tools/lib \
-        --target="$IGos"_TGT         \
+        --target=$IGos_TGT         \
         --disable-nls              \
         --disable-werror &&
     make &&
