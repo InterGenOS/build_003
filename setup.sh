@@ -1,4 +1,5 @@
 #!/bin/bash
+# setup.sh
 # -------------------------------------------------------
 # InterGenOS: A Linux from Source Project
 # build: .003
