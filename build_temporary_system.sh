@@ -151,7 +151,7 @@ SET_GCC_AND_LINUX () {
     tar xf gcc-4.9.2-extras.src.tar.gz && tar xf gcc-4.9.2.src.tar.gz &&
     mv gcc-4.9.2-extras/MD5/GCC_MD5SUMS gcc-4.9.2/MD5SUMS &&
     mv gcc-4.9.2-extras/gcc/testsuite gcc-4.9.2/gcc/ &&
-    mv gcc-4.9.2-extas/gcc/Changelog* gcc-4.9.2/gcc/ &&
+    mv gcc-4.9.2-extras/gcc/Changelog* gcc-4.9.2/gcc/ &&
     rm -rf gcc-4.9.2-extras.src.tar.gz gcc-4.9.2-extras gcc-4.9.2.src.tar.gz &&
     tar zcf gcc-4.9.2.src.tar.gz gcc-4.9.2/ &&
     rm -rf gcc-4.9.2/
