@@ -129,7 +129,6 @@ GET_PARTITION () {
     clear
     HEADER
     sleep 1
-    WHITE
     printf "Select the partition to build "
     BOLD
     BLUE
@@ -141,7 +140,7 @@ GET_PARTITION () {
     echo " in: "
     printf "\n"
     lsblk | grep part | cut -d 'd' -f 2- | sed -e 's/^/sd/' | awk '{printf "%- 13s %s\n", $1"  "$4, $6" "$7;}' > partitions
-    sed = partitions | sed 'N;s/\n/\t/' > partitionlist
+    sed = partitions | sed 'N;s/\n/\t/' > partitionlist && sed -i 's/^/#/g' partitionlist
     DIVIDER
     cat partitionlist
     DIVIDER
@@ -157,7 +156,7 @@ GET_PARTITION () {
     WHITE
     echo -n ": "
     read PARTITION_CHOICE
-    TARGET_PARTITION="$(grep -m 1 "$PARTITION_CHOICE" partitionlist | awk '{print $2}')"
+    TARGET_PARTITION="$(grep -m 1 \#"$PARTITION_CHOICE" partitionlist | awk '{print $2}')"
     printf "\n\n"
     printf "   Build "
     BOLD
@@ -174,9 +173,92 @@ GET_PARTITION () {
     echo -n "? "
     read TARGET_CONFIRMATION
     printf "\n\n"
+    if [ "$TARGET_CONFIRMATION" = "Y" ] || [ "$TARGET_CONFIRMATION" = "y" ] || [ "$TARGET_CONFIRMATION" = "Yes" ] || [ "$TARGET_CONFIRMATION" = "yes" ]; then
+        sleep 1
+        SETUP_BUILD
+    else
+        BOLD
+        RED
+        echo "   Build cancelled by user"
+        WHITE
+        printf "\n\n"
+        echo "    (exiting...)"
+        printf "\n\n\n"
+        exit 1
+    fi
 }
 
+SETUP_BUILD () {
+    clear
+    HEADER
+    BOLD
+    printf "Please enter your system username:"
+    WHITE
+    echo -n " "
+    read USER
+    printf "\n"
+    BOLD
+    GREEN
+    echo "Setting .bashrc exports..."
+    WHITE
+    printf "\n\n"
+    echo "export IGos=/mnt/igos" >> /home/"$USER"/.bashrc
+    echo "export IGos=/mnt/igos" >> /root/.bashrc
+    echo "export IGosPart=/dev/$TARGET_PARTITION" >> /home/"$USER"/.bash_profile
+    echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
+    IGos=/mnt/igos
+    sleep 1
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Setting up build directory mount..."
+    printf "\n\n"
+    WHITE
+    mkdir -pv "$IGos"
+    mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
+    sleep 1
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Fetching sources... (this will take a minute)"
+    printf "\n\n"
+    WHITE
+    wget -q https://github.com/InterGenOS/sources_003/archive/master.zip
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Moving things into place..."
+    printf "\n\n"
+    WHITE
+    mkdir -v "$IGos"/sources && chmod -v a+wt "$IGos"/sources
+    unzip master.zip && rm master.zip
+    mv sources_003-master/* "$IGos"/sources && rm sources_003-master
+    rm "$IGos"/sources/README.md
+    mkdir -v "$IGos"/tools && ln -sv "$IGos"/tools /
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Creating user 'igos' with password 'intergenos'..."
+    printf "\n\n"
+    WHITE
+    groupadd igos
+    useradd -s /bin/bash -g igos -m -k /dev/null igos
+    echo "igos:intergenos" | chpasswd
+    sleep 1
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Assigning tools' and sources' ownership to user 'igos'..."
+    printf "\n\n"
+    WHITE
+    chown -v igos "$IGos"/tools && chown -v igos "$IGos"/sources
 
+}
 
 ############################
 ##------------------------##
@@ -220,7 +302,10 @@ fi
 ##---------------------##
 #########################
 
-GET_PARTITION
+mkdir -p /var/log/InterGenOS/BuildLogs
+GET_PARTITION 2>&1 | tee build_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
+mv build_log /var/log/InterGenOS/BuildLogs/build_log_"$TIMESTAMP"
 
 #######################
 ##-------------------##
