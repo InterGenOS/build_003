@@ -142,6 +142,8 @@ GET_PARTITION () {
     WHITE
     echo " in: "
     printf "\n"
+
+    # Create build partition selection list
     lsblk | grep part | cut -d 'd' -f 2- | sed -e 's/^/sd/' | awk '{printf "%- 13s %s\n", $1"  "$4, $6" "$7;}' > partitions
     sed = partitions | sed 'N;s/\n/\t/' > partitionlist && sed -i 's/^/#/g' partitionlist
     DIVIDER
@@ -159,8 +161,12 @@ GET_PARTITION () {
     WHITE
     echo -n ": "
     read PARTITION_CHOICE
+
+    # Read target partition from build partition selection
     TARGET_PARTITION="$(grep -m 1 \#"$PARTITION_CHOICE" partitionlist | awk '{print $2}')"
     printf "\n\n"
+
+    # Confirm target build partition
     printf "   Build "
     BOLD
     BLUE
@@ -192,6 +198,7 @@ GET_PARTITION () {
 }
 
 SETUP_BUILD () {
+    # Set variables into host system user and root accounts
     rm partitions partitionlist
     clear
     HEADER
@@ -212,6 +219,7 @@ SETUP_BUILD () {
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
     sleep 1
 
+    # Mount the build directory
     clear
     HEADER
     BOLD
@@ -223,6 +231,7 @@ SETUP_BUILD () {
     mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
     sleep 1
 
+    # Download source packages
     clear
     HEADER
     BOLD
@@ -237,6 +246,7 @@ SETUP_BUILD () {
     echo "Source retrieval complete..."
     sleep 2
 
+    # Make build directories, move source packages into place
     clear
     HEADER
     BOLD
@@ -251,6 +261,7 @@ SETUP_BUILD () {
     rm "$IGos"/sources/README.md
     mkdir -v "$IGos"/tools && ln -sv "$IGos"/tools /
 
+    # Create build system user
     clear
     HEADER
     BOLD
@@ -263,6 +274,7 @@ SETUP_BUILD () {
     echo "igos:intergenos" | chpasswd
     sleep 2
 
+    # Assign build directory ownership to build system user
     clear
     HEADER
     BOLD
@@ -280,12 +292,19 @@ SETUP_BUILD () {
     printf "\n\n"
     WHITE
 
+    # Download temporary system build script, assign ownership to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
+    chown -v igos "$IGos"/build_temporary_system.sh
 
+    # Copy current grub.cfg for alteration upon build completion
+    cp /boot/grub/grub.cfg "$IGos"/grub.cfg
+
+    # Sets build user bash.profile
     cat > /home/igos/.bash_profile << "igos_bash_profile"
     exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
     igos_bash_profile
 
+    # Sets build user .bashrc, sets temporary system build script to launch on shell login
     cat > /home/igos/.bashrc << "igos_bashrc"
     set +h
     umask 022
@@ -298,6 +317,7 @@ SETUP_BUILD () {
     ./build_temporary_system.sh
     igos_bashrc
 
+    # Log into shell for build user
     su - igos
 }
 
