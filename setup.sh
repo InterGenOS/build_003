@@ -31,6 +31,9 @@ TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 # Regex check for numbers as choices
 NUMBER_CHECK='^[0-9]+$'
 
+# Sets build mount point
+export IGos=/mnt/igos
+
 #########################################
 ##-------------------------------------##
 ## END - INITIAL VARIABLE DECLARATIONS ##
@@ -189,6 +192,7 @@ GET_PARTITION () {
 }
 
 SETUP_BUILD () {
+    rm partitions partitionlist
     clear
     HEADER
     BOLD
@@ -206,8 +210,8 @@ SETUP_BUILD () {
     echo "export IGos=/mnt/igos" >> /root/.bashrc
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /home/"$USER"/.bash_profile
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
-    IGos=/mnt/igos
     sleep 1
+
     clear
     HEADER
     BOLD
@@ -218,6 +222,7 @@ SETUP_BUILD () {
     mkdir -pv "$IGos"
     mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
     sleep 1
+
     clear
     HEADER
     BOLD
@@ -226,11 +231,18 @@ SETUP_BUILD () {
     printf "\n\n"
     WHITE
     wget -q https://github.com/InterGenOS/sources_003/archive/master.zip
+    printf "\n"
+    BOLD
+    GREEN
+    echo "Source retrieval complete..."
+    sleep 2
+
     clear
     HEADER
     BOLD
     GREEN
     echo "Moving things into place..."
+    sleep 1
     printf "\n\n"
     WHITE
     mkdir -v "$IGos"/sources && chmod -v a+wt "$IGos"/sources
@@ -238,6 +250,7 @@ SETUP_BUILD () {
     mv sources_003-master/* "$IGos"/sources && rm sources_003-master
     rm "$IGos"/sources/README.md
     mkdir -v "$IGos"/tools && ln -sv "$IGos"/tools /
+
     clear
     HEADER
     BOLD
@@ -248,7 +261,8 @@ SETUP_BUILD () {
     groupadd igos
     useradd -s /bin/bash -g igos -m -k /dev/null igos
     echo "igos:intergenos" | chpasswd
-    sleep 1
+    sleep 2
+
     clear
     HEADER
     BOLD
@@ -257,7 +271,34 @@ SETUP_BUILD () {
     printf "\n\n"
     WHITE
     chown -v igos "$IGos"/tools && chown -v igos "$IGos"/sources
+    sleep 2
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Preparing shell variables for user 'igos'..."
+    printf "\n\n"
+    WHITE
 
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
+
+    cat > /home/igos/.bash_profile << "igos_bash_profile"
+    exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+    igos_bash_profile
+
+    cat > /home/igos/.bashrc << "igos_bashrc"
+    set +h
+    umask 022
+    IGos=/mnt/igos
+    LC_ALL=POSIX
+    IGos_TGT=$(uname -m)-igos-linux-gnu
+    PATH=/tools/bin:/bin:/usr/bin
+    export IGos LC_ALL IGos_TGT PATH
+    cd $IGos
+    ./build_temporary_system.sh
+    igos_bashrc
+
+    su - igos
 }
 
 ############################
