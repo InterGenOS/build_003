@@ -94,9 +94,16 @@ HEADER () {
     BLUE
     echo "____________________________________________________________________________"
     printf "\n"
+    printf "    InterGen"
     WHITE
     BOLD
-    echo "  InterGenOS build.003"
+    printf "OS"
+    WHITE
+    GREEN
+    printf " build"
+    WHITE
+    echo ".003"
+    BOLD
     BLUE
     echo "____________________________________________________________________________"
     WHITE
@@ -123,13 +130,15 @@ GET_PARTITION () {
     HEADER
     sleep 1
     WHITE
-    BOLD
     printf "Select the partition to build "
+    BOLD
     BLUE
     printf "InterGen"
     WHITE
     BOLD
-    echo "OS in: "
+    printf "OS"
+    WHITE
+    echo " in: "
     printf "\n"
     lsblk | grep part | cut -d 'd' -f 2- | sed -e 's/^/sd/' | awk '{printf "%- 13s %s\n", $1"  "$4, $6" "$7;}' > partitions
     sed = partitions | sed 'N;s/\n/\t/' > partitionlist
@@ -149,6 +158,22 @@ GET_PARTITION () {
     echo -n ": "
     read PARTITION_CHOICE
     TARGET_PARTITION="$(grep -m 1 "$PARTITION_CHOICE" partitionlist | awk '{print $2}')"
+    printf "\n\n"
+    printf "   Build "
+    BOLD
+    BLUE
+    printf "InterGen"
+    WHITE
+    BOLD
+    printf "OS"
+    WHITE
+    printf " in "$TARGET_PARTITION", correct "
+    BOLD
+    printf "(y/N)"
+    WHITE
+    echo -n "? "
+    read TARGET_CONFIRMATION
+    printf "\n\n"
 }
 
 
@@ -196,9 +221,6 @@ fi
 #########################
 
 GET_PARTITION
-printf "\n\n\n"
-echo You chose "$TARGET_PARTITION"
-printf "\n\n\n"
 
 #######################
 ##-------------------##
