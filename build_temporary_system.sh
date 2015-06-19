@@ -125,6 +125,113 @@ CLEARLINE () {
     fi
 }
 
+# Creates a 15 line gap for easier log review
+SPACER () {
+    printf "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+}
+
 #--------------------------------#
 # END - DISPLAY LAYOUT FUNCTIONS #
 #--------------------------------#
+
+# Rebuilds gcc and linux packages into correct form
+SET_GCC_AND_LINUX () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Setting up gcc-4.9.2 and linux-3.19 packages..."
+    printf "\n\n"
+    WHITE
+    tar xf linux-3.19-extras.src.tar.gz && tar xf linux-3.19.src.tar.gz &&
+    mv linux-3.19-extras/* linux-3.19/ &&
+    rm -rf linux-3.19-extras.src.tar.gz linux-3.19-extras linux-3.19.src.tar.gz &&
+    tar zcf linux-3.19.src.tar.gz linux-3.19/ &&
+    rm -rf linux-3.19/ &&
+    tar xf gcc-4.9.2-extras.src.tar.gz && tar xf gcc-4.9.2.src.tar.gz &&
+    mv gcc-4.9.2-extras/MD5/GCC_MD5SUMS gcc-4.9.2/MD5SUMS &&
+    mv gcc-4.9.2-extras/gcc/testsuite gcc-4.9.2/gcc/ &&
+    mv gcc-4.9.2-extas/gcc/Changelog* gcc-4.9.2/gcc/ &&
+    rm -rf gcc-4.9.2-extras.src.tar.gz gcc-4.9.2-extras gcc-4.9.2.src.tar.gz &&
+    tar zcf gcc-4.9.2.src.tar.gz gcc-4.9.2/ &&
+    rm -rf gcc-4.9.2/
+    SPACER
+}
+
+BUILD_BINUTILS_PASS1 () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building binutils-2.25 PASS 1..."
+    printf "\n\n"
+    WHITE
+
+    ###################
+    ## Binutils-2.25 ##
+    ## ============= ##
+    ##    PASS -1-   ##
+    #########################################################################################################
+    ## To determine SBUs, use the following command:                                                       ##
+    ## =============================================                                                       ##
+    ## time { ../binutils-2.25/configure --prefix=/tools --with-sysroot=$IGos --with-lib-path=/tools/lib \ ##
+    ## --target=$IGos_TGT --disable-nls --disable-werror && make && case $(uname -m) in \                  ##
+    ## x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;; esac && make install; }                   ##
+    ## =================================================================================                   ##
+    ## Example results for SBU with the following hardware:                                                ##
+    ## ====================================================                                                ##
+    ## 8GB Memory, Intel Core i3, SSD:                                                                     ##
+    ## real - 2m 1.212s                                                                                    ##
+    ## user - 1m 32.530s                                                                                   ##
+    ## sys  - 0m 5.540s                                                                                    ##
+    ## ================                                                                                    ##
+    #########################################################################################################
+
+    tar xf binutils-2.25.src.tar.gz &&
+    cd binutils-2.25/
+    mkdir -v ../binutils-build
+    cd ../binutils-build
+    ../binutils-2.25/configure     \
+        --prefix=/tools            \
+        --with-sysroot="$IGos"       \
+        --with-lib-path=/tools/lib \
+        --target="$IGos"_TGT         \
+        --disable-nls              \
+        --disable-werror &&
+    make &&
+    case $(uname -m) in
+        x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
+    esac &&
+    make install &&
+    cd .. && rm -rf binutils-2.25 binutils-build/
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "binutils-2.25 PASS 1 completed..."
+    SPACER
+}
+
+############################
+##------------------------##
+## END - SCRIPT FUNCTIONS ##
+##------------------------##
+############################
+
+#########################
+##---------------------##
+## BEGIN - CORE SCRIPT ##
+##---------------------##
+#########################
+
+cd /mnt/igos
+sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc entry that executes the temp-system build
+cd /mnt/igos/sources
+SET_GCC_AND_LINUX &&
+BUILD_BINUTILS_PASS1 &&
+
+
+#######################
+##-------------------##
+## END - CORE SCRIPT ##
+##-------------------##
+#######################
