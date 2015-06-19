@@ -4,8 +4,10 @@
 # If the problem exists on your system, either rename or delete the .la files or
 # install the appropriate missing package.
 
+printf "\n\n"
 for lib in lib{gmp,mpfr,mpc}.la; do
-  echo $lib: $(if find /usr/lib* -name $lib|
-               grep -q $lib;then :;else echo not;fi) found
+    echo $lib: $(if find /usr/lib* -name $lib|
+        grep -q $lib;then :;else echo not;fi) found
 done
+printf "\n\n"
 unset lib
