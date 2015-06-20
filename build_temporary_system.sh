@@ -855,6 +855,149 @@ BUILD_COREUTILS () {
     WHITE
 }
 
+BUILD_DIFFUTILS () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building diffutils-3.3..."
+    printf "\n\n"
+    WHITE
+
+    ###################
+    ## Diffutils-3.3 ##
+    ## ============= ##
+    ###################
+
+    tar xf diffutils-3.3.src.tar.gz &&
+    cd diffutils-3.3/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf diffutils-3.3
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "diffutils-3.3 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_FILE () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building file-5.22..."
+    printf "\n\n"
+    WHITE
+
+    ###############
+    ## File-5.22 ##
+    ## ========= ##
+    ###############
+
+    tar xf file-5.22.src.tar.gz &&
+    cd file-5.22/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf file-5.22
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "file-5.22 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_FINDUTILS () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building findutils-4.4.2..."
+    printf "\n\n"
+    WHITE
+
+    #####################
+    ## Findutils-4.4.2 ##
+    ## =============== ##
+    #####################
+
+    tar xf findutils-4.4.2.tar.gz &&
+    cd findutils-4.4.2/
+    ./configure --prefix=/tools && make && make install &&
+    cd .. && rm -rf findutils-4.4.2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "findutils-4.4.2 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_GAWK () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building gawk-4.1.1..."
+    printf "\n\n"
+    WHITE
+
+    ################
+    ## Gawk-4.1.1 ##
+    ## ========== ##
+    ################
+
+    tar xf gawk-4.1.1.src.tar.gz &&
+    cd gawk-4.1.1/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf gawk-4.1.1
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "gawk-4.1.1 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_GETTEXT () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building gettext-0.19.4..."
+    printf "\n\n"
+    WHITE
+
+    ####################
+    ## Gettext-0.19.4 ##
+    ## ============== ##
+    ####################
+
+    tar xf gettext-0.19.4.src.tar.gz &&
+    cd gettext-0.19.4/
+    cd gettext-tools
+    EMACS="no" ./configure --prefix=/tools --disable-shared &&
+    make -C gnulib-lib &&
+    make -C intl pluralx.c &&
+    make -C src msgfmt &&
+    make -C src msgmerge &&
+    make -C src xgettext &&
+    cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin
+    cd .. && cd .. && rm -rf gettext-0.19.4
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "gettext-0.19.4 completed..."
+    SPACER
+    WHITE
+}
+
 #------------------------------------------------#
 # END - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
 #------------------------------------------------#
@@ -876,61 +1019,78 @@ sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc ent
 cd /mnt/igos/sources
 
 # The actual workhorse
-SET_GCC_AND_LINUX 2>&1 | tee bin_pass1_log1 &&
-BUILD_BINUTILS_PASS1 2>&1 | tee bin_pass1_log2 &&
-BUILD_GCC_PASS1 2>&1 | tee gcc_pass1 &&
-BUILD_LINUX_API_HEADERS 2>&1 | tee lin_api &&
-BUILD_GLIBC 2>&1 | tee glibc &&
-BUILD_LIBSTDC 2>&1 | tee libstdc &&
-BUILD_BINUTILS_PASS2 2>&1 | tee bin_pass2 &&
-BUILD_GCC_PASS2 2>&1 | tee gcc_pass2 &&
-BUILD_TCL 2>&1 | tee tcl &&
-BUILD_EXPECT 2>&1 | tee expect &&
-BUILD_DEJAGNU 2>&1 | tee dejagnu &&
-BUILD_CHECK 2>&1 | tee check &&
-BUILD_NCURSES 2>&1 | tee ncurses &&
+SET_GCC_AND_LINUX 2>&1 | tee bin_p1log &&
+BUILD_BINUTILS_PASS1 2>&1 | tee bin_p2log &&
+BUILD_GCC_PASS1 2>&1 | tee gcc_pass1_log &&
+BUILD_LINUX_API_HEADERS 2>&1 | tee linux_api_log &&
+BUILD_GLIBC 2>&1 | tee glibc_log &&
+BUILD_LIBSTDC 2>&1 | tee libstdc_log &&
+BUILD_BINUTILS_PASS2 2>&1 | tee bin_pass2_log &&
+BUILD_GCC_PASS2 2>&1 | tee gcc_pass2_log &&
+BUILD_TCL 2>&1 | tee tcl_log &&
+BUILD_EXPECT 2>&1 | tee expect_log &&
+BUILD_DEJAGNU 2>&1 | tee dejagnu_log &&
+BUILD_CHECK 2>&1 | tee check_log &&
+BUILD_NCURSES 2>&1 | tee ncurses_log &&
 BUILD_BASH 2>&1 | tee bash_log &&
-BUILD_BZIP2 2>&1 | tee bzip2 &&
-BUILD_COREUTILS 2>&1 | tee coreutils &&
+BUILD_BZIP2 2>&1 | tee bzip2_log &&
+BUILD_COREUTILS 2>&1 | tee coreutils_log &&
+BUILD_DIFFUTILS 2>&1 | tee diffutils_log &&
+BUILD_FILE 2>&1 | tee file_log_log &&
+BUILD_FINDUTILS 2>&1 | tee findutils_log &&
+BUILD_GAWK 2>&1 | tee gawk_log &&
+BUILD_GETTEXT 2>&1 | tee gettext_log &&
 
 # Log cleaning
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass1_log1
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass1_log2
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gcc_pass1
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' lin_api
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' glibc
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' libstdc
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass2
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gcc_pass2
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' tcl
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' expect
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' dejagnu
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' check
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' ncurses
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_p1log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_p2log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gcc_pass1_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' linux_api_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' glibc_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' libstdc_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass2_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gcc_pass2_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' tcl_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' expect_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' dejagnu_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' check_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' ncurses_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bash_log
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bzip2
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' coreutils
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bzip2_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' coreutils_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' diffutils_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' file_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' findutils_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gawk_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gettext_log
 
-cat bin_pass1_log1 > temp_binutils_pass1
-cat bin_pass1_log2 >> temp_binutils_pass1
-rm bin_pass1_log1 bin_pass1_log2
+cat bin_p1log > binutils_pass1_log
+cat bin_p2log >> binutils_pass1_log
+rm bin_p1log bin_p2log
 
 # Filing the logs
-mv temp_binutils_pass1 /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
-mv gcc_pass1 /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
-mv lin_api /var/log/InterGenOS/BuildLogs/temp_lin_api_"$TIMESTAMP"
-mv glibc /var/log/InterGenOS/BuildLogs/temp_glibc_"$TIMESTAMP"
-mv libstdc /var/log/InterGenOS/BuildLogs/temp_libstdc_"$TIMESTAMP"
-mv bin_pass2 /var/log/InterGenOS/BuildLogs/temp_binutils_pass2_"$TIMESTAMP"
-mv gcc_pass2 /var/log/InterGenOS/BuildLogs/temp_gcc_pass2_"$TIMESTAMP"
-mv tcl /var/log/InterGenOS/BuildLogs/temp_tcl_"$TIMESTAMP"
-mv expect /var/log/InterGenOS/BuildLogs/temp_expect_"$TIMESTAMP"
-mv dejagnu /var/log/InterGenOS/BuildLogs/temp_dejagnu_"$TIMESTAMP"
-mv check /var/log/InterGenOS/BuildLogs/temp_check_"$TIMESTAMP"
-mv ncurses /var/log/InterGenOS/BuildLogs/temp_ncurses_"$TIMESTAMP"
+for bldlgs in $(find $(pwd) -type f -name '*log')
+
+mv binutils_pass1_log /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
+mv gcc_pass1_log /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
+mv linux_api_log /var/log/InterGenOS/BuildLogs/temp_linux_api_"$TIMESTAMP"
+mv glibc_log /var/log/InterGenOS/BuildLogs/temp_glibc_"$TIMESTAMP"
+mv libstdc_log /var/log/InterGenOS/BuildLogs/temp_libstdc_"$TIMESTAMP"
+mv bin_pass2_log /var/log/InterGenOS/BuildLogs/temp_binutils_pass2_"$TIMESTAMP"
+mv gcc_pass2_log /var/log/InterGenOS/BuildLogs/temp_gcc_pass2_"$TIMESTAMP"
+mv tcl_log /var/log/InterGenOS/BuildLogs/temp_tcl_"$TIMESTAMP"
+mv expect_log /var/log/InterGenOS/BuildLogs/temp_expect_"$TIMESTAMP"
+mv dejagnu_log /var/log/InterGenOS/BuildLogs/temp_dejagnu_"$TIMESTAMP"
+mv check_log /var/log/InterGenOS/BuildLogs/temp_check_"$TIMESTAMP"
+mv ncurses_log /var/log/InterGenOS/BuildLogs/temp_ncurses_"$TIMESTAMP"
 mv bash_log /var/log/InterGenOS/BuildLogs/temp_bash_"$TIMESTAMP"
-mv bzip2 /var/log/InterGenOS/BuildLogs/temp_bzip2_"$TIMESTAMP"
-mv coreutils /var/log/InterGenOS/BuildLogs/temp_coreutils_"$TIMESTAMP"
+mv bzip2_log /var/log/InterGenOS/BuildLogs/temp_bzip2_"$TIMESTAMP"
+mv coreutils_log /var/log/InterGenOS/BuildLogs/temp_coreutils_"$TIMESTAMP"
+mv diffutils_log /var/log/InterGenOS/BuildLogs/temp_diffutils_"$TIMESTAMP"
+mv file_log /var/log/InterGenOS/BuildLogs/temp_file_"$TIMESTAMP"
+mv findutils_log /var/log/InterGenOS/BuildLogs/temp_findutils_"$TIMESTAMP"
+mv gawk_log /var/log/InterGenOS/BuildLogs/temp_gawk_"$TIMESTAMP"
+mv gettext_log /var/log/InterGenOS/BuildLogs/temp_gettext_"$TIMESTAMP"
 
 #######################
 ##-------------------##
