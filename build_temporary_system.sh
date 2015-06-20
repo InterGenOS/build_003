@@ -998,6 +998,326 @@ BUILD_GETTEXT () {
     WHITE
 }
 
+BUILD_GREP () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building grep-2.21..."
+    printf "\n\n"
+    WHITE
+
+    ###############
+    ## Grep-2.21 ##
+    ## ========= ##
+    ###############
+
+    tar xf grep-2.21.src.tar.gz &&
+    cd grep-2.21/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf grep-2.21
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "grep-2.21 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_GZIP () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building gzip-1.6..."
+    printf "\n\n"
+    WHITE
+
+    ##############
+    ## Gzip-1.6 ##
+    ## ======== ##
+    ##############
+
+    tar xf gzip-1.6.src.tar.gz &&
+    cd gzip-1.6/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf gzip-1.6
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "gzip-1.6 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_M4 () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building m4-1.4.17..."
+    printf "\n\n"
+    WHITE
+
+    ###############
+    ## M4-1.4.17 ##
+    ## ========= ##
+    ###############
+
+    tar xf m4-1.4.17.src.tar.gz &&
+    cd m4-1.4.17/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf m4-1.4.17
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "m4-1.4.17 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_MAKE () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building make-4.1..."
+    printf "\n\n"
+    WHITE
+
+    ##############
+    ## Make-4.1 ##
+    ## ======== ##
+    ##############
+
+    tar xf make-4.1.src.tar.gz &&
+    cd make-4.1/
+    ./configure --prefix=/tools --without-guile &&
+    make &&
+    make install &&
+    cd .. && rm -rf make-4.1
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "make-4.1 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_PATCH () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building patch-2.7.4..."
+    printf "\n\n"
+    WHITE
+
+    #################
+    ## Patch-2.7.4 ##
+    ## =========== ##
+    #################
+
+    tar xf patch-2.7.4.src.tar.gz &&
+    cd patch-2.7.4/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf patch-2.7.4
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "patch-2.7.4 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_PERL () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building perl-5.20.2..."
+    printf "\n\n"
+    WHITE
+
+    #################
+    ## Perl-5.20.2 ##
+    ## =========== ##
+    #################
+
+    tar xf perl-5.20.2.src.tar.gz &&
+    cd perl-5.20.2/
+    sh Configure -des -Dprefix=/tools -Dlibs=-lm &&
+    make &&
+    cp -v perl cpan/podlators/pod2man /tools/bin
+    mkdir -pv /tools/lib/perl5/5.20.2
+    cp -Rv lib/* /tools/lib/perl5/5.20.2
+    cd .. && rm -rf perl-5.20.2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "perl-5.20.2 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_SED () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building sed-4.2.2..."
+    printf "\n\n"
+    WHITE
+
+    ###############
+    ## Sed-4.2.2 ##
+    ## ========= ##
+    ###############
+
+    tar xf sed-4.2.2.src.tar.gz &&
+    cd sed-4.2.2/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf sed-4.2.2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "sed-4.2.2 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_TAR () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building tar-1.28..."
+    printf "\n\n"
+    WHITE
+
+    ##############
+    ## Tar-1.28 ##
+    ## ======== ##
+    ##############
+
+    tar xf tar-1.28.src.tar.gz &&
+    cd tar-1.28/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf tar-1.28
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "tar-1.28 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_TEXINFO () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building texinfo-5.2..."
+    printf "\n\n"
+    WHITE
+
+    #################
+    ## Texinfo-5.2 ##
+    ## =========== ##
+    #################
+
+    tar xf texinfo-5.2.src.tar.gz &&
+    cd texinfo-5.2/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf texinfo-5.2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "texinfo-5.2 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_UTIL_LINUX () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building util-linux-2.26..."
+    printf "\n\n"
+    WHITE
+
+    #####################
+    ## Util-linux-2.26 ##
+    ## =============== ##
+    #####################
+
+    tar xf util-linux-2.26.src.tar.gz &&
+    cd util-linux-2.26/
+    ./configure --prefix=/tools        \
+        --without-python               \
+        --disable-makeinstall-chown    \
+        --without-systemdsystemunitdir \
+        PKG_CONFIG="" &&
+    make &&
+    make install &&
+    cd .. && rm -rf util-linux-2.26
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "util-linux-2.26 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_XZ () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building xz-5.2.0..."
+    printf "\n\n"
+    WHITE
+
+    ##############
+    ## Xz-5.2.0 ##
+    ## ======== ##
+    ##############
+
+    tar xf xz-5.2.0.src.tar.gz &&
+    cd xz-5.2.0/
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
+    cd .. && rm -rf xz-5.2.0
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "xz-5.2.0 completed..."
+    SPACER
+    WHITE
+}
+
+STRIPPING () {
+    strip --strip-debug /tools/lib/* &&
+    /usr/bin/strip --strip-unneeded /tools/{,s}bin/* &&
+    rm -rf /tools/{,share}/{info,man,doc} &&
+}
+
 #------------------------------------------------#
 # END - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
 #------------------------------------------------#
@@ -1040,6 +1360,17 @@ BUILD_FILE 2>&1 | tee file_log_log &&
 BUILD_FINDUTILS 2>&1 | tee findutils_log &&
 BUILD_GAWK 2>&1 | tee gawk_log &&
 BUILD_GETTEXT 2>&1 | tee gettext_log &&
+BUILD_GREP 2>&1 | tee grep_log &&
+BUILD_GZIP 2>&1 | tee gzip_log &&
+BUILD_M4 2>&1 | tee m4_log &&
+BUILD_MAKE 2>&1 | tee make_log &&
+BUILD_PATCH 2>&1 | tee patch_log &&
+BUILD_PERL 2>&1 | tee perl_log &&
+BUILD_SED 2>&1 | tee sed_log &&
+BUILD_TAR 2>&1 | tee tar_log &&
+BUILD_TEXINFO 2>&1 | tee texinfo_log &&
+BUILD_UTIL_LINUX 2>&1 | tee util_linux_log &&
+BUILD_XZ 2>&1 | tee xz_log &&
 
 cat bin_p1log > binutils_pass1_log
 cat bin_p2log >> binutils_pass1_log
@@ -1052,8 +1383,17 @@ for log in $(find $(pwd) -type f -name '*log' | sed 's/\// /g' | awk '{print $NF
     mv $log /var/log/InterGenOS/BuildLogs/$newlog
 done
 
+STRIPPING
+
 #######################
 ##-------------------##
 ## END - CORE SCRIPT ##
 ##-------------------##
 #######################
+
+SPACER
+BOLD
+GREEN
+echo "Temporary system build complete"
+printf "\n\n"
+DIVIDER
