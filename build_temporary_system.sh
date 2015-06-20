@@ -134,6 +134,10 @@ SPACER () {
 # END - DISPLAY LAYOUT FUNCTIONS #
 #--------------------------------#
 
+#--------------------------------------------------#
+# BEGIN - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
+#--------------------------------------------------#
+
 # Rebuilds gcc and linux packages into correct form
 SET_GCC_AND_LINUX () {
     clear
@@ -220,7 +224,7 @@ BUILD_GCC_PASS1 () {
     echo "Building gcc-4.9.2 PASS 1..."
     printf "\n\n"
     WHITE
-    
+
     ###############
     ## Gcc-4.9.2 ##
     ## ========= ##
@@ -282,6 +286,171 @@ BUILD_GCC_PASS1 () {
     WHITE
 }
 
+BUILD_LINUX_API_HEADERS () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building linux-3.19 API Headers..."
+    printf "\n\n"
+    WHITE
+
+    ## Updated kernel to 3.19 ###
+    #############################
+    ## Linux-3.19 API Headers  ##
+    ## ======================= ##
+    #############################
+
+    tar xf linux-3.19.src.tar.gz &&
+    cd linux-3.19/
+    make mrproper &&
+    make INSTALL_HDR_PATH=dest headers_install &&
+    cp -rv dest/include/* /tools/include &&
+    cd .. && rm -rf linux-3.19
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "linux-3.19 API Headers completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_GLIBC () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building glibc-2.21..."
+    printf "\n\n"
+    WHITE
+
+    ################
+    ## Glibc-2.21 ##
+    ## ========== ##
+    ################
+
+    tar xf glibc-2.21.src.tar.gz &&
+    cd glibc-2.21/
+    if [ ! -r /usr/include/rpc/types.h ]; then
+        su -c 'mkdir -pv /usr/include/rpc'
+        su -c 'cp -v sunrpc/rpc/*.h /usr/include/rpc'
+    fi
+    sed -e '/ia32/s/^/1:/' \
+        -e '/SSE2/s/^1://' \
+        -i  sysdeps/i386/i686/multiarch/mempcpy_chk.S
+    mkdir -v ../glibc-build
+    cd ../glibc-build
+    ../glibc-2.21/configure                           \
+        --prefix=/tools                               \
+        --host=$IGos_TGT                              \
+        --build=$(../glibc-2.21/scripts/config.guess) \
+        --disable-profile                             \
+        --enable-kernel=2.6.32                        \
+        --with-headers=/tools/include                 \
+        libc_cv_forced_unwind=yes                     \
+        libc_cv_ctors_header=yes                      \
+        libc_cv_c_cleanup=yes &&
+    make &&
+    make install &&
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "glibc-2.21 completed..."
+    printf "\n\n"
+    echo "stand by, performing glibc sanity checks..."
+    WHITE
+    sleep 4
+
+    ##########################
+    ## glibc sanity testing ##
+    ## ==================== ##
+    ##############################################################################
+    ## The actual Sanity Check will look like the following in terminal:        ##
+    ## =================================================================        ##
+    ## [igos@Arch glibc-build]$ echo 'main(){}' > dummy.c                       ##
+    ## [igos@Arch glibc-build]$ $IGos_TGT-gcc dummy.c                           ##
+    ## [igos@Arch glibc-build]$ readelf -l a.out | grep ': /tools'              ##
+    ##      [Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2] ##
+    ## ======================================================================== ##
+    ## The following section will kill the build if the Sanity Check fails:     ##
+    ## ===================================================================      ##
+    ##############################################################################
+
+    echo 'main(){}' > dummy.c
+    $IGos_TGT-gcc dummy.c
+
+    Expected="Requestingprograminterpreter/tools/lib64/ld-linux-x86-64.so.2"
+    Actual="$(readelf -l a.out | grep ': /tools' | sed s/://g | cut -d '[' -f 2 | cut -d ']' -f 1 | awk '{print $1$2$3$4}')"
+
+    if [ $Expected != $Actual ]; then
+        BOLD
+        RED
+        echo "!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
+        printf "\n\n\n\n\n"
+        WHITE
+        exit 1
+    else
+        SPACER
+        BOLD
+        GREEN
+        echo "Compiler and Linker are functioning as expected, continuing build."
+        sleep 4
+        SPACER
+    fi
+    WHITE
+    rm -v dummy.c a.out
+    cd .. && rm -rf glibc-2.21 glibc-build/
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "glibc-2.21 completed..."
+    SPACER
+    WHITE
+}
+
+BUILD_LIBSTDC () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building libstdc++-4.9.2..."
+    printf "\n\n"
+    WHITE
+
+    #################################
+    ##       Libstdc++-4.9.2       ##
+    ## (Part of Gcc-4.9.2 package) ##
+    ## =========================== ##
+    #################################
+
+    tar xf gcc-4.9.2.src.tar.gz &&
+    cd gcc-4.9.2/
+    mkdir -pv ../gcc-build
+    cd ../gcc-build
+    ../gcc-4.9.2/libstdc++-v3/configure \
+        --host=$IGos_TGT                \
+        --prefix=/tools                 \
+        --disable-multilib              \
+        --disable-shared                \
+        --disable-nls                   \
+        --disable-libstdcxx-threads     \
+        --disable-libstdcxx-pch         \
+        --with-gxx-include-dir=/tools/$IGos_TGT/include/c++/4.9.2 &&
+    make &&
+    make install
+    cd .. && rm -rf gcc-4.9.2 gcc-build/
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "libstdc++-4.9.2 completed..."
+    SPACER
+    WHITE
+}
+
+#------------------------------------------------#
+# END - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
+#------------------------------------------------#
+
 ############################
 ##------------------------##
 ## END - SCRIPT FUNCTIONS ##
@@ -297,17 +466,26 @@ BUILD_GCC_PASS1 () {
 cd /mnt/igos
 sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc entry that executes the temp-system build
 cd /mnt/igos/sources
-SET_GCC_AND_LINUX 2>&1 | tee build_log_1 &&
-BUILD_BINUTILS_PASS1 2>&1 | tee build_log_2 &&
-BUILD_GCC_PASS1 2>&1 | tee build_log_3 &&
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_1
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_2
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_3
-cat build_log_1 > temp_binutils_pass1_build_log
-cat build_log_2 >> temp_binutils_pass1_build_log
-mv temp_binutils_pass1_build_log /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
-mv build_log_3 /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
-rm build_log_1 build_log_2
+SET_GCC_AND_LINUX 2>&1 | tee bin_pass1_log1 &&
+BUILD_BINUTILS_PASS1 2>&1 | tee bin_pass1_log2 &&
+BUILD_GCC_PASS1 2>&1 | tee gcc_pass1 &&
+BUILD_LINUX_API_HEADERS 2>&1 | tee lin_api &&
+BUILD_GLIBC 2>&1 | tee glibc &&
+BUILD_LIBSTDC 2>&1 | tee libstdc &&
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass1_log1
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' bin_pass1_log2
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' gcc_pass1
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' lin_api
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' glibc
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' libstdc
+cat bin_pass1_log1 > temp_binutils_pass1
+cat bin_pass1_log2 >> temp_binutils_pass1
+rm bin_pass1_log1 bin_pass1_log2
+mv temp_binutils_pass1 /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
+mv gcc_pass1 /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
+mv lin_api /var/log/InterGenOS/BuildLogs/temp_lin_api_"$TIMESTAMP"
+mv glibc /var/log/InterGenOS/BuildLogs/temp_glibc_"$TIMESTAMP"
+mv libstdc /var/log/IngerGenOS/BuildLogs/temp_libstdc_"$TIMESTAMP"
 
 #######################
 ##-------------------##
