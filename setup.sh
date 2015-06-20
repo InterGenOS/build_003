@@ -30,7 +30,7 @@
 TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 
 # Regex check for numbers as choices
-NUMBER_CHECK='^[0-9]+$'
+export NUMBER_CHECK='^[0-9]+$'
 
 # Sets build mount point
 export IGos=/mnt/igos
@@ -200,11 +200,24 @@ GET_PARTITION () {
 }
 
 SETUP_BUILD () {
-    # Set variables into host system user and root accounts
     rm partitions partitionlist
+    # Mount the build directory
     clear
     HEADER
     BOLD
+    GREEN
+    echo "Setting up build directory mount..."
+    printf "\n\n"
+    WHITE
+    mkdir -pv "$IGos"
+    mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
+    sleep 1
+
+    # Set variables into host system user and root accounts
+    clear
+    HEADER
+    BOLD
+    GREEN
     printf "Please enter your system username:"
     WHITE
     echo -n " "
@@ -219,19 +232,17 @@ SETUP_BUILD () {
     echo "export IGos=/mnt/igos" >> /root/.bashrc
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /home/"$USER"/.bash_profile
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
-    sleep 1
 
-    # Mount the build directory
+    # Set up source directory
     clear
     HEADER
     BOLD
     GREEN
-    echo "Setting up build directory mount..."
+    echo "Creating sources directory..."
     printf "\n\n"
     WHITE
-    mkdir -pv "$IGos"
-    mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
-    sleep 1
+    mkdir -v "$IGos"/sources
+    chmod -v a+wt "$IGos"/sources
 
     # Download source packages
     clear
@@ -248,7 +259,7 @@ SETUP_BUILD () {
     echo "Source retrieval complete..."
     sleep 2
 
-    # Make build directories, move source packages into place
+    # Move source packages into place
     clear
     HEADER
     BOLD
@@ -257,11 +268,13 @@ SETUP_BUILD () {
     sleep 1
     printf "\n\n"
     WHITE
-    mkdir -v "$IGos"/sources && chmod -v a+wt "$IGos"/sources
-    unzip master.zip && rm master.zip
-    mv sources_003-master/* "$IGos"/sources && rm sources_003-master
+    unzip master.zip 2>&1 &&
+    rm master.zip
+    mv sources_003-master/* "$IGos"/sources &&
+    rm sources_003-master
     rm "$IGos"/sources/README.md
-    mkdir -v "$IGos"/tools && ln -sv "$IGos"/tools /
+    mkdir -v "$IGos"/tools
+    ln -sv "$IGos"/tools /
 
     # Create build system user
     clear
@@ -284,8 +297,11 @@ SETUP_BUILD () {
     echo "Assigning tools' and sources' ownership to user 'igos'..."
     printf "\n\n"
     WHITE
-    chown -v igos:igos "$IGos"/tools && chown -v igos "$IGos"/sources
+    chown -v igos "$IGos"/tools
+    chown -v igos "$IGos"/sources
     sleep 2
+
+    # Setup igos shell for 'build_temporary_system.sh'
     clear
     HEADER
     BOLD
@@ -296,7 +312,8 @@ SETUP_BUILD () {
 
     # Download temporary system build script, assign ownership to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
-    chown -v igos:igos "$IGos"/build_temporary_system.sh
+    chown -v igos "$IGos"/build_temporary_system.sh
+    chmod +x "$IGos"/build_temporary_system.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -306,7 +323,8 @@ SETUP_BUILD () {
 
     # Sets build user .bashrc
     mv tmp.bashrc /home/igos/.bashrc
-    chown -v igos:igos /home/igos/.bashrc /home/igos/.bash_profile
+    chown -v igos /home/igos/.bashrc /home/igos/.bash_profile
+    sleep 2
 }
 
 ############################
@@ -365,11 +383,12 @@ LC_ALL=POSIX
 IGos_TGT=$(uname -m)-igos-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export IGos LC_ALL IGos_TGT PATH
-cd $IGos
+cd "$IGos"
 ./build_temporary_system.sh
 igos_bashrc
 
 mkdir -p /var/log/InterGenOS/BuildLogs
+chown -R -v igos /var/log/InterGenOS
 GET_PARTITION 2>&1 | tee build_log
 
 #######################
