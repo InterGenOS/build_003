@@ -1069,8 +1069,6 @@ cat bin_p2log >> binutils_pass1_log
 rm bin_p1log bin_p2log
 
 # Filing the logs
-for bldlgs in $(find $(pwd) -type f -name '*log')
-
 mv binutils_pass1_log /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
 mv gcc_pass1_log /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
 mv linux_api_log /var/log/InterGenOS/BuildLogs/temp_linux_api_"$TIMESTAMP"
