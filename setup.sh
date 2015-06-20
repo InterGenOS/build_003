@@ -271,7 +271,7 @@ SETUP_BUILD () {
     unzip master.zip 2>&1 &&
     rm master.zip
     mv sources_003-master/* "$IGos"/sources &&
-    rm sources_003-master
+    rm -rf sources_003-master
     rm "$IGos"/sources/README.md
     mkdir -v "$IGos"/tools
     ln -sv "$IGos"/tools /
@@ -310,7 +310,7 @@ SETUP_BUILD () {
     printf "\n\n"
     WHITE
 
-    # Download temporary system build script, assign ownership to build user
+    # Download temporary system build script, assign ownerships to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
     chown -v igos "$IGos"/build_temporary_system.sh
     chmod +x "$IGos"/build_temporary_system.sh
@@ -388,7 +388,7 @@ cd "$IGos"
 igos_bashrc
 
 mkdir -p /var/log/InterGenOS/BuildLogs
-chown -R -v igos /var/log/InterGenOS
+chmod 777 /var/log/InterGenOS/*
 GET_PARTITION 2>&1 | tee build_log
 
 #######################

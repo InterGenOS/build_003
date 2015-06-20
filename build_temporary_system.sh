@@ -209,6 +209,7 @@ BUILD_BINUTILS_PASS1 () {
     GREEN
     echo "binutils-2.25 PASS 1 completed..."
     SPACER
+    WHITE
 }
 
 ############################
@@ -227,7 +228,7 @@ cd /mnt/igos
 sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc entry that executes the temp-system build
 cd /mnt/igos/sources
 SET_GCC_AND_LINUX 2>&1 | tee build_log_1 &&
-BUILD_BINUTILS_PASS1 2>&1 | tee buld_log_2 &&
+BUILD_BINUTILS_PASS1 2>&1 | tee build_log_2 &&
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_1
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_2
 cat build_log_1 > build_log
