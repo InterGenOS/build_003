@@ -159,7 +159,13 @@ SET_GCC_AND_LINUX () {
     rm -rf gcc-4.9.2-extras.src.tar.gz gcc-4.9.2-extras gcc-4.9.2.src.tar.gz &&
     tar zcf gcc-4.9.2.src.tar.gz gcc-4.9.2/ &&
     rm -rf gcc-4.9.2/
+    printf "\n"
+    BOLD
+    GREEN
+    echo "Package setup complete..."
     SPACER
+    WHITE
+    sleep 5
 }
 
 BUILD_BINUTILS_PASS1 () {
@@ -214,6 +220,7 @@ BUILD_BINUTILS_PASS1 () {
     echo "binutils-2.25 PASS 1 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GCC_PASS1 () {
@@ -284,6 +291,7 @@ BUILD_GCC_PASS1 () {
     echo "gcc-4.9.2 PASS 1 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_LINUX_API_HEADERS () {
@@ -313,6 +321,7 @@ BUILD_LINUX_API_HEADERS () {
     echo "linux-3.19 API Headers completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GLIBC () {
@@ -383,9 +392,9 @@ BUILD_GLIBC () {
     $IGos_TGT-gcc dummy.c
 
     Expected="Requestingprograminterpreter/tools/lib64/ld-linux-x86-64.so.2"
-    Actual="$(readelf -l a.out | grep ': /tools' spacing | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
+    Actual="$(readelf -l a.out | grep ': /tools' | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
 
-    if [ $Expected != $Actual ]; then
+    if [ "$Expected" != "$Actual" ]; then
         BOLD
         RED
         echo "!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
@@ -411,6 +420,7 @@ BUILD_GLIBC () {
     echo "glibc-2.21 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_LIBSTDC () {
@@ -450,6 +460,7 @@ BUILD_LIBSTDC () {
     echo "libstdc++-4.9.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_BINUTILS_PASS2 () {
@@ -506,6 +517,7 @@ BUILD_BINUTILS_PASS2 () {
     echo "binutils-2.25 PASS 2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GCC_PASS2 () {
@@ -592,9 +604,9 @@ BUILD_GCC_PASS2 () {
     cc dummy.c
 
     Expected2="Requestingprograminterpreter/tools/lib64/ld-linux-x86-64.so.2"
-    Actual2="$(readelf -l a.out | grep ': /tools' spacing | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
+    Actual2="$(readelf -l a.out | grep ': /tools' | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
 
-    if [ $Expected2 != $Actual2 ]; then
+    if [ "$Expected2" != "$Actual2" ]; then
         BOLD
         RED
         echo "!!!!!GCC 2nd PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
@@ -618,6 +630,7 @@ BUILD_GCC_PASS2 () {
     WHITE
     rm -v dummy.c a.out
     cd .. && rm -rf gcc-4.9.2 gcc-build/
+    sleep 5
 }
 
 BUILD_TCL () {
@@ -650,6 +663,7 @@ BUILD_TCL () {
     echo "tcl-8.6.3 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_EXPECT () {
@@ -682,6 +696,7 @@ BUILD_EXPECT () {
     echo "expect-5.45 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_DEJAGNU () {
@@ -709,6 +724,7 @@ BUILD_DEJAGNU () {
     echo "dejagnu-1.5.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_CHECK () {
@@ -737,6 +753,7 @@ BUILD_CHECK () {
     echo "check-0.9.14 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_NCURSES () {
@@ -770,6 +787,7 @@ BUILD_NCURSES () {
     echo "ncurses-5.9 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_BASH () {
@@ -799,6 +817,7 @@ BUILD_BASH () {
     echo "bash-4.3.30 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_BZIP2 () {
@@ -825,6 +844,7 @@ BUILD_BZIP2 () {
     echo "bzip2-1.0.6 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_COREUTILS () {
@@ -853,6 +873,7 @@ BUILD_COREUTILS () {
     echo "coreutils-8.23 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_DIFFUTILS () {
@@ -881,6 +902,7 @@ BUILD_DIFFUTILS () {
     echo "diffutils-3.3 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_FILE () {
@@ -909,6 +931,7 @@ BUILD_FILE () {
     echo "file-5.22 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_FINDUTILS () {
@@ -935,6 +958,7 @@ BUILD_FINDUTILS () {
     echo "findutils-4.4.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GAWK () {
@@ -963,6 +987,7 @@ BUILD_GAWK () {
     echo "gawk-4.1.1 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GETTEXT () {
@@ -996,6 +1021,7 @@ BUILD_GETTEXT () {
     echo "gettext-0.19.4 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GREP () {
@@ -1024,6 +1050,7 @@ BUILD_GREP () {
     echo "grep-2.21 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_GZIP () {
@@ -1052,6 +1079,7 @@ BUILD_GZIP () {
     echo "gzip-1.6 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_M4 () {
@@ -1080,6 +1108,7 @@ BUILD_M4 () {
     echo "m4-1.4.17 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_MAKE () {
@@ -1108,6 +1137,7 @@ BUILD_MAKE () {
     echo "make-4.1 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_PATCH () {
@@ -1136,6 +1166,7 @@ BUILD_PATCH () {
     echo "patch-2.7.4 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_PERL () {
@@ -1166,6 +1197,7 @@ BUILD_PERL () {
     echo "perl-5.20.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_SED () {
@@ -1194,6 +1226,7 @@ BUILD_SED () {
     echo "sed-4.2.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_TAR () {
@@ -1222,6 +1255,7 @@ BUILD_TAR () {
     echo "tar-1.28 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_TEXINFO () {
@@ -1250,6 +1284,7 @@ BUILD_TEXINFO () {
     echo "texinfo-5.2 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_UTIL_LINUX () {
@@ -1282,6 +1317,7 @@ BUILD_UTIL_LINUX () {
     echo "util-linux-2.26 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 BUILD_XZ () {
@@ -1310,6 +1346,7 @@ BUILD_XZ () {
     echo "xz-5.2.0 completed..."
     SPACER
     WHITE
+    sleep 5
 }
 
 #------------------------------------------------#
