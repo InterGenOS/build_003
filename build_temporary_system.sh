@@ -729,7 +729,7 @@ BUILD_CHECK () {
     cd check-0.9.14/
     PKG_CONFIG= ./configure --prefix=/tools &&
     make &&
-    make install
+    make install &&
     cd .. && rm -rf check-0.9.14
     printf "\n\n"
     BOLD
@@ -1312,12 +1312,6 @@ BUILD_XZ () {
     WHITE
 }
 
-STRIPPING () {
-    strip --strip-debug /tools/lib/* &&
-    /usr/bin/strip --strip-unneeded /tools/{,s}bin/* &&
-    rm -rf /tools/{,share}/{info,man,doc} &&
-}
-
 #------------------------------------------------#
 # END - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
 #------------------------------------------------#
@@ -1383,7 +1377,10 @@ for log in $(find $(pwd) -type f -name '*log' | sed 's/\// /g' | awk '{print $NF
     mv $log /var/log/InterGenOS/BuildLogs/$newlog
 done
 
-STRIPPING
+# Drop unecessary weight
+strip --strip-debug /tools/lib/* &&
+/usr/bin/strip --strip-unneeded /tools/{,s}bin/* &&
+rm -rf /tools/{,share}/{info,man,doc} &&
 
 #######################
 ##-------------------##
