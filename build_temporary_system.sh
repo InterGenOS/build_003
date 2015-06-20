@@ -212,6 +212,68 @@ BUILD_BINUTILS_PASS1 () {
     WHITE
 }
 
+BUILD_GCC_PASS1 () {
+    ###############
+    ## Gcc-4.9.2 ##
+    ## ========= ##
+    ##  PASS -1- ##
+    ###############
+
+    tar xf gcc-4.9.2.src.tar.gz
+    cd gcc-4.9.2/
+    tar -xf ../mpfr-3.1.2.src.tar.gz
+    mv -v mpfr-3.1.2 mpfr
+    tar -xf ../gmp-6.0.0a.src.tar.gz
+    mv -v gmp-6.0.0a gmp
+    tar -xf ../mpc-1.0.2.src.tar.gz
+    mv -v mpc-1.0.2 mpc
+    for file in $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h); do
+        cp -uv $file{,.orig}
+        sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' -e 's@/usr@/tools@g' $file.orig > $file
+        echo '
+    #undef STANDARD_STARTFILE_PREFIX_1
+    #undef STANDARD_STARTFILE_PREFIX_2
+    #define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+    #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+        touch $file.orig
+    done
+    sed -i '/k prot/agcc_cv_libc_provides_ssp=yes' gcc/configure
+    mkdir -v ../gcc-build
+    cd ../gcc-build
+    ../gcc-4.9.2/configure                               \
+        --target=$IGos_TGT                               \
+        --prefix=/tools                                  \
+        --with-sysroot=$IGos                             \
+        --with-newlib                                    \
+        --without-headers                                \
+        --with-local-prefix=/tools                       \
+        --with-native-system-header-dir=/tools/include   \
+        --disable-nls                                    \
+        --disable-shared                                 \
+        --disable-multilib                               \
+        --disable-decimal-float                          \
+        --disable-threads                                \
+        --disable-libatomic                              \
+        --disable-libgomp                                \
+        --disable-libitm                                 \
+        --disable-libquadmath                            \
+        --disable-libsanitizer                           \
+        --disable-libssp                                 \
+        --disable-libvtv                                 \
+        --disable-libcilkrts                             \
+        --disable-libstdc++-v3                           \
+        --enable-languages=c,c++ &&
+    make &&
+    make install &&
+    cd .. && rm -rf gcc-4.9.2 gcc-build/
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "gcc-4.9.2 PASS 1 completed..."
+    SPACER
+    WHITE
+}
+
 ############################
 ##------------------------##
 ## END - SCRIPT FUNCTIONS ##
@@ -229,11 +291,14 @@ sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc ent
 cd /mnt/igos/sources
 SET_GCC_AND_LINUX 2>&1 | tee build_log_1 &&
 BUILD_BINUTILS_PASS1 2>&1 | tee build_log_2 &&
+BUILD_GCC_PASS1 2>&1 | tee build_log_3 &&
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_1
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_2
-cat build_log_1 > build_log
-cat build_log_2 >> build_log
-mv build_log /var/log/InterGenOS/BuildLogs/build_temporary_system_log_"$TIMESTAMP"
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log_3
+cat build_log_1 > temp_binutils_pass1_build_log
+cat build_log_2 >> temp_binutils_pass1_build_log
+mv temp_binutils_pass1_build_log /var/log/InterGenOS/BuildLogs/temp_binutils_pass1_"$TIMESTAMP"
+mv build_log_3 /var/log/InterGenOS/BuildLogs/temp_gcc_pass1_"$TIMESTAMP"
 rm build_log_1 build_log_2
 
 #######################

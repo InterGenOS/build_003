@@ -390,6 +390,7 @@ igos_bashrc
 mkdir -p /var/log/InterGenOS/BuildLogs
 chmod 777 /var/log/InterGenOS/*
 GET_PARTITION 2>&1 | tee build_log
+mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 
 #######################
 ##-------------------##
