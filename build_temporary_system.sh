@@ -213,6 +213,14 @@ BUILD_BINUTILS_PASS1 () {
 }
 
 BUILD_GCC_PASS1 () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Building gcc-4.9.2 PASS 1..."
+    printf "\n\n"
+    WHITE
+    
     ###############
     ## Gcc-4.9.2 ##
     ## ========= ##
