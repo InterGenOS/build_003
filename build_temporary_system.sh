@@ -1378,6 +1378,16 @@ BUILD_XZ () {
 
 cd /mnt/igos/sources
 
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+set +h
+umask 022
+IGos=/mnt/igos
+LC_ALL=POSIX
+IGos_TGT=$(uname -m)-igos-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+export IGos LC_ALL IGos_TGT PATH
+
+
 # The actual workhorse
 SET_GCC_AND_LINUX 2>&1 | tee bin_p1log &&
 BUILD_BINUTILS_PASS1 2>&1 | tee bin_p2log &&

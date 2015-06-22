@@ -323,7 +323,7 @@ SETUP_BUILD () {
 
     # Sets build user .bashrc
     mv tmp.bashrc /home/igos/.bashrc
-    chown -v igos /home/igos/.bashrc /home/igos/.bash_profile
+    chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
     sleep 2
 }
 
@@ -370,13 +370,13 @@ fi
 #########################
 
 # Sets build user bash.profile
-cat > home/igos/.bash_profile << "igos_bash_profile"
+cat > tmp.bash_profile << "igos_bash_profile"
 exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
 igos_bash_profile
 chown igos:users /home/igos/.bash_profile
 
 # Sets build user .bashrc, sets temporary system build script to launch on shell login
-cat > /home/igos/.bashrc << "igos_bashrc"
+cat > tmp.bashrc << "igos_bashrc"
 set +h
 umask 022
 IGos=/mnt/igos
@@ -389,6 +389,7 @@ chown igos:users /home/igos/.bashrc
 
 mkdir -p /var/log/InterGenOS/BuildLogs
 chmod 777 /var/log/InterGenOS/*
+
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
 mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
