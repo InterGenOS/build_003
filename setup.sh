@@ -400,4 +400,6 @@ mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 #######################
 
 # Log into shell for build user
-su - igos
+exec su - igos
+printf "\n\n\n"
+echo The script would be continuing now
