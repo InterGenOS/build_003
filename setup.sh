@@ -383,8 +383,6 @@ LC_ALL=POSIX
 IGos_TGT=$(uname -m)-igos-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export IGos LC_ALL IGos_TGT PATH
-cd "$IGos"
-./build_temporary_system.sh
 igos_bashrc
 
 mkdir -p /var/log/InterGenOS/BuildLogs

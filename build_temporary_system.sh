@@ -1373,8 +1373,6 @@ BUILD_XZ () {
 ##---------------------##
 #########################
 
-cd /mnt/igos
-sed -i '/.\/build_temporary_system.sh/d' /home/igos/.bashrc # Removes bashrc entry that executes the temp-system build
 cd /mnt/igos/sources
 
 # The actual workhorse
