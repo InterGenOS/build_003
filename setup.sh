@@ -370,12 +370,13 @@ fi
 #########################
 
 # Sets build user bash.profile
-cat > tmp.bash_profile << "igos_bash_profile"
+cat > home/igos/.bash_profile << "igos_bash_profile"
 exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
 igos_bash_profile
+chown igos:users /home/igos/.bash_profile
 
 # Sets build user .bashrc, sets temporary system build script to launch on shell login
-cat > tmp.bashrc << "igos_bashrc"
+cat > /home/igos/.bashrc << "igos_bashrc"
 set +h
 umask 022
 IGos=/mnt/igos
@@ -384,6 +385,7 @@ IGos_TGT=$(uname -m)-igos-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export IGos LC_ALL IGos_TGT PATH
 igos_bashrc
+chown igos:users /home/igos/.bashrc
 
 mkdir -p /var/log/InterGenOS/BuildLogs
 chmod 777 /var/log/InterGenOS/*
