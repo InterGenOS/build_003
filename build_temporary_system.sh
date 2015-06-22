@@ -26,25 +26,7 @@
 ##---------------------------------------##
 ###########################################
 
-# Capture current needed variables
-U=$USER
-H=$HOME
-D=$DISPLAY
-T=$TERM
-
-# Clear the environment
-for i in $(env | awk -F"=" '{print $1}'); do
-    unset $i
-done
-
-# re-set desired environment variables
-export USER=$U
-export HOME=$H
-export DISPLAY=$D
-export TERM=$T
-
-# Declare additional build variables
-PS1='\u:\w\$ '
+# Set build variables
 set +h
 umask 022
 IGos=/mnt/igos
@@ -1410,7 +1392,7 @@ SET_GCC_AND_LINUX 2>&1 | tee bin_p1log &&
 BUILD_BINUTILS_PASS1 2>&1 | tee bin_p2log &&
 BUILD_GCC_PASS1 2>&1 | tee gcc_pass1_log &&
 BUILD_LINUX_API_HEADERS 2>&1 | tee linux_api_log &&
-BUILD_GLIBC 2>&1 | tee glibc_log
+BUILD_GLIBC 2>&1 | tee glibc_log &&
 if [ "$GLIBC_FLAG" = "BAD" ]; then
     SPACER
     BOLD
@@ -1427,7 +1409,7 @@ else
 fi
 BUILD_LIBSTDC 2>&1 | tee libstdc_log &&
 BUILD_BINUTILS_PASS2 2>&1 | tee bin_pass2_log &&
-BUILD_GCC_PASS2 2>&1 | tee gcc_pass2_log
+BUILD_GCC_PASS2 2>&1 | tee gcc_pass2_log &&
 if [ "$GCC_FLAG" = "BAD" ]; then
     SPACER
     BOLD

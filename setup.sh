@@ -312,8 +312,9 @@ SETUP_BUILD () {
 
     # Download temporary system build script, assign ownerships to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
-    chown -v igos "$IGos"/build_temporary_system.sh
-    chmod +x "$IGos"/build_temporary_system.sh
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/clean_environment.sh -P "$IGos"
+    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh
+    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -396,6 +397,6 @@ mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 
 # Build temporary system in separate shell as the build user
 cd "$IGos"
-sudo -u igos ./build_temporary_system.sh
+sudo -u igos ./clean_environment.sh
 printf "\n\n\n"
 echo The script would be continuing now
