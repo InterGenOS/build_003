@@ -394,6 +394,7 @@ sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' 
 mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 
 # Build temporary system in separate shell as the build user
+cd "$IGos"
 sudo -u igos ./build_temporary_system.sh
 printf "\n\n\n"
 echo The script would be continuing now
