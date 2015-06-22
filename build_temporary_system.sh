@@ -1439,4 +1439,4 @@ GREEN
 echo "Temporary system build complete"
 printf "\n\n"
 DIVIDER
-exit
+exit 0
