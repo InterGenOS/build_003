@@ -1,5 +1,5 @@
 #!/bin/bash
-# clean_environment.sh
+# enter_chroot.sh
 # -------------------------------------------------------
 # InterGenOS: A Linux from Source Project
 # build: .003
@@ -20,4 +20,4 @@
 # any later version.
 # ------------------
 
-env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash ./build_temporary_system.sh
+chroot "$IGos" /tools/bin/env -i HOME=/root TERM=$TERM PS1='\u:\w\$ ' /tools/bin/bash --login +h

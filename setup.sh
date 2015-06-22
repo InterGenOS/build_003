@@ -313,8 +313,10 @@ SETUP_BUILD () {
     # Download temporary system build script, assign ownerships to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/clean_environment.sh -P "$IGos"
-    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh
-    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system.sh -P "$IGos"
+    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
+    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -326,6 +328,42 @@ SETUP_BUILD () {
     mv tmp.bashrc /home/igos/.bashrc
     chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
     sleep 2
+}
+
+SETUP_CHROOT () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Changing temporary tools direcotry ownership..."
+    printf "\n"
+    WHITE
+    chown -R root:root "$IGos"/tools
+    sleep 1
+    printf "\n"
+    BOLD
+    GREEN
+    echo "Temp tools directory ownership change comlete"
+    sleep 2
+    WHITE
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Preparing Virtual Kernel File Systems..."
+    printf "\n"
+    WHITE
+    mkdir -pv "$IGos"/{dev,proc,sys,run}
+    mknod -m 600 "$IGos"/dev/console c 5 1
+    mknod -m 666 "$IGos"/dev/null c 1 3
+    mount -v --bind /dev "$IGos"/dev
+    mount -vt devpts devpts "$IGos"/dev/pts -o gid=5,mode=620
+    mount -vt proc proc "$IGos"/proc
+    mount -vt sysfs sysfs "$IGos"/sys
+    mount -vt tmpfs tmpfs "$IGos"/run
+    if [ -h "$IGos"/dev/shm ]; then
+      mkdir -pv "$IGos"/$(readlink "$IGos"/dev/shm)
+    fi
 }
 
 ############################
@@ -388,15 +426,82 @@ export IGos LC_ALL IGos_TGT PATH
 igos_bashrc
 chown igos:users /home/igos/.bashrc
 
-mkdir -p /var/log/InterGenOS/BuildLogs
+mkdir -p /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
 chmod 777 /var/log/InterGenOS/*
 
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
-mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
+mv build_log /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs/setup_log_"$TIMESTAMP"
 
 # Build temporary system in separate shell as the build user
 cd "$IGos"
 sudo -u igos ./clean_environment.sh
 printf "\n\n\n"
-echo The script would be continuing now
+
+mkdir -pv "$IGos"/etc
+mkdir -pv "$IGos"/root
+
+# Create /root/.bash_profile
+cat > /mnt/igos/root/.bash_profile << "EndOfRootBashProfile"
+./build_system.sh
+EndOfRootBashProfile
+
+# Create /etc/passwd
+cat > /mnt/igos/etc/passwd << "EndOfEtcPasswd"
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/dev/null:/bin/false
+daemon:x:6:6:Daemon User:/dev/null:/bin/false
+messagebus:x:18:18:D-Bus Message Daemon User:/var/run/dbus:/bin/false
+systemd-bus-proxy:x:72:72:systemd Bus Proxy:/:/bin/false
+systemd-journal-gateway:x:73:73:systemd Journal Gateway:/:/bin/false
+systemd-journal-remote:x:74:74:systemd Journal Remote:/:/bin/false
+systemd-journal-upload:x:75:75:systemd Journal Upload:/:/bin/false
+systemd-network:x:76:76:systemd Network Management:/:/bin/false
+systemd-resolve:x:77:77:systemd Resolver:/:/bin/false
+systemd-timesync:x:78:78:systemd Time Synchronization:/:/bin/false
+nobody:x:99:99:Unprivileged User:/dev/null:/bin/false
+EndOfEtcPasswd
+
+# Create /etc/group
+cat > /mnt/igos/etc/group << "EndOfEtcGroup"
+root:x:0:
+bin:x:1:daemon
+sys:x:2:
+kmem:x:3:
+tape:x:4:
+tty:x:5:
+daemon:x:6:
+floppy:x:7:
+disk:x:8:
+lp:x:9:
+dialout:x:10:
+audio:x:11:
+video:x:12:
+utmp:x:13:
+usb:x:14:
+cdrom:x:15:
+adm:x:16:
+messagebus:x:18:
+systemd-journal:x:23:
+input:x:24:
+mail:x:34:
+systemd-bus-proxy:x:72:
+systemd-journal-gateway:x:73:
+systemd-journal-remote:x:74:
+systemd-journal-upload:x:75:
+systemd-network:x:76:
+systemd-resolve:x:77:
+systemd-timesync:x:78:
+nogroup:x:99:
+users:x:999:
+EndOfEtcGroup
+
+SETUP_CHROOT 2>&1 | tee chroot_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' chroot_log
+mv chroot_log /var/log/InterGenOS/BuildLogs/chroot_log_"$TIMESTAMP"
+
+cd "$IGos"
+sudo -u root ./enter_chroot.sh 2>&1 | sys_build_log
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' sys_build_log
+mv sys_build_log /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
+printf "\n\n\n"
