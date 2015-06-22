@@ -393,13 +393,7 @@ GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
 mv build_log /var/log/InterGenOS/BuildLogs/setup_log_"$TIMESTAMP"
 
-#######################
-##-------------------##
-## END - CORE SCRIPT ##
-##-------------------##
-#######################
-
-# Log into shell for build user
-sudo -l igos /bin/bash build_temporary_system.sh
+# Build temporary system in separate shell as the build user
+sudo -u igos ./build_temporary_system.sh
 printf "\n\n\n"
 echo The script would be continuing now
