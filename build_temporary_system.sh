@@ -26,6 +26,33 @@
 ##---------------------------------------##
 ###########################################
 
+# Capture current needed variables
+U=$USER
+H=$HOME
+D=$DISPLAY
+T=$TERM
+
+# Clear the environment
+for i in $(env | awk -F"=" '{print $1}'); do
+    unset $i
+done
+
+# re-set desired environment variables
+export USER=$U
+export HOME=$H
+export DISPLAY=$D
+export TERM=$T
+
+# Declare additional build variables
+PS1='\u:\w\$ '
+set +h
+umask 022
+IGos=/mnt/igos
+LC_ALL=POSIX
+IGos_TGT=$(uname -m)-igos-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+export IGos LC_ALL IGos_TGT PATH
+
 # Sets a start-point timestamp
 TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 
@@ -1377,16 +1404,6 @@ BUILD_XZ () {
 #########################
 
 cd /mnt/igos/sources
-
-exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
-set +h
-umask 022
-IGos=/mnt/igos
-LC_ALL=POSIX
-IGos_TGT=$(uname -m)-igos-linux-gnu
-PATH=/tools/bin:/bin:/usr/bin
-export IGos LC_ALL IGos_TGT PATH
-
 
 # The actual workhorse
 SET_GCC_AND_LINUX 2>&1 | tee bin_p1log &&
