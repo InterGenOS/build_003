@@ -426,8 +426,8 @@ export IGos LC_ALL IGos_TGT PATH
 igos_bashrc
 chown igos:users /home/igos/.bashrc
 
-mkdir -p /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
-chmod 777 /var/log/InterGenOS/*
+mkdir -pv /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
+chmod -r 777 /var/log/InterGenOS/*
 
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
