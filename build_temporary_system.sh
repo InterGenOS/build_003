@@ -185,6 +185,7 @@ BUILD_BINUTILS_PASS1 () {
     echo "Building binutils-2.25 PASS 1..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###################
     ## Binutils-2.25 ##
@@ -248,6 +249,7 @@ BUILD_GCC_PASS1 () {
     echo "Building gcc-4.9.2 PASS 1..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## Gcc-4.9.2 ##
@@ -319,6 +321,7 @@ BUILD_LINUX_API_HEADERS () {
     echo "Building linux-3.19 API Headers..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ## Updated kernel to 3.19 ###
     #############################
@@ -349,6 +352,7 @@ BUILD_GLIBC () {
     echo "Building glibc-2.21..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ################
     ## Glibc-2.21 ##
@@ -388,7 +392,7 @@ BUILD_GLIBC () {
     GREEN
     echo "stand by, performing glibc sanity checks..."
     WHITE
-    sleep 4
+    sleep 5
 
     ##########################
     ## glibc sanity testing ##
@@ -417,6 +421,7 @@ BUILD_GLIBC () {
         echo "!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
         printf "\n\n\n\n\n"
         WHITE
+        sleep 5
         GLIBC_SANITY=BAD
         exit 1
     else
@@ -424,7 +429,7 @@ BUILD_GLIBC () {
         BOLD
         GREEN
         echo "Compiler and Linker are functioning as expected, continuing build."
-        sleep 4
+        sleep 5
         SPACER
     fi
     DIVIDER
@@ -449,6 +454,7 @@ BUILD_LIBSTDC () {
     echo "Building libstdc++-4.9.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################################
     ##       Libstdc++-4.9.2       ##
@@ -489,6 +495,7 @@ BUILD_BINUTILS_PASS2 () {
     echo "Building binutils-2.25 PASS 2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ####################
     ## Binutils-2.25  ##
@@ -546,6 +553,7 @@ BUILD_GCC_PASS2 () {
     echo "Building gcc-4.9.2 PASS 2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## Gcc-4.9.2 ##
@@ -601,7 +609,7 @@ BUILD_GCC_PASS2 () {
     GREEN
     echo "stand by, performing gcc sanity checks..."
     WHITE
-    sleep 4
+    sleep 5
 
     ##############################
     ## gcc pass2 sanity testing ##
@@ -631,6 +639,7 @@ BUILD_GCC_PASS2 () {
         echo "!!!!!GCC 2nd PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
         printf "\n\n\n\n\n"
         WHITE
+        sleep 5
         GCC_SANITY=BAD
         exit 1
     else
@@ -638,7 +647,7 @@ BUILD_GCC_PASS2 () {
         BOLD
         GREEN
         echo "Compiler and Linker are functioning as expected, continuing build."
-        sleep 4
+        sleep 5
         SPACER
     fi
     DIVIDER
@@ -648,8 +657,8 @@ BUILD_GCC_PASS2 () {
     echo "gcc-4.9.2 completed..."
     SPACER
     WHITE
-    #rm -v dummy.c a.out - leaving in place for testing purposes
-    cd .. #&& rm -rf gcc-4.9.2 gcc-build/ - leaving in place for testing purposes
+    rm -v dummy.c a.out
+    cd .. && rm -rf gcc-4.9.2 gcc-build/
     sleep 5
 }
 
@@ -661,6 +670,7 @@ BUILD_TCL () {
     echo "Building tcl-8.6.3..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## Tcl-8.6.3 ##
@@ -694,6 +704,7 @@ BUILD_EXPECT () {
     echo "Building expect-5.45..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Expect-5.45 ##
@@ -727,6 +738,7 @@ BUILD_DEJAGNU () {
     echo "Building dejagnu-1.5.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###################
     ## DejaGNU-1.5.2 ##
@@ -755,6 +767,7 @@ BUILD_CHECK () {
     echo "Building check-0.9.14..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ##################
     ## Check-0.9.14 ##
@@ -784,6 +797,7 @@ BUILD_NCURSES () {
     echo "Building ncurses-5.9..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Ncurses-5.9 ##
@@ -818,6 +832,7 @@ BUILD_BASH () {
     echo "Building bash-4.3.30..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Bash-4.3.30 ##
@@ -848,6 +863,7 @@ BUILD_BZIP2 () {
     echo "Building bzip2-1.0.6..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Bzip2-1.0.6 ##
@@ -875,6 +891,7 @@ BUILD_COREUTILS () {
     echo "Building coreutils-8.23..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ####################
     ## Coreutils-8.23 ##
@@ -904,6 +921,7 @@ BUILD_DIFFUTILS () {
     echo "Building diffutils-3.3..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###################
     ## Diffutils-3.3 ##
@@ -933,6 +951,7 @@ BUILD_FILE () {
     echo "Building file-5.22..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## File-5.22 ##
@@ -962,15 +981,18 @@ BUILD_FINDUTILS () {
     echo "Building findutils-4.4.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #####################
     ## Findutils-4.4.2 ##
     ## =============== ##
     #####################
 
-    tar xf findutils-4.4.2.tar.gz &&
+    tar xf findutils-4.4.2.src.tar.gz &&
     cd findutils-4.4.2/
-    ./configure --prefix=/tools && make && make install &&
+    ./configure --prefix=/tools &&
+    make &&
+    make install &&
     cd .. && rm -rf findutils-4.4.2
     printf "\n\n"
     BOLD
@@ -989,6 +1011,7 @@ BUILD_GAWK () {
     echo "Building gawk-4.1.1..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ################
     ## Gawk-4.1.1 ##
@@ -1018,6 +1041,7 @@ BUILD_GETTEXT () {
     echo "Building gettext-0.19.4..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ####################
     ## Gettext-0.19.4 ##
@@ -1052,6 +1076,7 @@ BUILD_GREP () {
     echo "Building grep-2.21..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## Grep-2.21 ##
@@ -1081,6 +1106,7 @@ BUILD_GZIP () {
     echo "Building gzip-1.6..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ##############
     ## Gzip-1.6 ##
@@ -1110,6 +1136,7 @@ BUILD_M4 () {
     echo "Building m4-1.4.17..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## M4-1.4.17 ##
@@ -1139,6 +1166,7 @@ BUILD_MAKE () {
     echo "Building make-4.1..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ##############
     ## Make-4.1 ##
@@ -1168,6 +1196,7 @@ BUILD_PATCH () {
     echo "Building patch-2.7.4..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Patch-2.7.4 ##
@@ -1197,6 +1226,7 @@ BUILD_PERL () {
     echo "Building perl-5.20.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Perl-5.20.2 ##
@@ -1228,6 +1258,7 @@ BUILD_SED () {
     echo "Building sed-4.2.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ###############
     ## Sed-4.2.2 ##
@@ -1257,6 +1288,7 @@ BUILD_TAR () {
     echo "Building tar-1.28..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ##############
     ## Tar-1.28 ##
@@ -1286,6 +1318,7 @@ BUILD_TEXINFO () {
     echo "Building texinfo-5.2..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #################
     ## Texinfo-5.2 ##
@@ -1315,6 +1348,7 @@ BUILD_UTIL_LINUX () {
     echo "Building util-linux-2.26..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     #####################
     ## Util-linux-2.26 ##
@@ -1348,6 +1382,7 @@ BUILD_XZ () {
     echo "Building xz-5.2.0..."
     printf "\n\n"
     WHITE
+    sleep 5
 
     ##############
     ## Xz-5.2.0 ##
@@ -1400,6 +1435,7 @@ if [ "$GLIBC_SANITY" = "BAD" ]; then
     echo "Glibc sanity check has failed.  Please review the logs at /var/log/InterGenOS"
     printf "\n\n\n"
     WHITE
+    sleep 5
     exit 1
 fi
 BUILD_LIBSTDC 2>&1 | tee libstdc_log &&
@@ -1412,6 +1448,7 @@ if [ "$GCC_SANITY" = "BAD" ]; then
     echo "GCC sanity check has failed.  Please review the logs at /var/log/InterGenOS"
     printf "\n\n\n"
     WHITE
+    sleep 5
     exit 1
 fi
 BUILD_TCL 2>&1 | tee tcl_log &&
