@@ -214,9 +214,10 @@ SETUP_BUILD () {
     printf "\n\n"
     BOLD
     GREEN
+    sleep 3
     echo "Build directory mount setup complete"
     WHITE
-    sleep 3
+    sleep 2
 
     # Set variables into host system user and root accounts
     clear
@@ -241,8 +242,9 @@ SETUP_BUILD () {
     BOLD
     GREEN
     printf "\n\n"
-    echo "Variable additions complete"
     sleep 3
+    echo "Variable additions complete"
+    sleep 2
     WHITE
 
     # Set up source directory
@@ -258,8 +260,9 @@ SETUP_BUILD () {
     BOLD
     GREEN
     printf "\n\n"
-    echo "Source directory creation complete"
     sleep 3
+    echo "Source directory creation complete"
+    sleep 2
     WHITE
 
     # Download source packages
@@ -274,8 +277,9 @@ SETUP_BUILD () {
     printf "\n"
     BOLD
     GREEN
-    echo "Source retrieval complete..."
     sleep 3
+    echo "Source retrieval complete..."
+    sleep 2
     WHITE
 
     # Move source packages into place
@@ -297,8 +301,9 @@ SETUP_BUILD () {
     printf "\n\n"
     BOLD
     GREEN
-    echo "Source preparation complete"
     sleep 3
+    echo "Source preparation complete"
+    sleep 2
     WHITE
 
     # Create build system user
@@ -315,9 +320,10 @@ SETUP_BUILD () {
     printf "\n\n"
     BOLD
     GREEN
+    sleep 3
     echo "User creation complete"
     WHITE
-    sleep 3
+    sleep 2
 
     # Assign build directory ownership to build system user
     clear
@@ -332,9 +338,10 @@ SETUP_BUILD () {
     printf "\n\n"
     BOLD
     GREEN
+    sleep 3
     echo "Directory ownership assingment complete"
     WHITE
-    sleep 3
+    sleep 2
 
     # Setup igos shell for 'build_temporary_system.sh'
     clear
@@ -367,9 +374,10 @@ SETUP_BUILD () {
     print "\n\n"
     BOLD
     GREEN
+    sleep 3
     echo "Shell variable preparation complete"
     WHITE
-    sleep 5
+    sleep 2
 }
 
 SETUP_CHROOT () {
@@ -385,6 +393,7 @@ SETUP_CHROOT () {
     printf "\n"
     BOLD
     GREEN
+    sleep 3
     echo "Temp tools directory ownership change comlete"
     sleep 2
     WHITE
@@ -409,12 +418,13 @@ SETUP_CHROOT () {
     printf "\n\n"
     BOLD
     GREEN
+    sleep 3
     echo "Virtual kernel file preparation complete"
     print "\n\n\n"
     echo "Entering chroot environment..."
     WHITE
     printf "\n"
-    sleep 3
+    sleep 2
 }
 
 ############################
