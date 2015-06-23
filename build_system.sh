@@ -135,6 +135,20 @@ SPACER () {
 # BEGIN - SYSTEM PACKAGE BUILD FUNCTIONS #
 #----------------------------------------#
 
+CONFIRM_CHROOT () {
+    clear
+    HEADER
+    BOLD
+    GREEN
+    echo "Successfully entered chroot environment"
+    sleep 2
+    printf "\n\n"
+    echo "Continuing build..."
+    printf "\n\n\n"
+    WHITE
+    sleep 2
+}
+
 CREATE_DIRECTORIES () {
 
     clear
@@ -407,6 +421,7 @@ BUILD_GLIBC () {
 ##---------------------##
 #########################
 
+CONFIRM_CHROOT
 CREATE_DIRECTORIES
 CREATE_FILES_AND_SYMLINKS
 SETUP_LOGGING

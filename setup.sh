@@ -211,7 +211,12 @@ SETUP_BUILD () {
     WHITE
     mkdir -pv "$IGos"
     mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
-    sleep 1
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "Build directory mount setup complete"
+    WHITE
+    sleep 3
 
     # Set variables into host system user and root accounts
     clear
@@ -225,13 +230,20 @@ SETUP_BUILD () {
     printf "\n"
     BOLD
     GREEN
-    echo "Setting .bashrc exports..."
+    echo "Adding environment variables to bash initialization files..."
     WHITE
+    sleep 1
     printf "\n\n"
     echo "export IGos=/mnt/igos" >> /home/"$USER"/.bashrc
     echo "export IGos=/mnt/igos" >> /root/.bashrc
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /home/"$USER"/.bash_profile
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
+    BOLD
+    GREEN
+    printf "\n\n"
+    echo "Variable additions complete"
+    sleep 3
+    WHITE
 
     # Set up source directory
     clear
@@ -243,13 +255,19 @@ SETUP_BUILD () {
     WHITE
     mkdir -v "$IGos"/sources
     chmod -v a+wt "$IGos"/sources
+    BOLD
+    GREEN
+    printf "\n\n"
+    echo "Source directory creation complete"
+    sleep 3
+    WHITE
 
     # Download source packages
     clear
     HEADER
     BOLD
     GREEN
-    echo "Fetching sources... (this will take a minute)"
+    echo "Fetching sources... (this will take a minute...)"
     printf "\n\n"
     WHITE
     wget -q https://github.com/InterGenOS/sources_003/archive/master.zip
@@ -257,14 +275,15 @@ SETUP_BUILD () {
     BOLD
     GREEN
     echo "Source retrieval complete..."
-    sleep 2
+    sleep 3
+    WHITE
 
     # Move source packages into place
     clear
     HEADER
     BOLD
     GREEN
-    echo "Moving things into place..."
+    echo "Preparing sources for compilation..."
     sleep 1
     printf "\n\n"
     WHITE
@@ -275,6 +294,12 @@ SETUP_BUILD () {
     rm "$IGos"/sources/README.md
     mkdir -v "$IGos"/tools
     ln -sv "$IGos"/tools /
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "Source preparation complete"
+    sleep 3
+    WHITE
 
     # Create build system user
     clear
@@ -287,7 +312,12 @@ SETUP_BUILD () {
     groupadd igos
     useradd -s /bin/bash -g igos -m -k /dev/null igos
     echo "igos:intergenos" | chpasswd
-    sleep 2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "User creation complete"
+    WHITE
+    sleep 3
 
     # Assign build directory ownership to build system user
     clear
@@ -299,7 +329,12 @@ SETUP_BUILD () {
     WHITE
     chown -v igos "$IGos"/tools
     chown -v igos "$IGos"/sources
-    sleep 2
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "Directory ownership assingment complete"
+    WHITE
+    sleep 3
 
     # Setup igos shell for 'build_temporary_system.sh'
     clear
@@ -326,8 +361,15 @@ SETUP_BUILD () {
 
     # Sets build user .bashrc
     mv tmp.bashrc /home/igos/.bashrc
+
+    # Sets bash file ownership
     chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
-    sleep 2
+    print "\n\n"
+    BOLD
+    GREEN
+    echo "Shell variable preparation complete"
+    WHITE
+    sleep 5
 }
 
 SETUP_CHROOT () {
@@ -364,6 +406,15 @@ SETUP_CHROOT () {
     if [ -h "$IGos"/dev/shm ]; then
       mkdir -pv "$IGos"/$(readlink "$IGos"/dev/shm)
     fi
+    printf "\n\n"
+    BOLD
+    GREEN
+    echo "Virtual kernel file preparation complete"
+    print "\n\n\n"
+    echo "Entering chroot environment..."
+    WHITE
+    printf "\n"
+    sleep 3
 }
 
 ############################
@@ -412,7 +463,6 @@ fi
 cat > tmp.bash_profile << "igos_bash_profile"
 exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
 igos_bash_profile
-chown igos:users /home/igos/.bash_profile
 
 # Sets build user .bashrc, sets temporary system build script to launch on shell login
 cat > tmp.bashrc << "igos_bashrc"
@@ -424,7 +474,6 @@ IGos_TGT=$(uname -m)-igos-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export IGos LC_ALL IGos_TGT PATH
 igos_bashrc
-chown igos:users /home/igos/.bashrc
 
 mkdir -pv /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
 chmod -r 777 /var/log/InterGenOS/*
@@ -447,3 +496,9 @@ sudo -u root ./enter_chroot.sh 2>&1 | tee sys_build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' sys_build_log
 mv sys_build_log /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
 printf "\n\n\n"
+
+#######################
+##-------------------##
+## END - CORE SCRIPT ##
+##-------------------##
+#######################
