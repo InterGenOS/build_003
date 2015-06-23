@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/tools/bin/bash
 # build_system.sh
 # -------------------------------------------------------
 # InterGenOS: A Linux from Source Project
@@ -394,7 +394,7 @@ BUILD_GLIBC () {
     echo "include /etc/ld.so.conf.d/*.conf" >> /etc/ld.so.conf
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
-    mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log_"$TIMESTAMP"
+    mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log
     BOLD
     GREEN
     echo "glibc-2.21 completed..."

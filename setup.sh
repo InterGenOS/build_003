@@ -358,6 +358,8 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/clean_environment.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bash_profile -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bashrc -P "$IGos"
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
 
@@ -365,13 +367,14 @@ SETUP_BUILD () {
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
 
     # Sets build user bash.profile
-    mv tmp.bash_profile /home/igos/.bash_profile
+    mv home.igos.bash_profile /home/igos/.bash_profile
 
     # Sets build user .bashrc
-    mv tmp.bashrc /home/igos/.bashrc
+    mv home.igos.bashrc /home/igos/.bashrc
 
     # Sets bash file ownership
     chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
+
     print "\n\n"
     BOLD
     GREEN
@@ -470,24 +473,8 @@ fi
 ##---------------------##
 #########################
 
-# Sets build user bash.profile
-cat > tmp.bash_profile << "igos_bash_profile"
-exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
-igos_bash_profile
-
-# Sets build user .bashrc, sets temporary system build script to launch on shell login
-cat > tmp.bashrc << "igos_bashrc"
-set +h
-umask 022
-IGos=/mnt/igos
-LC_ALL=POSIX
-IGos_TGT=$(uname -m)-igos-linux-gnu
-PATH=/tools/bin:/bin:/usr/bin
-export IGos LC_ALL IGos_TGT PATH
-igos_bashrc
-
 mkdir -pv /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
-chmod -r 777 /var/log/InterGenOS/*
+chmod -R 777 /var/log/InterGenOS
 
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
