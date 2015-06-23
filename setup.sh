@@ -375,7 +375,7 @@ SETUP_BUILD () {
     # Sets bash file ownership
     chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
 
-    print "\n\n"
+    printf "\n\n"
     BOLD
     GREEN
     sleep 3
