@@ -20,4 +20,5 @@
 # any later version.
 # ------------------
 
-chroot /mnt/igos /tools/bin/env -i HOME=/root TERM=$TERM PS1='\u:\w\$ ' /tools/bin/bash -c ./build_system.sh
+chroot /mnt/igos /tools/bin/env -i HOME=/root TERM=$TERM PS1='\u:\w\$ ' /tools/bin/bash -c ./build_system.sh &&
+exit 0

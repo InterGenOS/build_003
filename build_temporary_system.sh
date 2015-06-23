@@ -1504,5 +1504,5 @@ GREEN
 echo "Temporary system build complete"
 printf "\n\n"
 DIVIDER
-sleep 10
+sleep 5
 exit 0
