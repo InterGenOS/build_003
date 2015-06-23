@@ -404,7 +404,7 @@ BUILD_GLIBC () {
     ## The following section will kill the build if the Sanity Check fails:     ##
     ## ===================================================================      ##
     ##############################################################################
-    GLIBC_FLAG=GOOD
+
     echo 'main(){}' > dummy.c
     $IGos_TGT-gcc dummy.c
 
@@ -417,7 +417,7 @@ BUILD_GLIBC () {
         echo "!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
         printf "\n\n\n\n\n"
         WHITE
-        GLIBC_FLAG=BAD
+        GLIBC_SANITY=BAD
         exit 1
     else
         SPACER
@@ -618,7 +618,7 @@ BUILD_GCC_PASS2 () {
     ## ===================================================================      ##
     ##############################################################################
 
-    GCC_FLAG=GOOD
+
     echo 'main(){}' > dummy.c
     cc dummy.c
 
@@ -631,7 +631,7 @@ BUILD_GCC_PASS2 () {
         echo "!!!!!GCC 2nd PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
         printf "\n\n\n\n\n"
         WHITE
-        GCC_FLAG=BAD
+        GCC_SANITY=BAD
         exit 1
     else
         SPACER
@@ -648,8 +648,8 @@ BUILD_GCC_PASS2 () {
     echo "gcc-4.9.2 completed..."
     SPACER
     WHITE
-    rm -v dummy.c a.out
-    cd .. && rm -rf gcc-4.9.2 gcc-build/
+    #rm -v dummy.c a.out - leaving in place for testing purposes
+    cd .. #&& rm -rf gcc-4.9.2 gcc-build/ - leaving in place for testing purposes
     sleep 5
 }
 
@@ -1393,7 +1393,7 @@ BUILD_BINUTILS_PASS1 2>&1 | tee bin_p2log &&
 BUILD_GCC_PASS1 2>&1 | tee gcc_pass1_log &&
 BUILD_LINUX_API_HEADERS 2>&1 | tee linux_api_log &&
 BUILD_GLIBC 2>&1 | tee glibc_log &&
-if [ "$GLIBC_FLAG" = "BAD" ]; then
+if [ "$GLIBC_SANITY" = "BAD" ]; then
     SPACER
     BOLD
     RED
@@ -1401,16 +1401,11 @@ if [ "$GLIBC_FLAG" = "BAD" ]; then
     printf "\n\n\n"
     WHITE
     exit 1
-else
-    printf "\n\n\n"
-    WHITE
-    echo "continuing build..."
-    printf "\n\n\n"
 fi
 BUILD_LIBSTDC 2>&1 | tee libstdc_log &&
 BUILD_BINUTILS_PASS2 2>&1 | tee bin_pass2_log &&
 BUILD_GCC_PASS2 2>&1 | tee gcc_pass2_log &&
-if [ "$GCC_FLAG" = "BAD" ]; then
+if [ "$GCC_SANITY" = "BAD" ]; then
     SPACER
     BOLD
     RED
@@ -1418,11 +1413,6 @@ if [ "$GCC_FLAG" = "BAD" ]; then
     printf "\n\n\n"
     WHITE
     exit 1
-else
-    printf "\n\n\n"
-    WHITE
-    echo "continuing build..."
-    printf "\n\n\n"
 fi
 BUILD_TCL 2>&1 | tee tcl_log &&
 BUILD_EXPECT 2>&1 | tee expect_log &&
