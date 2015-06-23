@@ -50,38 +50,37 @@ export NUMBER_CHECK='^[0-9]+$'
 
 # Colors trailing text Red
 RED () {
-    tput setaf 1
+    $(echo -e "\033[1;31m")
 }
 
 # Colors trailing text Green
 GREEN () {
-    tput setaf 2
+    $(echo -e "\033[1;32m")
 }
 
 # Colors trailing text Yellow
 YELLOW () {
-    tput setaf 3
+    $(echo -e "\033[1;33m")
 }
 
 # Colors trailing text Blue
 BLUE () {
-    tput setaf 4
+    $(echo -e "\033[1;34m")
 }
 
 # Prints any color in bold
-BOLD () {
-    tput bold
+BOLD_WHITE () {
+    $(echo -e "\033[1;37m")
 }
 
 # Clears any preceding text color declarations - including bold
 WHITE () {
-    tput sgr0
+    $(echo -e "\033[0m")
 }
 
 # Simple divider
 DIVIDER () {
     printf "\n"
-    BOLD
     GREEN
     echo "-----------------------------------------------------------"
     printf "\n"
@@ -91,35 +90,20 @@ DIVIDER () {
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
     echo
-    BOLD
     BLUE
     echo "____________________________________________________________________________"
     printf "\n"
     printf "    InterGen"
-    WHITE
-    BOLD
+    BOLD_WHITE
     printf "OS"
-    WHITE
     GREEN
     printf " build"
     WHITE
     echo ".003"
-    BOLD
     BLUE
     echo "____________________________________________________________________________"
     WHITE
     printf "\n\n"
-}
-
-# Clears $ amount of lines when called
-CLEARLINE () {
-# To use, set CLINES=<$#> before function if you need to clear more than 1 line
-    if [ -z "$CLINES" ]; then
-        tput cuu 1 && tput el
-    else
-        tput cuu "$CLINES" && tput el
-        unset CLINES
-    fi
 }
 
 # Creates a 15 line gap for easier log review
@@ -136,29 +120,23 @@ SPACER () {
 #----------------------------------------#
 
 CONFIRM_CHROOT () {
-    clear
+    SPACER
     HEADER
-    BOLD
     GREEN
     echo "Successfully entered chroot environment"
-    sleep 2
     printf "\n\n"
     echo "Continuing build..."
     printf "\n\n\n"
     WHITE
-    sleep 2
 }
 
 CREATE_DIRECTORIES () {
 
-    clear
-    HEADER
-    BOLD
+    SPACER
     GREEN
     echo "Creating system directories..."
     printf "\n"
     WHITE
-    sleep 5
     mkdir -pv /{bin,boot,etc/{opt,sysconfig},home,lib/firmware,mnt,opt}
     mkdir -pv /{media/{floppy,cdrom},sbin,srv,var}
     install -dv -m 0750 /root
@@ -180,24 +158,19 @@ CREATE_DIRECTORIES () {
     ln -sv /run/lock /var/lock
     mkdir -pv /var/{opt,cache,lib/{color,misc,locate},local}
     printf "\n"
-    BOLD
     GREEN
     echo "System directories created successfully"
     WHITE
-    sleep 3
 
 }
 
 CREATE_FILES_AND_SYMLINKS () {
 
-    clear
-    HEADER
-    BOLD
+    SPACER
     GREEN
     echo "Creating essential files and symlinks..."
     printf "\n"
     WHITE
-    sleep 5
     ln -sv /tools/bin/{bash,cat,echo,pwd,stty} /bin
     ln -sv /tools/bin/perl /usr/bin
     ln -sv /tools/lib/libgcc_s.so{,.1} /usr/lib
@@ -211,40 +184,33 @@ CREATE_FILES_AND_SYMLINKS () {
     chmod -v 600  /var/log/btmp
     mkdir -p /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
     printf "\n"
-    BOLD
     GREEN
     echo "System files and symlinks created successfully"
     WHITE
-    sleep 3
 }
 
 SETUP_LOGGING () {
 
-    clear
-    HEADER
-    BOLD
+    SPACER
     GREEN
     echo "Creating log directories..."
     printf "\n"
     WHITE
-    sleep 5
+    SPACER
     touch /var/log/{btmp,lastlog,wtmp}
     chgrp -v utmp /var/log/lastlog
     chmod -v 664  /var/log/lastlog
     chmod -v 600  /var/log/btmp
     mkdir -pv /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
     printf "\n"
-    BOLD
     GREEN
     echo "Log directories created successfully"
     WHITE
-    sleep 3
+
 }
 
 BUILD_LINUX () {
-    clear
-    HEADER
-    BOLD
+    SPACER
     GREEN
     echo "Building linux-3.19..."
     printf "\n\n"
@@ -264,18 +230,15 @@ BUILD_LINUX () {
     cd ..
     # DO NOT REMOVE LINUX SOURCE DIRECTORY - NEEDED FOR ETHERNET DRIVER COMPILATION
     printf "\n\n"
-    BOLD
     GREEN
     echo "linux-3.19 completed..."
     SPACER
     WHITE
-    sleep 5
+
 }
 
 BUILD_MAN_PAGES () {
-    clear
-    HEADER
-    BOLD
+    SPACER
     GREEN
     echo "Building man-pages-3.79..."
     printf "\n\n"
@@ -291,18 +254,15 @@ BUILD_MAN_PAGES () {
     make install &&
     cd .. && rm -rf man-pages-3.79 &&
     printf "\n\n"
-    BOLD
     GREEN
     echo "linux-3.19 completed..."
     SPACER
     WHITE
-    sleep 5
 }
 
 BUILD_GLIBC () {
-    clear
-    HEADER
-    BOLD
+
+    SPACER
     GREEN
     echo "Building glibc-2.21..."
     printf "\n\n"
@@ -395,12 +355,10 @@ BUILD_GLIBC () {
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
     mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log
-    BOLD
     GREEN
     echo "glibc-2.21 completed..."
     SPACER
     WHITE
-    sleep 5
 }
 
 
@@ -483,7 +441,6 @@ BUILD_MAN_PAGES
 BUILD_GLIBC
 
 SPACER
-BOLD
 GREEN
 echo "WORKING AS EXPECTED"
 WHITE
