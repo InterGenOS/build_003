@@ -20,5 +20,5 @@
 # any later version.
 # ------------------
 
-chroot "$IGos" /tools/bin/env -i HOME=/root TERM=$TERM PS1='\u:\w\$ ' /tools/bin/bash --login +h &&
+chroot "$IGos" /tools/bin/env -i HOME=/root TERM=$TERM PS1='\u:\w\$ ' /tools/bin/bash -c "su - -c ./build_system.sh" &&
 exit 0
