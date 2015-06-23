@@ -474,7 +474,7 @@ fi
 #########################
 
 mkdir -pv /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
-chmod -R 777 /var/log/InterGenOS
+chmod 777 /var/log/InterGenOS /var/log/InterGenOS/BuildLogs /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
 
 GET_PARTITION 2>&1 | tee build_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
