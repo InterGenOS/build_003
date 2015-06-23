@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # enter_chroot.sh
 # -------------------------------------------------------
 # InterGenOS: A Linux from Source Project

@@ -421,7 +421,7 @@ SETUP_CHROOT () {
     GREEN
     sleep 3
     echo "Virtual kernel file preparation complete"
-    print "\n\n\n"
+    printf "\n\n\n"
     echo "Entering chroot environment..."
     WHITE
     printf "\n"
