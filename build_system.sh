@@ -26,12 +26,6 @@
 ##---------------------------------------##
 ###########################################
 
-# Sets a start-point timestamp
-TIMESTAMP="$(date +"%m-%d-%Y_%T")"
-
-# Regex check for numbers as choices
-export NUMBER_CHECK='^[0-9]+$'
-
 #########################################
 ##-------------------------------------##
 ## END - INITIAL VARIABLE DECLARATIONS ##
@@ -48,61 +42,31 @@ export NUMBER_CHECK='^[0-9]+$'
 # BEGIN - DISPLAY LAYOUT FUNCTIONS #
 #----------------------------------#
 
-# Colors trailing text Red
-RED () {
-    $(echo -e "\033[1;31m")
-}
-
-# Colors trailing text Green
-GREEN () {
-    $(echo -e "\033[1;32m")
-}
-
-# Colors trailing text Yellow
-YELLOW () {
-    $(echo -e "\033[1;33m")
-}
-
-# Colors trailing text Blue
-BLUE () {
-    $(echo -e "\033[1;34m")
-}
-
-# Prints any color in bold
-BOLD_WHITE () {
-    $(echo -e "\033[1;37m")
-}
-
-# Clears any preceding text color declarations - including bold
-WHITE () {
-    $(echo -e "\033[0m")
-}
-
 # Simple divider
 DIVIDER () {
     printf "\n"
-    GREEN
+
     echo "-----------------------------------------------------------"
     printf "\n"
-    WHITE
+
 }
 
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
     echo
-    BLUE
+
     echo "____________________________________________________________________________"
     printf "\n"
     printf "    InterGen"
-    BOLD_WHITE
+
     printf "OS"
-    GREEN
+
     printf " build"
-    WHITE
+
     echo ".003"
-    BLUE
+
     echo "____________________________________________________________________________"
-    WHITE
+
     printf "\n\n"
 }
 
@@ -122,21 +86,21 @@ SPACER () {
 CONFIRM_CHROOT () {
     SPACER
     HEADER
-    GREEN
+
     echo "Successfully entered chroot environment"
     printf "\n\n"
     echo "Continuing build..."
     printf "\n\n\n"
-    WHITE
+
 }
 
 CREATE_DIRECTORIES () {
 
     SPACER
-    GREEN
+
     echo "Creating system directories..."
     printf "\n"
-    WHITE
+
     mkdir -pv /{bin,boot,etc/{opt,sysconfig},home,lib/firmware,mnt,opt}
     mkdir -pv /{media/{floppy,cdrom},sbin,srv,var}
     install -dv -m 0750 /root
@@ -158,19 +122,19 @@ CREATE_DIRECTORIES () {
     ln -sv /run/lock /var/lock
     mkdir -pv /var/{opt,cache,lib/{color,misc,locate},local}
     printf "\n"
-    GREEN
+
     echo "System directories created successfully"
-    WHITE
+
 
 }
 
 CREATE_FILES_AND_SYMLINKS () {
 
     SPACER
-    GREEN
+
     echo "Creating essential files and symlinks..."
     printf "\n"
-    WHITE
+
     ln -sv /tools/bin/{bash,cat,echo,pwd,stty} /bin
     ln -sv /tools/bin/perl /usr/bin
     ln -sv /tools/lib/libgcc_s.so{,.1} /usr/lib
@@ -184,18 +148,18 @@ CREATE_FILES_AND_SYMLINKS () {
     chmod -v 600  /var/log/btmp
     mkdir -p /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
     printf "\n"
-    GREEN
+
     echo "System files and symlinks created successfully"
-    WHITE
+
 }
 
 SETUP_LOGGING () {
 
     SPACER
-    GREEN
+
     echo "Creating log directories..."
     printf "\n"
-    WHITE
+
     SPACER
     touch /var/log/{btmp,lastlog,wtmp}
     chgrp -v utmp /var/log/lastlog
@@ -203,18 +167,18 @@ SETUP_LOGGING () {
     chmod -v 600  /var/log/btmp
     mkdir -pv /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
     printf "\n"
-    GREEN
+
     echo "Log directories created successfully"
-    WHITE
+
 
 }
 
 BUILD_LINUX () {
     SPACER
-    GREEN
+
     echo "Building linux-3.19..."
     printf "\n\n"
-    WHITE
+
 
     ################
     ## Linux-3.19 ##
@@ -230,19 +194,19 @@ BUILD_LINUX () {
     cd ..
     # DO NOT REMOVE LINUX SOURCE DIRECTORY - NEEDED FOR ETHERNET DRIVER COMPILATION
     printf "\n\n"
-    GREEN
+
     echo "linux-3.19 completed..."
     SPACER
-    WHITE
+
 
 }
 
 BUILD_MAN_PAGES () {
     SPACER
-    GREEN
+
     echo "Building man-pages-3.79..."
     printf "\n\n"
-    WHITE
+
 
     ####################
     ## Man-Pages-3.79 ##
@@ -254,19 +218,19 @@ BUILD_MAN_PAGES () {
     make install &&
     cd .. && rm -rf man-pages-3.79 &&
     printf "\n\n"
-    GREEN
+
     echo "linux-3.19 completed..."
     SPACER
-    WHITE
+
 }
 
 BUILD_GLIBC () {
 
     SPACER
-    GREEN
+
     echo "Building glibc-2.21..."
     printf "\n\n"
-    WHITE
+
 
     ################
     ## Glibc-2.21 ##
@@ -355,10 +319,10 @@ BUILD_GLIBC () {
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
     mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log
-    GREEN
+
     echo "glibc-2.21 completed..."
     SPACER
-    WHITE
+
 }
 
 
@@ -441,8 +405,8 @@ BUILD_MAN_PAGES
 BUILD_GLIBC
 
 SPACER
-GREEN
+
 echo "WORKING AS EXPECTED"
-WHITE
+
 printf "\n\n\n"
 exit 0
