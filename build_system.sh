@@ -26,6 +26,10 @@
 ##---------------------------------------##
 ###########################################
 
+set +h
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin
+export PATH
+
 #########################################
 ##-------------------------------------##
 ## END - INITIAL VARIABLE DECLARATIONS ##
@@ -137,11 +141,6 @@ CREATE_FILES_AND_SYMLINKS () {
     sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la
     ln -sv bash /bin/sh
     ln -sv /proc/self/mounts /etc/mtab
-    touch /var/log/{btmp,lastlog,wtmp}
-    chgrp -v utmp /var/log/lastlog
-    chmod -v 664  /var/log/lastlog
-    chmod -v 600  /var/log/btmp
-    mkdir -p /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
     printf "\n\n"
     sleep 2
     echo -e "\e[1m\e[32mSystem files and symlinks created successfully\e[0m"
@@ -343,7 +342,6 @@ BUILD_GLIBC () {
 CONFIRM_CHROOT
 CREATE_DIRECTORIES
 CREATE_FILES_AND_SYMLINKS
-SETUP_LOGGING
 
 # Create /etc/passwd
 cat > /etc/passwd << "EndOfEtcPasswd"
@@ -394,6 +392,8 @@ systemd-timesync:x:78:
 nogroup:x:99:
 users:x:999:
 EndOfEtcGroup
+
+SETUP_LOGGING
 
 cd /sources
 
