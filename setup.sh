@@ -138,7 +138,7 @@ GET_PARTITION () {
     printf "\n\n"
 
     # Confirm target build partition
-    echo -en "Build \e[1m\e[34mInterGEN\e[37mOS \e[0min \e[1m\e[32m$TARGET_PARTITION\e[0m, correct \e[1m\e[37m(y/N)\e[0m? "
+    echo -en "    Build \e[1m\e[34mInterGEN\e[37mOS \e[0min \e[1m\e[32m$TARGET_PARTITION\e[0m, correct \e[1m\e[37m(y/N)\e[0m? "
     read TARGET_CONFIRMATION
     printf "\n\n"
     if [ "$TARGET_CONFIRMATION" = "Y" ] || [ "$TARGET_CONFIRMATION" = "y" ] || [ "$TARGET_CONFIRMATION" = "Yes" ] || [ "$TARGET_CONFIRMATION" = "yes" ]; then
