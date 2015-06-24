@@ -293,7 +293,7 @@ BUILD_GLIBC () {
     echo "rpc: files" >> /etc/nsswitch.conf
     echo " " >> /etc/nsswitch.conf
     echo "# End /etc/nsswitch.conf" >> /etc/nsswitch.conf
-    tar -xf ../tzdata2015a.tar.gz
+    tar -xf ../tzdata2015a.src.tar.gz
     mv tzdata2015a/* .
     ZONEINFO=/usr/share/zoneinfo
     mkdir -pv $ZONEINFO/{posix,right}
