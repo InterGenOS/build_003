@@ -212,10 +212,11 @@ BUILD_MAN_PAGES () {
     tar xf man-pages-3.79.src.tar.gz &&
     cd man-pages-3.79
     make install &&
-    cd .. && rm -rf man-pages-3.79 &&
+    cd .. &&
+    rm -rf man-pages-3.79 &&
     printf "\n\n"
     sleep 3
-    echo -e "\e[1m\e[32mlinux-3.19 completed...\e[0m"
+    echo -e "\e[1m\e[32mman-pages-3.79 completed...\e[0m"
     sleep 2
 
 }
