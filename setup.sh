@@ -262,7 +262,7 @@ SETUP_CHROOT () {
 
     clear
     HEADER
-    echo -e "\e[32m\e[1mChanging temporary tools direcotry ownership...\e[0m"
+    echo -e "\e[32m\e[1mChanging temporary tools directory ownership...\e[0m"
     printf "\n"
     chown -R root:root "$IGos"/tools
     sleep 1

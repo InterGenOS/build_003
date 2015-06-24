@@ -26,9 +26,13 @@
 ##---------------------------------------##
 ###########################################
 
+# Set environment variables
 set +h
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin
 export PATH
+
+# Sets a start-point timestamp
+TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 
 #########################################
 ##-------------------------------------##
@@ -248,7 +252,7 @@ BUILD_GLIBC () {
         --enable-kernel=2.6.32 \
         --enable-obsolete-rpc &&
     make &&
-    make check 2>&1 | tee glibc_make-check_log
+    make check 2>&1 | tee glibc_mkck_log
     touch /etc/ld.so.conf
     make install &&
     cp -v ../glibc-2.21/nscd/nscd.conf /etc/nscd.conf
@@ -315,12 +319,275 @@ BUILD_GLIBC () {
     echo "include /etc/ld.so.conf.d/*.conf" >> /etc/ld.so.conf
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
-    mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log
+    mv glibc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
     sleep 3
     echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
     sleep 2
 
 }
+
+TOOLCHAIN_TEST1 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #1\e[0m"
+    printf "\n\n"
+    sleep 3
+    mv -v /tools/bin/{ld,ld-old}
+    mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}
+    mv -v /tools/bin/{ld-new,ld}
+    ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld
+    gcc -dumpspecs | sed -e 's@/tools@@g'                   \
+        -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
+        -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \
+        `dirname $(gcc --print-libgcc-file-name)`/specs
+    echo 'main(){}' > dummy.c
+    cc dummy.c -v -Wl,--verbose &> dummy.log
+    Expected_TEST1="Requestingprograminterpreter/lib64/ld-linux-x86-64.so.2"
+    Actual_TEST1="$(readelf -l a.out | grep ': /lib' | sed -e 's/://g' -e 's/\[//g' -e 's/\]//g' | awk '{print $1$2$3$4}')"
+    if [ "$Expected_TEST1" != "$Actual_TEST1" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 1 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1 \e[1m\e[32mpassed, preparing TEST 2...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+
+}
+
+TOOLCHAIN_TEST2 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #2\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST2="$(cat tlchn_test2.txt)"
+    Actual_TEST2="$(grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log)"
+    if [ "$Expected_TEST2" != "$Actual_TEST2" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 2 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2 \e[1m\e[32mpassed, preparing TEST 3...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_test2.txt
+}
+
+TOOLCHAIN_TEST3 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #3\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST3="/usr/include"
+    Actual_TEST3="$(grep -B1 '^ /usr/include' dummy.log | grep usr | awk '{print $1}')"
+    if [ "$Expected_TEST3" != "$Actual_TEST3" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 3 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3 \e[1m\e[32mpassed, preparing TEST 4...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+
+}
+
+TOOLCHAIN_TEST4 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #4\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST4="$(cat tlchn_test4.txt)"
+    Actual_TEST4="$(grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g')"
+    if [ "$Expected_TEST4" != "$Actual_TEST4" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 4 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4 \e[1m\e[32mpassed, preparing TEST 5...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_test4.txt
+
+}
+
+TOOLCHAIN_TEST5 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #5\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST5="succeeded"
+    Actual_TEST5="$(grep "/lib.*/libc.so.6 " dummy.log | awk '{print $5}')"
+    if [ "$Expected_TEST5" != "$Actual_TEST5" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 5 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5 \e[1m\e[32mpassed, preparing TEST 6...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+
+}
+
+TOOLCHAIN_TEST6 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #4\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST6="found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2"
+    Actual_TEST6="$(grep found dummy.log)"
+    if [ "$Expected_TEST6" != "$Actual_TEST6" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 6 FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6 \e[1m\e[32mpassed, continuing build...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm -v dummy.c a.out dummy.log
+    cd ..
+    rm -rf glibc-2.21 glibc-build/
+
+}
+
+BUILD_ZLIB () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding glibc-2.21...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ################
+    ## Zlib-1.2.8 ##
+    ## ========== ##
+    ################
+
+    tar xf zlib-1.2.8.src.tar.gz &&
+    cd zlib-1.2.8
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /zlib-mkck-log
+    make install &&
+    mv -v /usr/lib/libz.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
+    cd .. && rm -rf zlib-1.2.8
+    printf "\n\n"
+    mv zlib_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
+    sleep 3
+    echo -e "\e[1m\e[32mzlib-1.2.8 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_FILE () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding file-5.22...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## File-5.22 ##
+    ## ========= ##
+    ###############
+
+    tar xf file-5.22.src.tar.gz &&
+    cd file-5.22
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /file-mkck-log
+    make install &&
+    cd .. && rm -rf file-5.22
+    printf "\n\n"
+    mv file_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/file_mkck_log_"$TIMESTAMP"
+    sleep 3
+    echo -e "\e[1m\e[32mfile-5.22 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_BINUTILS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding file-5.22...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Binutils-2.25 ##
+    ## ============= ##
+    ###################
+
+    tar xf binutils-2.25.src.tar.gz &&
+    cd binutils-2.25
+    mkdir -v ../binutils-build
+    cd ../binutils-build
+    ../binutils-2.25/configure  \
+        --prefix=/usr           \
+        --enable-shared         \
+        --disable-werror &&
+    make tooldir=/usr &&
+    make -k check 2>&1 | tee /binutils-mkck-log
+    make tooldir=/usr install &&
+    cd ..
+    rm -rf binutils-2.25 binutils-build/
+    printf "\n\n"
+    mv binutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
+    sleep 3
+    echo -e "\e[1m\e[32mbinutils-2.25 completed...\e[0m"
+    sleep 2
+
+}
+
 
 
 
@@ -401,6 +668,32 @@ cd /sources
 BUILD_LINUX
 BUILD_MAN_PAGES
 BUILD_GLIBC
+TOOLCHAIN_TEST1
+
+cat > tlchn_test2.txt << "TEST2Data"
+/usr/lib/../lib64/crt1.o succeeded
+/usr/lib/../lib64/crti.o succeeded
+/usr/lib/../lib64/crtn.o succeeded
+TEST2Data
+
+TOOLCHAIN_TEST2
+TOOLCHAIN_TEST3
+
+cat > tlchn_test4.txt << "TEST4Data"
+SEARCH_DIR("=/tools/x86_64-unknown-linux-gnu/lib64")
+SEARCH_DIR("/usr/lib")
+SEARCH_DIR("/lib")
+SEARCH_DIR("=/tools/x86_64-unknown-linux-gnu/lib");
+TEST4Data
+
+TOOLCHAIN_TEST4
+TOOLCHAIN_TEST5
+TOOLCHAIN_TEST6
+BUILD_ZLIB
+BUILD_FILE
+BUILD_BINUTILS
+
+
 
 SPACER
 echo -e "\e[1m\e[32mWORKING AS EXPECTED\e[0m"
