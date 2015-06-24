@@ -49,21 +49,21 @@ export PATH
 # Simple divider
 DIVIDER () {
 
-    printf "\n"
+    printf "\n\n"
     echo -e "\e[32m\e[1m-----------------------------------------------------------\e[0m"
-    printf "\n"
+    printf "\n\n"
 
 }
 
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
 
-    printf "\n\n"
+    printf "\n"
     echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
     printf "\n"
     echo -e "\e[34m\e[1m    InterGen\e[37mOS \e[32mbuild\e[0m.003"
     echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
-    printf "\n\n"
+    printf "\n\n\n"
 
 }
 

@@ -92,35 +92,23 @@ WHITE () {
 
 # Simple divider
 DIVIDER () {
-    printf "\n"
-    BOLD
-    GREEN
-    echo "-----------------------------------------------------------"
-    printf "\n"
-    WHITE
+
+    printf "\n\n"
+    echo -e "\e[32m\e[1m-----------------------------------------------------------\e[0m"
+    printf "\n\n"
+
 }
 
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
-    echo
-    BOLD
-    BLUE
-    echo "____________________________________________________________________________"
+
     printf "\n"
-    printf "    InterGen"
-    WHITE
-    BOLD
-    printf "OS"
-    WHITE
-    GREEN
-    printf " build"
-    WHITE
-    echo ".003"
-    BOLD
-    BLUE
-    echo "____________________________________________________________________________"
-    WHITE
-    printf "\n\n"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n"
+    echo -e "\e[34m\e[1m    InterGen\e[37mOS \e[32mbuild\e[0m.003"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n\n\n"
+
 }
 
 # Clears $ amount of lines when called

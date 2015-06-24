@@ -83,35 +83,23 @@ WHITE () {
 
 # Simple divider
 DIVIDER () {
-    printf "\n"
-    BOLD
-    GREEN
-    echo "-----------------------------------------------------------"
-    printf "\n"
-    WHITE
+
+    printf "\n\n"
+    echo -e "\e[32m\e[1m-----------------------------------------------------------\e[0m"
+    printf "\n\n"
+
 }
 
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
-    echo
-    BOLD
-    BLUE
-    echo "____________________________________________________________________________"
+
     printf "\n"
-    printf "    InterGen"
-    WHITE
-    BOLD
-    printf "OS"
-    WHITE
-    GREEN
-    printf " build"
-    WHITE
-    echo ".003"
-    BOLD
-    BLUE
-    echo "____________________________________________________________________________"
-    WHITE
-    printf "\n\n"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n"
+    echo -e "\e[34m\e[1m    InterGen\e[37mOS \e[32mbuild\e[0m.003"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n\n\n"
+
 }
 
 # Clears $ amount of lines when called
@@ -133,15 +121,7 @@ GET_PARTITION () {
     clear
     HEADER
     sleep 1
-    printf "Select the partition to build "
-    BOLD
-    BLUE
-    printf "InterGen"
-    WHITE
-    BOLD
-    printf "OS"
-    WHITE
-    echo " in: "
+    echo -e "Select the partition to build \e[1m\e[34mInterGen\e[37mOS \e[0min:"
     printf "\n"
 
     # Create build partition selection list
@@ -150,17 +130,7 @@ GET_PARTITION () {
     DIVIDER
     cat partitionlist
     DIVIDER
-    BOLD
-    GREEN
-    printf "["
-    WHITE
-    BOLD
-    printf "enter selection"
-    BOLD
-    GREEN
-    printf "]"
-    WHITE
-    echo -n ": "
+    echo -en "\e[1m\e[32m[ \e[37menter selection \e[32m]\e[0m: "
     read PARTITION_CHOICE
 
     # Read target partition from build partition selection
@@ -168,30 +138,14 @@ GET_PARTITION () {
     printf "\n\n"
 
     # Confirm target build partition
-    printf "   Build "
-    BOLD
-    BLUE
-    printf "InterGen"
-    WHITE
-    BOLD
-    printf "OS"
-    WHITE
-    printf " in %s" "$TARGET_PARTITION"
-    printf ", correct "
-    BOLD
-    printf "(y/N)"
-    WHITE
-    echo -n "? "
+    echo -en "Build \e[1m\e[34mInterGEN\e[37mOS \e[0min \e[1m\e[32m$TARGET_PARTITION\e[0m, correct \e[1m\e[37m(y/N)\e[0m? "
     read TARGET_CONFIRMATION
     printf "\n\n"
     if [ "$TARGET_CONFIRMATION" = "Y" ] || [ "$TARGET_CONFIRMATION" = "y" ] || [ "$TARGET_CONFIRMATION" = "Yes" ] || [ "$TARGET_CONFIRMATION" = "yes" ]; then
         sleep 1
         SETUP_BUILD
     else
-        BOLD
-        RED
-        echo "   Build cancelled by user"
-        WHITE
+        echo -e "   \e[1m\e[31mBuild cancelled by user\e[0m"
         printf "\n\n"
         echo "    (exiting...)"
         printf "\n\n\n"
