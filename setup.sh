@@ -51,36 +51,6 @@ export IGos=/mnt/igos
 # BEGIN - DISPLAY LAYOUT FUNCTIONS #
 #----------------------------------#
 
-# Colors trailing text Red
-RED () {
-    tput setaf 1
-}
-
-# Colors trailing text Green
-GREEN () {
-    tput setaf 2
-}
-
-# Colors trailing text Yellow
-YELLOW () {
-    tput setaf 3
-}
-
-# Colors trailing text Blue
-BLUE () {
-    tput setaf 4
-}
-
-# Prints any color in bold
-BOLD () {
-    tput bold
-}
-
-# Clears any preceding text color declarations - including bold
-WHITE () {
-    tput sgr0
-}
-
 # Simple divider
 DIVIDER () {
 
@@ -154,97 +124,67 @@ GET_PARTITION () {
 }
 
 SETUP_BUILD () {
+
     rm partitions partitionlist
     # Mount the build directory
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Setting up build directory mount..."
+    echo -e "\e[32m\e[1mSetting up build directory mount...\e[0m"
     printf "\n\n"
-    WHITE
     mkdir -pv "$IGos"
     mount -v -t ext4 /dev/"$TARGET_PARTITION" "$IGos"
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Build directory mount setup complete"
-    WHITE
+    echo -e "\e[32m\e[1mBuild directory mount setup complete\e[0m"
     sleep 2
 
     # Set variables into host system user and root accounts
     clear
     HEADER
-    BOLD
-    GREEN
-    printf "Please enter your system username:"
-    WHITE
-    echo -n " "
+    echo -en "\e[32m\e[1mPlease enter your system username\e[0m: "
     read USER
     printf "\n"
-    BOLD
-    GREEN
-    echo "Adding environment variables to bash initialization files..."
-    WHITE
+    echo -e "\e[32m\e[1mAdding environment variables to bash initialization files...\e[0m"
     sleep 1
     printf "\n\n"
     echo "export IGos=/mnt/igos" >> /home/"$USER"/.bashrc
     echo "export IGos=/mnt/igos" >> /root/.bashrc
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /home/"$USER"/.bash_profile
     echo "export IGosPart=/dev/$TARGET_PARTITION" >> /root/.bash_profile
-    BOLD
-    GREEN
     printf "\n\n"
     sleep 3
-    echo "Variable additions complete"
+    echo -e "\e[32m\e[1mVariable additions complete\e[0m"
     sleep 2
-    WHITE
 
     # Set up source directory
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Creating sources directory..."
+    echo -e "\e[32m\e[1mCreating sources directory...\e[0m"
     printf "\n\n"
-    WHITE
     mkdir -v "$IGos"/sources
     chmod -v a+wt "$IGos"/sources
-    BOLD
-    GREEN
     printf "\n\n"
     sleep 3
-    echo "Source directory creation complete"
+    echo -e "\e[32m\e[1mSource directory creation complete\e[0m"
     sleep 2
-    WHITE
 
     # Download source packages
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Fetching sources... (this will take a minute...)"
+    echo -e "\e[32m\e[1mFetching sources... \e[0m(this will take a minute...)"
     printf "\n\n"
-    WHITE
     wget -q https://github.com/InterGenOS/sources_003/archive/master.zip -P "$IGos"
     printf "\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Source retrieval complete..."
+    echo -e "\e[32m\e[1mSource retrieval complete...\e[0m"
     sleep 2
-    WHITE
 
     # Move source packages into place
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Preparing sources for compilation..."
+    echo -e "\e[32m\e[1mPreparing sources for compilation...\e[0m"
     sleep 1
     printf "\n\n"
-    WHITE
     cd "$IGos"
     unzip master.zip 2>&1 &&
     rm master.zip
@@ -254,58 +194,40 @@ SETUP_BUILD () {
     mkdir -v "$IGos"/tools
     ln -sv "$IGos"/tools /
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Source preparation complete"
+    echo -e "\e[32m\e[1mSource preparation complete\e[0m"
     sleep 2
-    WHITE
 
     # Create build system user
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Creating user 'igos' with password 'intergenos'..."
+    echo -e "\e[32m\e[1mCreating user '\e[1m\e[37migos\e[0m' with password '\e[1m\e[33mintergenos\e[0m'\e[1m\e[32m...\e[0m"
     printf "\n\n"
-    WHITE
     groupadd igos
     useradd -s /bin/bash -g igos -m -k /dev/null igos
     echo "igos:intergenos" | chpasswd
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "User creation complete"
-    WHITE
+    echo -e "\e[32m\e[1mUser creation complete\e[0m"
     sleep 2
 
     # Assign build directory ownership to build system user
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Assigning tools' and sources' ownership to user 'igos'..."
+    echo -e "\e[32m\e[1mAssigning tools' and sources' ownership to user '\e[1m\e[37migos\e[1m\e[32m'...\e[0m"
     printf "\n\n"
-    WHITE
     chown -v igos "$IGos"/tools
     chown -v igos "$IGos"/sources
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Directory ownership assingment complete"
-    WHITE
+    echo -e "\e[32m\e[1mDirectory ownership assingment complete\e[0m"
     sleep 2
 
     # Setup igos shell for 'build_temporary_system.sh'
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Preparing shell variables for user 'igos'..."
+    echo -e "\e[32m\e[1mPreparing shell variables for user '\e[1m\e[37migos\e[1m\e[32m'...\e[0m"
     printf "\n\n"
-    WHITE
 
     # Download temporary system build script, assign ownerships to build user
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
@@ -330,38 +252,29 @@ SETUP_BUILD () {
     chown -v igos:users /home/igos/.bashrc /home/igos/.bash_profile
 
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Shell variable preparation complete"
-    WHITE
+    echo -e "\e[32m\e[1mShell variable preparation complete\e[0m"
     sleep 2
+
 }
 
 SETUP_CHROOT () {
+
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Changing temporary tools direcotry ownership..."
+    echo -e "\e[32m\e[1mChanging temporary tools direcotry ownership...\e[0m"
     printf "\n"
-    WHITE
     chown -R root:root "$IGos"/tools
     sleep 1
     printf "\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Temp tools directory ownership change comlete"
+    echo -e "\e[32m\e[1mTemp tools directory ownership change comlete\e[0m"
     sleep 2
-    WHITE
+
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Preparing Virtual Kernel File Systems..."
+    echo -e "\e[32m\e[1mPreparing Virtual Kernel File Systems...\e[0m"
     printf "\n"
-    WHITE
     mkdir -pv "$IGos"/{dev,proc,sys,run}
     mknod -m 600 "$IGos"/dev/console c 5 1
     mknod -m 666 "$IGos"/dev/null c 1 3
@@ -374,15 +287,13 @@ SETUP_CHROOT () {
       mkdir -pv "$IGos"/$(readlink "$IGos"/dev/shm)
     fi
     printf "\n\n"
-    BOLD
-    GREEN
     sleep 3
-    echo "Virtual kernel file preparation complete"
+    echo -e "\e[32m\e[1mVirtual kernel file preparation complete\e[0m"
     printf "\n\n\n"
-    echo "Entering chroot environment..."
-    WHITE
+    echo -e "     \e[1m\e[4m\e[34mEntering chroot environment...\e[0m"
     printf "\n"
     sleep 2
+
 }
 
 ############################
@@ -398,19 +309,14 @@ SETUP_CHROOT () {
 #############################################
 
 if [ "$(id -u)" != "0" ]; then
-    BOLD
-    RED
     printf "\n\n"
-    echo "--------"
-    echo "WARNING!"
-    echo "--------"
-    echo
-    WHITE
-    BOLD
-    echo "InterGenOS must be built as root"
+    echo -e "\e[1m\e[5m\e[31m--------\e[0m"
+    echo -e "\e[1m\e[5m\e[31mWARNING!\e[0m"
+    echo -e "\e[1m\e[5m\e[31m--------\e[0m"
     printf "\n\n"
-    WHITE
-    echo "(Exiting now...)"
+    echo -e "\e[1m\e[37mInterGenOS must be built as \e[1m\e[31mroot\e[0m"
+    printf "\n\n"
+    echo -e "\e[1m\e[32m(Exiting now...)\e[0m"
     printf "\n\n"
     exit 1
 fi
