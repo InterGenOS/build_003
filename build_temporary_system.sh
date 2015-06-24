@@ -60,36 +60,6 @@ export IGos=/mnt/igos
 # BEGIN - DISPLAY LAYOUT FUNCTIONS #
 #----------------------------------#
 
-# Colors trailing text Red
-RED () {
-    tput setaf 1
-}
-
-# Colors trailing text Green
-GREEN () {
-    tput setaf 2
-}
-
-# Colors trailing text Yellow
-YELLOW () {
-    tput setaf 3
-}
-
-# Colors trailing text Blue
-BLUE () {
-    tput setaf 4
-}
-
-# Prints any color in bold
-BOLD () {
-    tput bold
-}
-
-# Clears any preceding text color declarations - including bold
-WHITE () {
-    tput sgr0
-}
-
 # Simple divider
 DIVIDER () {
 
@@ -139,11 +109,8 @@ SPACER () {
 SET_GCC_AND_LINUX () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Setting up gcc-4.9.2 and linux-3.19 packages..."
+    echo -e "\e[1m\e[32mSetting up gcc-4.9.2 and linux-3.19 packages...\e[0m"
     printf "\n\n"
-    WHITE
     tar xf linux-3.19-extras.src.tar.gz && tar xf linux-3.19.src.tar.gz &&
     mv linux-3.19-extras/* linux-3.19/ &&
     rm -rf linux-3.19-extras.src.tar.gz linux-3.19-extras linux-3.19.src.tar.gz &&
@@ -157,22 +124,16 @@ SET_GCC_AND_LINUX () {
     tar zcf gcc-4.9.2.src.tar.gz gcc-4.9.2/ &&
     rm -rf gcc-4.9.2/
     printf "\n"
-    BOLD
-    GREEN
-    echo "Package setup complete..."
+    echo -e "\e[1m\e[32mPackage setup complete...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_BINUTILS_PASS1 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building binutils-2.25 PASS 1..."
+    echo -e "\e[1m\e[32mBuilding binutils-2.25 PASS 1...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###################
@@ -221,22 +182,16 @@ BUILD_BINUTILS_PASS1 () {
     make install &&
     cd .. && rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "binutils-2.25 PASS 1 completed..."
+    echo -e "\e[1m\e[32mbinutils-2.25 PASS 1 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GCC_PASS1 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building gcc-4.9.2 PASS 1..."
+    echo -e "\e[1m\e[32mBuilding gcc-4.9.2 PASS 1...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -293,22 +248,16 @@ BUILD_GCC_PASS1 () {
     make install &&
     cd .. && rm -rf gcc-4.9.2 gcc-build/
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "gcc-4.9.2 PASS 1 completed..."
+    echo -e "\e[1m\e[32mgcc-4.9.2 PASS 1 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_LINUX_API_HEADERS () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building linux-3.19 API Headers..."
+    echo -e "\e[1m\e[32mBuilding linux-3.19 API Headers...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ## Updated kernel to 3.19 ###
@@ -324,22 +273,16 @@ BUILD_LINUX_API_HEADERS () {
     cp -rv dest/include/* /tools/include &&
     cd .. && rm -rf linux-3.19
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "linux-3.19 API Headers completed..."
+    echo -e "\e[1m\e[32mlinux-3.19 API Headers completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GLIBC () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building glibc-2.21..."
+    echo -e "\e[1m\e[32mBuilding glibc-2.21...e\[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ################
@@ -371,15 +314,10 @@ BUILD_GLIBC () {
     make &&
     make install &&
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "glibc-2.21 completed..."
+    echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
     printf "\n\n\n\n\n\n\n\n\n\n"
     DIVIDER
-    BOLD
-    GREEN
-    echo "stand by, performing glibc sanity checks..."
-    WHITE
+    echo -e "\e[1m\e[32mstand by, performing glibc sanity checks...\e[0m"
     sleep 5
 
     ##########################
@@ -404,44 +342,32 @@ BUILD_GLIBC () {
     Actual="$(readelf -l a.out | grep ': /tools' | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
 
     if [ "$Expected" != "$Actual" ]; then
-        BOLD
-        RED
-        echo "!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
+        echo -e "\e[1m\e[5m\e[31m!!!!!GLIBC 1st PASS SANITY CHECK FAILED!!!!! Halting build, check your work.\e[0m"
         printf "\n\n\n\n\n"
-        WHITE
         sleep 5
         GLIBC_SANITY=BAD
         exit 1
     else
         SPACER
-        BOLD
-        GREEN
-        echo "Compiler and Linker are functioning as expected, continuing build."
+        echo -e "\e[1m\e[4m\e[32mCompiler and Linker are functioning as expected, continuing build.\e[0m"
         sleep 5
         SPACER
     fi
     DIVIDER
     printf "\n\n\n\n\n\n\n\n\n\n"
-    WHITE
     rm -v dummy.c a.out
     cd .. && rm -rf glibc-2.21 glibc-build/
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "glibc-2.21 completed..."
+    echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_LIBSTDC () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building libstdc++-4.9.2..."
+    echo -e "\e[1m\e[32mBuilding libstdc++-4.9.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################################
@@ -467,22 +393,16 @@ BUILD_LIBSTDC () {
     make install
     cd .. && rm -rf gcc-4.9.2 gcc-build/
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "libstdc++-4.9.2 completed..."
+    echo -e "\e[1m\e[32mlibstdc++-4.9.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_BINUTILS_PASS2 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building binutils-2.25 PASS 2..."
+    echo -e "\e[1m\e[32mBuilding binutils-2.25 PASS 2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ####################
@@ -508,39 +428,28 @@ BUILD_BINUTILS_PASS2 () {
     make install &&
     printf "\n\n\n\n\n\n\n\n\n\n"
     DIVIDER
-    BOLD
-    GREEN
-    echo "Preparing the linker for re-adjusting..."
+    echo -e "\e[1m\e[32mPreparing the linker for re-adjusting...\e[0m"
     printf "\n"
-    WHITE
     make -C ld clean &&
     make -C ld LIB_PATH=/usr/lib:/lib &&
     cp -v ld/ld-new /tools/bin
     sleep 4
     printf "\n"
-    BOLD
-    GREEN
-    echo "linker re-adjustment complete"
+    echo -e "\e[1m\e[4m\e[32mlinker re-adjustment complete\e[0m"
     DIVIDER
     printf "\n\n\n\n\n\n\n\n\n\n"
     cd .. && rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "binutils-2.25 PASS 2 completed..."
+    echo -e "\e[1m\e[32mbinutils-2.25 PASS 2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GCC_PASS2 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building gcc-4.9.2 PASS 2..."
+    echo -e "\e[1m\e[32mBuilding gcc-4.9.2 PASS 2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -588,15 +497,10 @@ BUILD_GCC_PASS2 () {
     make install &&
     ln -sv gcc /tools/bin/cc &&
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "gcc-4.9.2 PASS 2 completed..."
+    echo -e "\e[1m\e[32mgcc-4.9.2 PASS 2 completed...\e[0m"
     printf "\n\n\n\n\n\n\n\n\n\n"
     DIVIDER
-    BOLD
-    GREEN
-    echo "stand by, performing gcc sanity checks..."
-    WHITE
+    echo -e "\e[1m\e[32mstand by, performing gcc sanity checks...\e[0m"
     sleep 5
 
     ##############################
@@ -622,29 +526,21 @@ BUILD_GCC_PASS2 () {
     Actual2="$(readelf -l a.out | grep ': /tools' | sed -e 's/://' -e 's/\[/ /' -e 's/\]/ /' | awk '{print $1$2$3$4}')"
 
     if [ "$Expected2" != "$Actual2" ]; then
-        BOLD
-        RED
-        echo "!!!!!GCC 2nd PASS SANITY CHECK FAILED!!!!! Halting build, check your work."
+        echo -e "\e[1m\e[5m\e[31m!!!!!GCC 2nd PASS SANITY CHECK FAILED!!!!! Halting build, check your work.\e[0m"
         printf "\n\n\n\n\n"
-        WHITE
         sleep 5
         GCC_SANITY=BAD
         exit 1
     else
         SPACER
-        BOLD
-        GREEN
-        echo "Compiler and Linker are functioning as expected, continuing build."
+        echo -e "\e[1m\e[4m\e[32mCompiler and Linker are functioning as expected, continuing build.\e[0m"
         sleep 5
         SPACER
     fi
     DIVIDER
     printf "\n\n\n\n\n\n\n\n\n\n"
-    BOLD
-    GREEN
-    echo "gcc-4.9.2 completed..."
+    echo -e "\e[1m\e[32mgcc-4.9.2 completed...\e[0m"
     SPACER
-    WHITE
     rm -v dummy.c a.out
     cd .. && rm -rf gcc-4.9.2 gcc-build/
     sleep 5
@@ -653,11 +549,8 @@ BUILD_GCC_PASS2 () {
 BUILD_TCL () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building tcl-8.6.3..."
+    echo -e "\e[1m\e[32mBuilding tcl-8.6.3...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -676,22 +569,16 @@ BUILD_TCL () {
     ln -sv tclsh8.6 /tools/bin/tclsh
     cd .. && cd .. && rm -rf tcl-8.6.3
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "tcl-8.6.3 completed..."
+    echo -e "\e[1m\e[32mtcl-8.6.3 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_EXPECT () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building expect-5.45..."
+    echo -e "\e[1m\e[32mBuilding expect-5.45...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -710,22 +597,16 @@ BUILD_EXPECT () {
     make SCRIPTS="" install
     cd .. && rm -rf expect-5.45
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "expect-5.45 completed..."
+    echo -e "\e[1m\e[32mexpect-5.45 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_DEJAGNU () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building dejagnu-1.5.2..."
+    echo -e "\e[1m\e[32mBuilding dejagnu-1.5.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###################
@@ -739,22 +620,16 @@ BUILD_DEJAGNU () {
     make install &&
     cd .. && rm -rf dejagnu-1.5.2
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "dejagnu-1.5.2 completed..."
+    echo -e "\e[1m\e[32mdejagnu-1.5.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_CHECK () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building check-0.9.14..."
+    echo -e "\e[1m\e[32mBuilding check-0.9.14...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ##################
@@ -769,22 +644,16 @@ BUILD_CHECK () {
     make install &&
     cd .. && rm -rf check-0.9.14
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "check-0.9.14 completed..."
+    echo -e "\e[1m\e[32mcheck-0.9.14 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_NCURSES () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building ncurses-5.9..."
+    echo -e "\e[1m\e[32mBuilding ncurses-5.9...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -804,22 +673,16 @@ BUILD_NCURSES () {
     make install &&
     cd .. && rm -rf ncurses-5.9
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "ncurses-5.9 completed..."
+    echo -e "\e[1m\e[32mncurses-5.9 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_BASH () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building bash-4.3.30..."
+    echo -e "\e[1m\e[32mBuilding bash-4.3.30...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -835,22 +698,16 @@ BUILD_BASH () {
     ln -sv bash /tools/bin/sh
     cd .. && rm -rf bash-4.3.30
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "bash-4.3.30 completed..."
+    echo -e "\e[1m\e[32mbash-4.3.30 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_BZIP2 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building bzip2-1.0.6..."
+    echo -e "\e[1m\e[32mBuilding bzip2-1.0.6...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -863,22 +720,16 @@ BUILD_BZIP2 () {
     make && make PREFIX=/tools install &&
     cd .. && rm -rf bzip2-1.0.6
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "bzip2-1.0.6 completed..."
+    echo -e "\e[1m\e[32mbzip2-1.0.6 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_COREUTILS () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building coreutils-8.23..."
+    echo -e "\e[1m\e[32mBuilding coreutils-8.23...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ####################
@@ -893,22 +744,16 @@ BUILD_COREUTILS () {
     make install &&
     cd .. && rm -rf coreutils-8.23
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "coreutils-8.23 completed..."
+    echo -e "\e[1m\e[32mcoreutils-8.23 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_DIFFUTILS () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building diffutils-3.3..."
+    echo -e "\e[1m\e[32mBuilding diffutils-3.3...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###################
@@ -923,22 +768,16 @@ BUILD_DIFFUTILS () {
     make install &&
     cd .. && rm -rf diffutils-3.3
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "diffutils-3.3 completed..."
+    echo -e "\e[1m\e[32mdiffutils-3.3 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_FILE () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building file-5.22..."
+    echo -e "\e[1m\e[32mBuilding file-5.22...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -953,22 +792,16 @@ BUILD_FILE () {
     make install &&
     cd .. && rm -rf file-5.22
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "file-5.22 completed..."
+    echo -e "\e[1m\e[32mfile-5.22 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_FINDUTILS () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building findutils-4.4.2..."
+    echo -e "\e[1m\e[32mBuilding findutils-4.4.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #####################
@@ -983,22 +816,16 @@ BUILD_FINDUTILS () {
     make install &&
     cd .. && rm -rf findutils-4.4.2
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "findutils-4.4.2 completed..."
+    echo -e "\e[1m\e[32mfindutils-4.4.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GAWK () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building gawk-4.1.1..."
+    echo -e "\e[1m\e[32mBuilding gawk-4.1.1...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ################
@@ -1013,22 +840,16 @@ BUILD_GAWK () {
     make install &&
     cd .. && rm -rf gawk-4.1.1
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "gawk-4.1.1 completed..."
+    echo -e "\e[1m\e[32mgawk-4.1.1 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GETTEXT () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building gettext-0.19.4..."
+    echo -e "\e[1m\e[32mBuilding gettext-0.19.4...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ####################
@@ -1048,22 +869,16 @@ BUILD_GETTEXT () {
     cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin
     cd .. && cd .. && rm -rf gettext-0.19.4
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "gettext-0.19.4 completed..."
+    echo -e "\e[1m\e[32mgettext-0.19.4 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GREP () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building grep-2.21..."
+    echo -e "\e[1m\e[32mBuilding grep-2.21...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -1078,22 +893,16 @@ BUILD_GREP () {
     make install &&
     cd .. && rm -rf grep-2.21
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "grep-2.21 completed..."
+    echo -e "\e[1m\e[32mgrep-2.21 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_GZIP () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building gzip-1.6..."
+    echo -e "\e[1m\e[32mBuilding gzip-1.6...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ##############
@@ -1108,22 +917,16 @@ BUILD_GZIP () {
     make install &&
     cd .. && rm -rf gzip-1.6
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "gzip-1.6 completed..."
+    echo -e "\e[1m\e[32mgzip-1.6 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_M4 () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building m4-1.4.17..."
+    echo -e "\e[1m\e[32mBuilding m4-1.4.17...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -1138,22 +941,16 @@ BUILD_M4 () {
     make install &&
     cd .. && rm -rf m4-1.4.17
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "m4-1.4.17 completed..."
+    echo -e "\e[1m\e[32mm4-1.4.17 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_MAKE () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building make-4.1..."
+    echo -e "\e[1m\e[32mBuilding make-4.1...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ##############
@@ -1168,22 +965,16 @@ BUILD_MAKE () {
     make install &&
     cd .. && rm -rf make-4.1
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "make-4.1 completed..."
+    echo -e "\e[1m\e[32mmake-4.1 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_PATCH () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building patch-2.7.4..."
+    echo -e "\e[1m\e[32mBuilding patch-2.7.4...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -1198,22 +989,16 @@ BUILD_PATCH () {
     make install &&
     cd .. && rm -rf patch-2.7.4
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "patch-2.7.4 completed..."
+    echo -e "\e[1m\e[32mpatch-2.7.4 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_PERL () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building perl-5.20.2..."
+    echo -e "\e[1m\e[32mBuilding perl-5.20.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -1230,22 +1015,16 @@ BUILD_PERL () {
     cp -Rv lib/* /tools/lib/perl5/5.20.2
     cd .. && rm -rf perl-5.20.2
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "perl-5.20.2 completed..."
+    echo -e "\e[1m\e[32mperl-5.20.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_SED () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building sed-4.2.2..."
+    echo -e "\e[1m\e[32mBuilding sed-4.2.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ###############
@@ -1260,22 +1039,16 @@ BUILD_SED () {
     make install &&
     cd .. && rm -rf sed-4.2.2
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "sed-4.2.2 completed..."
+    echo -e "\e[1m\e[32msed-4.2.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_TAR () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building tar-1.28..."
+    echo -e "\e[1m\e[32mBuilding tar-1.28...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ##############
@@ -1290,22 +1063,16 @@ BUILD_TAR () {
     make install &&
     cd .. && rm -rf tar-1.28
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "tar-1.28 completed..."
+    echo -e "\e[1m\e[32mtar-1.28 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_TEXINFO () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building texinfo-5.2..."
+    echo -e "\e[1m\e[32mBuilding texinfo-5.2...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #################
@@ -1320,22 +1087,16 @@ BUILD_TEXINFO () {
     make install &&
     cd .. && rm -rf texinfo-5.2
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "texinfo-5.2 completed..."
+    echo -e "\e[1m\e[32mtexinfo-5.2 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_UTIL_LINUX () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building util-linux-2.26..."
+    echo -e "\e[1m\e[32mBuilding util-linux-2.26...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     #####################
@@ -1354,22 +1115,16 @@ BUILD_UTIL_LINUX () {
     make install &&
     cd .. && rm -rf util-linux-2.26
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "util-linux-2.26 completed..."
+    echo -e "\e[1m\e[32mutil-linux-2.26 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
 BUILD_XZ () {
     clear
     HEADER
-    BOLD
-    GREEN
-    echo "Building xz-5.2.0..."
+    echo -e "\e[1m\e[32mBuilding xz-5.2.0...\e[0m"
     printf "\n\n"
-    WHITE
     sleep 5
 
     ##############
@@ -1384,11 +1139,8 @@ BUILD_XZ () {
     make install &&
     cd .. && rm -rf xz-5.2.0
     printf "\n\n"
-    BOLD
-    GREEN
-    echo "xz-5.2.0 completed..."
+    echo -e "\e[1m\e[32mxz-5.2.0 completed...\e[0m"
     SPACER
-    WHITE
     sleep 5
 }
 
@@ -1418,11 +1170,8 @@ BUILD_LINUX_API_HEADERS 2>&1 | tee linux_api_log &&
 BUILD_GLIBC 2>&1 | tee glibc_log &&
 if [ "$GLIBC_SANITY" = "BAD" ]; then
     SPACER
-    BOLD
-    RED
-    echo "Glibc sanity check has failed.  Please review the logs at /var/log/InterGenOS"
+    echo -e "\e[1m\e[5m\e[31mGlibc sanity check has failed\e[0m.  \e[1m\e[32mPlease review the logs at \e[1m\e[37m/var/log/InterGenOS\e[0m"
     printf "\n\n\n"
-    WHITE
     sleep 5
     exit 1
 fi
@@ -1431,9 +1180,7 @@ BUILD_BINUTILS_PASS2 2>&1 | tee bin_pass2_log &&
 BUILD_GCC_PASS2 2>&1 | tee gcc_pass2_log &&
 if [ "$GCC_SANITY" = "BAD" ]; then
     SPACER
-    BOLD
-    RED
-    echo "GCC sanity check has failed.  Please review the logs at /var/log/InterGenOS"
+    echo -e "\e[1m\e[5m\e[31mGCC sanity check has failed\e[0m.  \e[1m\e[32mPlease review the logs at \e[1m\e[37m/var/log/InterGenOS\e[0m"
     printf "\n\n\n"
     WHITE
     sleep 5
@@ -1487,9 +1234,7 @@ rm -rf /tools/{,share}/{info,man,doc} &&
 #######################
 
 SPACER
-BOLD
-GREEN
-echo "Temporary system build complete"
+echo -e "\e[1m\e[4m\e[32mTemporary system build complete\e[0m"
 printf "\n\n"
 DIVIDER
 sleep 5
