@@ -425,7 +425,7 @@ SETUP_CHROOT () {
     sleep 3
     echo "Virtual kernel file preparation complete"
     printf "\n\n\n"
-    echo "Entering chroot environment..."
+    #echo "Entering chroot environment..."
     WHITE
     printf "\n"
     sleep 2
@@ -489,11 +489,11 @@ SETUP_CHROOT 2>&1 | tee chroot_log
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' chroot_log
 mv chroot_log /var/log/InterGenOS/BuildLogs/chroot_log_"$TIMESTAMP"
 
-cd "$IGos"
-./enter_chroot.sh 2>&1 | tee sys_build_log &&
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' sys_build_log
-mv sys_build_log /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
-printf "\n\n\n"
+#cd "$IGos"
+#./enter_chroot.sh 2>&1 | tee sys_build_log &&
+#sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' sys_build_log
+#mv sys_build_log /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
+#printf "\n\n\n"
 
 #######################
 ##-------------------##

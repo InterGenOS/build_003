@@ -44,35 +44,30 @@
 
 # Simple divider
 DIVIDER () {
-    printf "\n"
 
-    echo "-----------------------------------------------------------"
+    printf "\n"
+    echo -e "\e[32m\e[1m-----------------------------------------------------------\e[0m"
     printf "\n"
 
 }
 
 # Creates uniform look during script execution when called after any clear command
 HEADER () {
-    echo
-
-    echo "____________________________________________________________________________"
-    printf "\n"
-    printf "    InterGen"
-
-    printf "OS"
-
-    printf " build"
-
-    echo ".003"
-
-    echo "____________________________________________________________________________"
 
     printf "\n\n"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n"
+    echo -e "\e[34m\e[1m    InterGen\e[37mOS \e[32mbuild\e[0m.003"
+    echo -e "\e[34m\e[1m____________________________________________________________________________\e[0m"
+    printf "\n\n"
+
 }
 
 # Creates a 15 line gap for easier log review
 SPACER () {
+
     printf "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
 }
 
 #--------------------------------#
@@ -84,23 +79,25 @@ SPACER () {
 #----------------------------------------#
 
 CONFIRM_CHROOT () {
-    SPACER
-    HEADER
 
-    echo "Successfully entered chroot environment"
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mSuccessfully entered chroot environment\e[0m"
     printf "\n\n"
-    echo "Continuing build..."
-    printf "\n\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mContinuing build...\e[0m"
+    sleep 2
+
 
 }
 
 CREATE_DIRECTORIES () {
 
-    SPACER
-
-    echo "Creating system directories..."
-    printf "\n"
-
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mCreating system directories...\e[0m"
+    printf "\n\n"
+    sleep 3
     mkdir -pv /{bin,boot,etc/{opt,sysconfig},home,lib/firmware,mnt,opt}
     mkdir -pv /{media/{floppy,cdrom},sbin,srv,var}
     install -dv -m 0750 /root
@@ -110,31 +107,29 @@ CREATE_DIRECTORIES () {
     mkdir -v  /usr/{,local/}share/{misc,terminfo,zoneinfo}
     mkdir -v  /usr/libexec
     mkdir -pv /usr/{,local/}share/man/man{1..8}
-
     case $(uname -m) in
         x86_64) ln -sv lib /lib64
                 ln -sv lib /usr/lib64
                 ln -sv lib /usr/local/lib64 ;;
     esac
-
     mkdir -v /var/{log,mail,spool}
     ln -sv /run /var/run
     ln -sv /run/lock /var/lock
     mkdir -pv /var/{opt,cache,lib/{color,misc,locate},local}
-    printf "\n"
-
-    echo "System directories created successfully"
-
+    printf "\n\n"
+    sleep 2
+    echo -e "\e[1m\e[32mSystem directories created successfully\e[0m"
+    sleep 3
 
 }
 
 CREATE_FILES_AND_SYMLINKS () {
 
-    SPACER
-
-    echo "Creating essential files and symlinks..."
-    printf "\n"
-
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mCreating essential files and symlinks...\e[0m"
+    sleep 3
+    printf "\n\n"
     ln -sv /tools/bin/{bash,cat,echo,pwd,stty} /bin
     ln -sv /tools/bin/perl /usr/bin
     ln -sv /tools/lib/libgcc_s.so{,.1} /usr/lib
@@ -147,38 +142,40 @@ CREATE_FILES_AND_SYMLINKS () {
     chmod -v 664  /var/log/lastlog
     chmod -v 600  /var/log/btmp
     mkdir -p /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
-    printf "\n"
-
-    echo "System files and symlinks created successfully"
+    printf "\n\n"
+    sleep 2
+    echo -e "\e[1m\e[32mSystem files and symlinks created successfully\e[0m"
+    sleep 3
 
 }
 
 SETUP_LOGGING () {
 
-    SPACER
-
-    echo "Creating log directories..."
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mCreating log directories...\e[0m"
+    sleep 3
     printf "\n"
-
     SPACER
     touch /var/log/{btmp,lastlog,wtmp}
     chgrp -v utmp /var/log/lastlog
     chmod -v 664  /var/log/lastlog
     chmod -v 600  /var/log/btmp
     mkdir -pv /var/log/InterGenOS/BuildLogs/Sys_Buildlogs
-    printf "\n"
-
-    echo "Log directories created successfully"
-
+    printf "\n\n"
+    sleep 2
+    echo -e "\e[1m\e[32mLog directories created successfully\e[0m"
+    sleep 3
 
 }
 
 BUILD_LINUX () {
-    SPACER
 
-    echo "Building linux-3.19..."
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding linux-3.19...\e[0m"
+    sleep 3
     printf "\n\n"
-
 
     ################
     ## Linux-3.19 ##
@@ -194,19 +191,19 @@ BUILD_LINUX () {
     cd ..
     # DO NOT REMOVE LINUX SOURCE DIRECTORY - NEEDED FOR ETHERNET DRIVER COMPILATION
     printf "\n\n"
-
-    echo "linux-3.19 completed..."
-    SPACER
-
+    sleep 3
+    echo -e "\e[1m\e[32mlinux-3.19 completed...\e[0m"
+    sleep 2
 
 }
 
 BUILD_MAN_PAGES () {
-    SPACER
 
-    echo "Building man-pages-3.79..."
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding man-pages-3.79...\e[0m"
+    sleep 3
     printf "\n\n"
-
 
     ####################
     ## Man-Pages-3.79 ##
@@ -218,19 +215,19 @@ BUILD_MAN_PAGES () {
     make install &&
     cd .. && rm -rf man-pages-3.79 &&
     printf "\n\n"
-
-    echo "linux-3.19 completed..."
-    SPACER
+    sleep 3
+    echo -e "\e[1m\e[32mlinux-3.19 completed...\e[0m"
+    sleep 2
 
 }
 
 BUILD_GLIBC () {
 
-    SPACER
-
-    echo "Building glibc-2.21..."
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding glibc-2.21...\e[0m"
+    sleep 3
     printf "\n\n"
-
 
     ################
     ## Glibc-2.21 ##
@@ -319,9 +316,9 @@ BUILD_GLIBC () {
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
     mv glibc_make-check_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_make-check_log
-
-    echo "glibc-2.21 completed..."
-    SPACER
+    sleep 3
+    echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
+    sleep 2
 
 }
 
@@ -405,8 +402,9 @@ BUILD_MAN_PAGES
 BUILD_GLIBC
 
 SPACER
-
-echo "WORKING AS EXPECTED"
+echo -e "\e[1m\e[32mWORKING AS EXPECTED\e[0m"
+SPACER
+sleep 5
 
 printf "\n\n\n"
 exit 0
