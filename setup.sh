@@ -236,9 +236,10 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system_post-bash_extended.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_stripping.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/strip_binaries-libraries.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.fstab -P "$IGos"
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh     \
         "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
-        "$IGos"/strip_binaries-libraries.sh
+        "$IGos"/strip_binaries-libraries.sh "$Igos"/intergenos.fstab
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh          \
         "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
         "$IGos"/strip_binaries-libraries.sh

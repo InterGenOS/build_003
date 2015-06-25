@@ -192,7 +192,7 @@ BUILD_LINUX () {
     find dest/include \( -name .install -o -name ..install.cmd \) -delete &&
     cp -rv dest/include/* /usr/include &&
     cd ..
-    # DO NOT REMOVE LINUX SOURCE DIRECTORY - NEEDED FOR ETHERNET DRIVER COMPILATION
+    rm -rf linux-3.19
     printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32mlinux-3.19 completed...\e[0m"
@@ -1596,20 +1596,6 @@ BUILD_BASH () {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #--------------------------------------#
 # END - SYSTEM PACKAGE BUILD FUNCTIONS #
 #--------------------------------------#
@@ -1784,16 +1770,6 @@ cat > /root/.bash_profile << "AddExecutable"
 AddExecutable
 
 BUILD_BASH
-
-
-
-
-SPACER
-echo -e "\e[1m\e[4m\e[32mWORKING AS EXPECTED\e[0m"
-SPACER
-sleep 5
-
-printf "\n\n\n"
 
 #######################
 ##-------------------##
