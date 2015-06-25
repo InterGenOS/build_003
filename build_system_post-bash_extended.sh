@@ -741,11 +741,98 @@ BUILD_KBD () {
 
 }
 
+BUILD_KMOD () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding kmod-19...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #############
+    ## Kmod-19 ##
+    ## ======= ##
+    #############
 
+    tar xf kmod-19.src.tar.gz &&
+    cd kmod-19/
+    ./configure --prefix=/usr          \
+                --bindir=/bin          \
+                --sysconfdir=/etc      \
+                --with-rootlibdir=/lib \
+                --with-xz              \
+                --with-zlib &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/kmod-mkck-log_"$TIMESTAMP"
+    make install &&
+    for target_mod in depmod insmod lsmod modinfo modprobe rmmod; do
+      ln -sv ../bin/kmod /sbin/$target_mod
+    done
+    ln -sv kmod /bin/lsmod
+    cd ..
+    rm -rf kmod-19/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mkmod-19 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_LIBPIPELINE () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding libpipeline-1.4.0...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #######################
+    ## Libpipeline-1.4.0 ##
+    ## ================= ##
+    #######################
+
+    tar xf libpipeline-1.4.0.src.tar.gz &&
+    cd libpipeline-1.4.0/
+    PKG_CONFIG_PATH=/tools/lib/pkgconfig ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/libpipeline-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf libpipeline-1.4.0/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mlibpipeline-1.4.0 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_MAKE () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding make-4.1...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ##############
+    ## Make-4.1 ##
+    ## ======== ##
+    ##############
+
+    tar xf make-4.1.src.tar.gz &&
+    cd make-4.1/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/make-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf make-4.1/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mmake-4.1 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -798,9 +885,9 @@ BUILD_KBD () {
 ##---------------------##
 #########################
 
-echo -e "    \e[1m\e[32mNew shell launch with completed system bash binary successful..."
+echo -e "    \e[1m\e[32mNew shell launched successfully..."
 DIVIDER
-echo -e "    \e[1m\e[32mContinuing build..."
+echo -e "    \e[1m\e[32mCleaning up bash-4.3.30 source files..."
 SPACER
 sleep 3
 
@@ -810,6 +897,10 @@ echo \# > /root/.bash_profile
 # Tidy up bash-4.3.30 build
 cd /sources
 rm -rf bash-4.3.30
+printf "\n"
+sleep 3
+echo -e "    \e[1m\e[32mContinuing build..."
+sleep 3
 
 BUILD_BC
 BUILD_LIBTOOL
@@ -833,9 +924,9 @@ BUILD_LESS
 BUILD_GZIP
 BUILD_IPROUTE2
 BUILD_KBD
-
-
-
+BUILD_KMOD
+BUILD_LIBPIPELINE
+BUILD_MAKE
 
 
 
