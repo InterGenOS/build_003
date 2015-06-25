@@ -87,6 +87,11 @@ SPACER () {
 ##---------------------##
 #########################
 
+clear
+HEADER
+echo -e "\e[1m\e[32mFinalizing System Settings...\e[0m"
+printf "\n\n"
+sleep 3
 
 # Create systemd network directory and eth.network
 mkdir -pv /etc/systemd/network
@@ -212,6 +217,12 @@ $endif
 EOF
 
 #---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -e "\e[1m\e[32mCreating shell files...\e[0m"
+printf "\n\n"
+sleep 3
 
 # Create /etc/shells
 cat > /etc/shells << "EOF"
@@ -861,6 +872,12 @@ echo "InterGen OS \r (\l)" >> /etc/issue
 
 #---------------------------------------------------------------------------------------#
 
+clear
+HEADER
+echo -e "\e[1m\e[32mCreating fstab...\e[0m"
+printf "\n\n"
+sleep 3
+
 # Create /etc/fstab
 mv /intergenos.fstab /etc/fstab
 ROOTMOUNT=$(mount | grep '\/dev\/sd' | awk '{print $1}')
@@ -868,3 +885,116 @@ ROOTUUID=$(blkid $ROOTMOUNT | awk '{print $2}' | cut -d '"' -f 2 | cut -d '"' -f
 sed -i "s/xxx/$ROOTUUID/" /etc/fstab
 
 #---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -e "\e[1m\e[32mBuilding the system kernel...\e[0m"
+printf "\n\n"
+sleep 3
+
+# Build the kernel
+cd /sources
+tar xf linux-3.19.tar.xz &&
+cd linux-3.19
+make mrproper &&
+mv /intergenos.config .config
+make &&
+make modules_install
+cp -v arch/x86_64/boot/bzImage /boot/vmlinuz-3.19-intergen-003-systemd
+cp -v System.map /boot/System.map-intergen-3.19
+cp -v .config /boot/config-intergen-3.19
+install -d /usr/share/doc/linux-3.19
+cp -r Documentation/* /usr/share/doc/linux-3.19
+
+#---------------------------------------------------------------------------------------#
+
+# Create /etc/modprobe.d & set usb.conf
+install -v -m755 -d /etc/modprobe.d
+cat > /etc/modprobe.d/usb.conf << "EOF"
+# Begin /etc/modprobe.d/usb.conf
+
+install ohci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i ohci_hcd ; true
+install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
+
+# End /etc/modprobe.d/usb.conf
+EOF
+
+#---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -e "\e[1m\e[32mGenerating GRUB2 configuration...\e[0m"
+printf "\n\n"
+sleep 3
+
+# Setup grub.cfg - needs to be re-written badly
+mv /grub.cfg /sources/linux-3.19/
+sed -i "s/xxx/$ROOTUUID/g" /intergenos.grub.cfg
+GRUBTARGET=$(echo $ROOTMOUNT | sed 's/[0-9]*//g')
+HDNUMBER=$(echo $ROOTMOUNT | cut -d '/' -f 3 | sed 's/[0-9]*//g')
+PARTNUMBER=$(echo $ROOTMOUNT | cut -d '/' -f 3 | sed 's/[^0-9]*//g')
+sed -i "s/vvv/$ROOTMOUNT/g" /intergenos.grub.cfg
+if [ "$HDNUMBER" = sda ]; then
+     sed -i "s/yyy/0/g" /intergenos.grub.cfg
+   elif [ "$HDNUMBER" = sdb ]; then
+     sed -i "s/yyy/1/g" /intergenos.grub.cfg
+   elif [ "$HDNUMBER" = sdc ]; then
+     sed -i "s/yyy/2/g" /intergenos.grub.cfg
+   else
+     sed -i "s/yyy/3/g" /intergenos.grub.cfg
+fi
+sed -i "s/zzz/$PARTNUMBER/g" /intergenos.grub.cfg
+cat <(head -n$(cat -n grub.cfg | grep 'BEGIN /etc/grub.d/40_custom' | awk '{print $1}') grub.cfg) >> grub.new
+cat /intergenos.grub.cfg >> grub.new
+sed -e '1,/END \/etc\/grub.d\/40_custom/d' /grub.cfg >> grub.new
+
+grub-install $GRUBTARGET
+unset ROOTMOUNT ROOTUUID GRUBTARGET PARTNUMBER HDNUMBER
+mv grub.new /boot/grub/grub.cfg
+
+#---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -e "\e[1m\e[32mCreating OS Identificatins files...\e[0m"
+printf "\n\n"
+sleep 3
+
+# Create /etc/os-release
+cat > /etc/os-release << "EOF"
+NAME="InterGen OS"
+VERSION=".003SD"
+ID=igos
+PRETTY_NAME="InterGen OS"
+EOF
+
+echo .003SD > /etc/igos-release
+
+#---------------------------------------------------------------------------------------#
+
+# Create /etc/lsb-release
+cat > /etc/lsb-release << "EOF"
+DISTRIB_ID="InterGen OS"
+DISTRIB_RELEASE=".002SD"
+DISTRIB_CODENAME="InterGen"
+DISTRIB_DESCRIPTION="InterGen OS"
+EOF
+
+#---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -e "\e[1m\e[32mSetup complete...\e[0m"
+printf "\n\n"
+sleep 3
+printf "\n\n"
+echo -e "\e[1m\e[32mDropping back into root shell...\e[0m"
+sleep 5
+
+#######################
+##-------------------##
+## END - CORE SCRIPT ##
+##-------------------##
+#######################
+
+exit 0

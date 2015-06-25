@@ -226,7 +226,7 @@ SETUP_BUILD () {
     echo -e "\e[32m\e[1mPreparing shell variables for user '\e[1m\e[37migos\e[1m\e[32m'...\e[0m"
     printf "\n\n"
 
-    # Download temporary system build script, assign ownerships to build user
+    # Download system build scripts, assign ownerships to build user, set executable bits
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_temporary_system.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/clean_environment.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot.sh -P "$IGos"
@@ -236,13 +236,18 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system_post-bash_extended.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_stripping.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/strip_binaries-libraries.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_finalize.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/finalize_system.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.fstab -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.config -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.grub.config -P "$IGos"
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh     \
         "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
-        "$IGos"/strip_binaries-libraries.sh "$Igos"/intergenos.fstab
+        "$IGos"/strip_binaries-libraries.sh "$Igos"/intergenos.fstab "$Igos"/intergenos.config               \
+        "$Igos"/enter_chroot_finalize.sh "$Igos"/finalize_system.sh "$Igos"/intergenos.grub.cfg
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh          \
         "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
-        "$IGos"/strip_binaries-libraries.sh
+        "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -387,7 +392,24 @@ sudo -u root ./enter_chroot_finalize.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_finalize_log_"$TIMESTAMP"
 printf "\n\n"
 
-
+clear
+HEADER
+echo -e "           \e[1m\e[4m\e[34mInterGenOS v003 Build Complete...\e[0m"
+printf "\n\n"
+sleep 3
+printf "\n\n"
+echo -e "           \e[1m\e[37mThank you for your participation in the project\e[0m"
+printf "\n\n"
+echo -e "           \e[1m\e[37mAny errors you would like to report will be grealy appreciated\e[0m"
+printf "\n\n"
+echo -e "           \e[1m\e[37mPlease send any submissions to:\e[0m"
+printf "\n\n\n"
+echo -e "           \e[1m\e[34minfo\e[1m\e[37m@\e[1m\e[34mintergenstudios.com\e[0m"
+printf "\n\n\n"
+echo -e "           \e[1m\e[37mYou should now reboot your system and select the InterGenOS from your grub menu\e[0m"
+printf "\n\n"
+DIVIDER
+sleep 3
 
 #######################
 ##-------------------##

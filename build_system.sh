@@ -1592,7 +1592,7 @@ BUILD_BASH () {
     echo -e "    \e[1m\e[32mPreparing to launch new shell with completed system bash binary..."
     SPACER
     sleep 3
-    exec /bin/bash --login +h
+    exec /bin/bash --login +h &&
 
 }
 
