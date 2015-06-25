@@ -234,10 +234,14 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bash_profile -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bashrc -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system_post-bash_extended.sh -P "$IGos"
-    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh \
-        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh
-    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh      \
-        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_stripping.sh -P "$IGos"
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/strip_binaries-libraries.sh -P "$IGos"
+    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh     \
+        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
+        "$IGos"/strip_binaries-libraries.sh
+    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh          \
+        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh \
+        "$IGos"/strip_binaries-libraries.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -342,24 +346,47 @@ fi
 mkdir -pv /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
 chmod 777 /var/log/InterGenOS /var/log/InterGenOS/BuildLogs /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs
 
-GET_PARTITION 2>&1 | tee build_log
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' build_log
-mv build_log /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs/setup_log_"$TIMESTAMP"
+GET_PARTITION 2>&1 | tee /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs/setup_log_"$TIMESTAMP"
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/Temp_Sys_Buildlogs/setup_log_"$TIMESTAMP"
 
 # Build temporary system in separate shell as the build user
 cd "$IGos"
 sudo -u igos ./clean_environment.sh &&
 printf "\n\n\n"
 
-SETUP_CHROOT 2>&1 | tee chroot_log
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' chroot_log
-mv chroot_log /var/log/InterGenOS/BuildLogs/chroot_log_"$TIMESTAMP"
+SETUP_CHROOT 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_log_"$TIMESTAMP"
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_log_"$TIMESTAMP"
 
 cd "$IGos"
-sudo -u root ./enter_chroot.sh 2>&1 | tee sys_build_log &&
-sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' sys_build_log
-mv sys_build_log /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
+sudo -u root ./enter_chroot.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP" &&
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/sys_build_log_"$TIMESTAMP"
 printf "\n\n\n"
+
+clear
+HEADER
+echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+DIVIDER
+sleep 3
+echo -e "     \e[1m\e[32mEntering chroot environment for binary and library stripping..."
+cd "$IGos"
+sleep 3
+sudo -u root ./enter_chroot_stripping.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP" &&
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP"
+printf "\n\n"
+
+clear
+HEADER
+echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+DIVIDER
+sleep 3
+echo -e "     \e[1m\e[32mEntering chroot environment for System Finalization..."
+cd "$IGos"
+sleep 3
+sudo -u root ./enter_chroot_finalize.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_finalize_log_"$TIMESTAMP" &&
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_finalize_log_"$TIMESTAMP"
+printf "\n\n"
+
+
 
 #######################
 ##-------------------##
