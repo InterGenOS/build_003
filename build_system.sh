@@ -1592,7 +1592,6 @@ BUILD_BASH () {
     echo -e "    \e[1m\e[32mPreparing to launch new shell with completed system bash binary..."
     SPACER
     sleep 3
-    exec /bin/bash --login +h &&
 
 }
 
@@ -1770,6 +1769,7 @@ cat > /root/.bash_profile << "AddExecutable"
 AddExecutable
 
 BUILD_BASH
+exec /bin/bash --login +h &&
 
 #######################
 ##-------------------##
