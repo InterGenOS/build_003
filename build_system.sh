@@ -326,13 +326,13 @@ BUILD_GLIBC () {
 
 }
 
-TOOLCHAIN_TEST1 () {
+TOOLCHAIN_TEST1A () {
 
     clear
     HEADER
     echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
     printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #1\e[0m"
+    echo -e "       \e[1m\e[4m\e[34mTEST #1A\e[0m"
     printf "\n\n"
     sleep 3
     mv -v /tools/bin/{ld,ld-old}
@@ -345,154 +345,158 @@ TOOLCHAIN_TEST1 () {
         `dirname $(gcc --print-libgcc-file-name)`/specs
     echo 'main(){}' > dummy.c
     cc dummy.c -v -Wl,--verbose &> dummy.log
-    Expected_TEST1="Requestingprograminterpreter/lib64/ld-linux-x86-64.so.2"
-    Actual_TEST1="$(readelf -l a.out | grep ': /lib' | sed -e 's/://g' -e 's/\[//g' -e 's/\]//g' | awk '{print $1$2$3$4}')"
-    if [ "$Expected_TEST1" != "$Actual_TEST1" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 1 FAILED!!!!!\e[0m"
+    Expected_TEST1A="Requestingprograminterpreter/lib64/ld-linux-x86-64.so.2"
+    Actual_TEST1A="$(readelf -l a.out | grep ': /lib' | sed -e 's/://g' -e 's/\[//g' -e 's/\]//g' | awk '{print $1$2$3$4}')"
+    if [ "$Expected_TEST1A" != "$Actual_TEST1A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 1A FAILED!!!!!\e[0m"
         printf "\n"
         echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
         sleep 5
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1 \e[1m\e[32mpassed, preparing TEST 2...\e[0m"
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1A \e[1m\e[32mpassed, preparing TEST 2A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
 
 }
 
-TOOLCHAIN_TEST2 () {
+TOOLCHAIN_TEST2A () {
 
     clear
     HEADER
     echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
     printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #2\e[0m"
+    echo -e "       \e[1m\e[4m\e[34mTEST #2A\e[0m"
     printf "\n\n"
     sleep 3
-    Expected_TEST2="$(cat tlchn_test2.txt)"
-    Actual_TEST2="$(grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log)"
-    if [ "$Expected_TEST2" != "$Actual_TEST2" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 2 FAILED!!!!!\e[0m"
+    Expected_TEST2A="$(cat tlchn_TEST2A.txt)"
+    Actual_TEST2A="$(grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log)"
+    if [ "$Expected_TEST2A" != "$Actual_TEST2A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 2A FAILED!!!!!\e[0m"
         printf "\n"
         echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
         sleep 5
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2 \e[1m\e[32mpassed, preparing TEST 3...\e[0m"
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2A \e[1m\e[32mpassed, preparing TEST 3A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
-    rm tlchn_test2.txt
+    rm tlchn_TEST2A.txt
 }
 
-TOOLCHAIN_TEST3 () {
+TOOLCHAIN_TEST3A () {
 
     clear
     HEADER
     echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
     printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #3\e[0m"
+    echo -e "       \e[1m\e[4m\e[34mTEST #3A\e[0m"
     printf "\n\n"
     sleep 3
-    Expected_TEST3="/usr/include"
-    Actual_TEST3="$(grep -B1 '^ /usr/include' dummy.log | grep usr | awk '{print $1}')"
-    if [ "$Expected_TEST3" != "$Actual_TEST3" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 3 FAILED!!!!!\e[0m"
+    Expected_TEST3A="/usr/include"
+    Actual_TEST3A="$(grep -B1 '^ /usr/include' dummy.log | grep usr | awk '{print $1}')"
+    if [ "$Expected_TEST3A" != "$Actual_TEST3A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 3A FAILED!!!!!\e[0m"
         printf "\n"
         echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
         sleep 5
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3 \e[1m\e[32mpassed, preparing TEST 4...\e[0m"
-        printf "\n\n"
-        sleep 3
-    fi
-
-}
-
-TOOLCHAIN_TEST4 () {
-
-    clear
-    HEADER
-    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
-    printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #4\e[0m"
-    printf "\n\n"
-    sleep 3
-    Expected_TEST4="$(cat tlchn_test4.txt)"
-    Actual_TEST4="$(grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g')"
-    if [ "$Expected_TEST4" != "$Actual_TEST4" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 4 FAILED!!!!!\e[0m"
-        printf "\n"
-        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
-        sleep 5
-        printf "\n\n"
-        exit 1
-    else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4 \e[1m\e[32mpassed, preparing TEST 5...\e[0m"
-        printf "\n\n"
-        sleep 3
-    fi
-    rm tlchn_test4.txt
-
-}
-
-TOOLCHAIN_TEST5 () {
-
-    clear
-    HEADER
-    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
-    printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #5\e[0m"
-    printf "\n\n"
-    sleep 3
-    Expected_TEST5="succeeded"
-    Actual_TEST5="$(grep "/lib.*/libc.so.6 " dummy.log | awk '{print $5}')"
-    if [ "$Expected_TEST5" != "$Actual_TEST5" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 5 FAILED!!!!!\e[0m"
-        printf "\n"
-        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
-        sleep 5
-        printf "\n\n"
-        exit 1
-    else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5 \e[1m\e[32mpassed, preparing TEST 6...\e[0m"
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3A \e[1m\e[32mpassed, preparing TEST 4A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
 
 }
 
-TOOLCHAIN_TEST6 () {
+TOOLCHAIN_TEST4A () {
 
     clear
     HEADER
     echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
     printf "\n\n"
-    echo -e "       \e[1m\e[4m\e[34mTEST #4\e[0m"
+    echo -e "       \e[1m\e[4m\e[34mTEST #4A\e[0m"
     printf "\n\n"
     sleep 3
-    Expected_TEST6="found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2"
-    Actual_TEST6="$(grep found dummy.log)"
-    if [ "$Expected_TEST6" != "$Actual_TEST6" ]; then
-        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 6 FAILED!!!!!\e[0m"
+    Expected_TEST4A="$(cat tlchn_TEST4A.txt)"
+    Actual_TEST4A="$(grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g')"
+    if [ "$Expected_TEST4A" != "$Actual_TEST4A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 4A FAILED!!!!!\e[0m"
         printf "\n"
         echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
         sleep 5
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6 \e[1m\e[32mpassed, continuing build...\e[0m"
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4A \e[1m\e[32mpassed, preparing TEST 5A...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST4A.txt
+
+}
+
+TOOLCHAIN_TEST5A () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #5A\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST5A="succeeded"
+    Actual_TEST5A="$(grep "/lib.*/libc.so.6 " dummy.log | awk '{print $5}')"
+    if [ "$Expected_TEST5A" != "$Actual_TEST5A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 5A FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5A \e[1m\e[32mpassed, preparing TEST 6A...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+
+}
+
+TOOLCHAIN_TEST6A () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #6A\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST6A="found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2"
+    Actual_TEST6A="$(grep found dummy.log)"
+    if [ "$Expected_TEST6A" != "$Actual_TEST6A" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 6A FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6A \e[1m\e[32mpassed, continuing build...\e[0m"
         printf "\n\n"
         sleep 3
     fi
     rm -v dummy.c a.out dummy.log
     cd ..
     rm -rf glibc-2.21 glibc-build/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mToolchain Adjustment Testing completed...\e[0m"
+    sleep 2
 
 }
 
@@ -513,13 +517,14 @@ BUILD_ZLIB () {
     cd zlib-1.2.8
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee /zlib-mkck-log
+    make check 2>&1 | tee zlib-mkck-log
     make install &&
     mv -v /usr/lib/libz.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
-    cd .. && rm -rf zlib-1.2.8
-    printf "\n\n"
     mv zlib_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf zlib-1.2.8
+    printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32mzlib-1.2.8 completed...\e[0m"
     sleep 2
@@ -543,11 +548,12 @@ BUILD_FILE () {
     cd file-5.22
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee /file-mkck-log
+    make check 2>&1 | tee file-mkck-log
     make install &&
-    cd .. && rm -rf file-5.22
-    printf "\n\n"
     mv file_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/file_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf file-5.22
+    printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32mfile-5.22 completed...\e[0m"
     sleep 2
@@ -576,14 +582,333 @@ BUILD_BINUTILS () {
         --enable-shared         \
         --disable-werror &&
     make tooldir=/usr &&
-    make -k check 2>&1 | tee /binutils-mkck-log
+    make -k check 2>&1 | tee binutils-mkck-log
     make tooldir=/usr install &&
+    mv binutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
-    mv binutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
     sleep 3
     echo -e "\e[1m\e[32mbinutils-2.25 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_GMP () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gmp-6.0.0a...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ################
+    ## GMP-6.0.0a ##
+    ## ========== ##
+    ################
+
+    tar xf gmp-6.0.0a.src.tar.gz &&
+    cd gmp-6.0.0a
+    ./configure       \
+        --prefix=/usr \
+        --enable-cxx  \
+        --docdir=/usr/share/doc/gmp-6.0.0a &&
+    make &&
+    make html &&
+    make check 2>&1 | tee gmp-check-logA
+    awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-logB
+    cat gmp-check-logA >> gmp-mkck-log
+    cat gmp-check-logB >> gmp-mkck-log
+    make install &&
+    make install-html &&
+    mv gmp_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gmp_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf gmp-6.0.0a
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgmp-6.0.0a completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_MPFR () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding mpfr-3.1.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ################
+    ## MPFR-3.1.2 ##
+    ## ========== ##
+    ################
+
+    tar xf mpfr-3.1.2.src.tar.gz &&
+    cd mpfr-3.1.2
+    patch -Np1 -i ../mpfr-3.1.2-upstream_fixes-3.patch &&
+    ./configure              \
+        --prefix=/usr        \
+        --enable-thread-safe \
+        --docdir=/usr/share/doc/mpfr-3.1.2 &&
+    make &&
+    make html &&
+    make check 2>&1 | tee mpfr-mkck-log
+    make install &&
+    make install-html &&
+    mv mpfr_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpfr_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf mpfr-3.1.2
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mmpfr-3.1.2 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_MPC () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding mpc-1.0.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## MPC-1.0.2 ##
+    ## ========= ##
+    ###############
+
+    tar xf mpc-1.0.2.src.tar.gz &&
+    cd mpc-1.0.2
+    ./configure       \
+        --prefix=/usr \
+        --docdir=/usr/share/doc/mpc-1.0.2 &&
+    make &&
+    make html &&
+    make check 2>&1 | tee mpc-mkck-log
+    make install &&
+    make install-html &&
+    mv mpc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpc_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf mpc-1.0.2
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mmpc-1.0.2 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_GCC () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding mpc-1.0.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## GCC-4.9.2 ##
+    ## ========= ##
+    ###############
+
+    tar xf gcc-4.9.2.src.tar.gz &&
+    mkdir -v gcc-build
+    cd gcc-build
+    SED=sed                      \
+    ../gcc-4.9.2/configure       \
+        --prefix=/usr            \
+        --enable-languages=c,c++ \
+        --disable-multilib       \
+        --disable-bootstrap      \
+        --with-system-zlib &&
+    make &&
+    ulimit -s 32768
+    make -k check 2>&1 | tee gcc-mkck-logA
+    ../gcc-4.9.2/contrib/test_summary | grep -A7 Summ >> gcc-mkck-logB
+    cat gcc-mkck-logA >> gcc-mkck-log
+    cat gcc-mkck-logB >> gcc-mkck-log
+    make install &&
+    ln -sv ../usr/bin/cpp /lib
+    ln -sv gcc /usr/bin/cc
+    install -v -dm755 /usr/lib/bfd-plugins &&
+    ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/4.9.2/liblto_plugin.so /usr/lib/bfd-plugins/
+    printf "\n\n"
+    mv gcc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gcc_mkck_log_"$TIMESTAMP"
+    sleep 3
+    echo -e "\e[1m\e[32mgcc-4.9.2 completed...\e[0m"
+    sleep 2
+
+}
+
+TOOLCHAIN_TEST1B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #1B\e[0m"
+    printf "\n\n"
+    sleep 3
+    echo 'main(){}' > dummy.c
+    cc dummy.c -v -Wl,--verbose &> dummy.log
+    Expected_TEST1B="Requestingprograminterpreter/lib64/ld-linux-x86-64.so.2"
+    Actual_TEST1B="$(readelf -l a.out | grep ': /lib' | sed s/://g | cut -d '[' -f 2 | cut -d ']' -f 1 | awk '{print $1$2$3$4}')"
+    if [ "$Expected_TEST1B" != "$Actual_TEST1B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 1B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1B \e[1m\e[32mpassed, preparing TEST 2B...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+
+}
+
+TOOLCHAIN_TEST2B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #2B\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST2B="$(cat tlchn_TEST2B.txt)"
+    Actual_TEST2B="$(grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log)"
+    if [ "$Expected_TEST2B" != "$Actual_TEST2B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 2B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2B \e[1m\e[32mpassed, preparing TEST 3B...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST2B.txt
+
+}
+
+TOOLCHAIN_TEST3B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #3B\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST3B="$(cat tlchn_TEST3B.txt)"
+    Actual_TEST3B="$(grep -B4 '^ /usr/include' dummy.log)"
+    if [ "$Expected_TEST3B" != "$Actual_TEST3B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 3B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3B \e[1m\e[32mpassed, preparing TEST 4B...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST3B.txt
+
+}
+
+TOOLCHAIN_TEST4B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #4B\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST4B="$(cat tlchn_TEST4B.txt)"
+    Actual_TEST4B="$(grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g')"
+    if [ "$Expected_TEST4B" != "$Actual_TEST4B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 4B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4B \e[1m\e[32mpassed, preparing TEST 5B...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST4B.txt
+
+}
+
+TOOLCHAIN_TEST5B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #5B\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST5B="$(cat tlchn_TEST5B.txt)"
+    Actual_TEST5B="$(grep "/lib.*/libc.so.6 " dummy.log)"
+    if [ "$Expected_TEST5B" != "$Actual_TEST5B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 5B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5B \e[1m\e[32mpassed, preparing TEST 6B...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST5B.txt
+
+}
+
+TOOLCHAIN_TEST6B () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mAdjusting the toolchain\e[0m"
+    printf "\n\n"
+    echo -e "       \e[1m\e[4m\e[34mTEST #6B\e[0m"
+    printf "\n\n"
+    sleep 3
+    Expected_TEST6B="$(cat tlchn_TEST6B.txt)"
+    Actual_TEST6B="$(grep found dummy.log)"
+    if [ "$Expected_TEST6B" != "$Actual_TEST6B" ]; then
+        echo -e "\e[1m\e[5m\e[31m!!!!!TOOLCHAIN ADJUSTMENT TEST 6B FAILED!!!!!\e[0m"
+        printf "\n"
+        echo -e "\e[1m\e[32mHalting build, check your work.\e[0m"
+        sleep 5
+        printf "\n\n"
+        exit 1
+    else
+        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6B \e[1m\e[32mpassed, continuing build...\e[0m"
+        printf "\n\n"
+        sleep 3
+    fi
+    rm tlchn_TEST6B.txt
+    rm -v dummy.c a.out dummy.log
+    mkdir -pv /usr/share/gdb/auto-load/usr/lib
+    mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+    cd ..
+    rm -rf gcc-build/ gcc-4.9.2
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mToolchain Adjustment Testing completed...\e[0m"
     sleep 2
 
 }
@@ -591,9 +916,17 @@ BUILD_BINUTILS () {
 
 
 
-#------------------------------------------------#
-# END - TEMPORARY SYSTEM PACKAGE BUILD FUNCTIONS #
-#------------------------------------------------#
+
+
+
+
+
+
+
+
+#--------------------------------------#
+# END - SYSTEM PACKAGE BUILD FUNCTIONS #
+#--------------------------------------#
 
 ############################
 ##------------------------##
@@ -668,30 +1001,83 @@ cd /sources
 BUILD_LINUX
 BUILD_MAN_PAGES
 BUILD_GLIBC
-TOOLCHAIN_TEST1
+TOOLCHAIN_TEST1A
 
-cat > tlchn_test2.txt << "TEST2Data"
+cat > tlchn_TEST2A.txt << "TEST2AData"
 /usr/lib/../lib64/crt1.o succeeded
 /usr/lib/../lib64/crti.o succeeded
 /usr/lib/../lib64/crtn.o succeeded
-TEST2Data
+TEST2AData
 
-TOOLCHAIN_TEST2
-TOOLCHAIN_TEST3
+TOOLCHAIN_TEST2A
+TOOLCHAIN_TEST3A
 
-cat > tlchn_test4.txt << "TEST4Data"
+cat > tlchn_TEST4A.txt << "TEST4AData"
 SEARCH_DIR("=/tools/x86_64-unknown-linux-gnu/lib64")
 SEARCH_DIR("/usr/lib")
 SEARCH_DIR("/lib")
 SEARCH_DIR("=/tools/x86_64-unknown-linux-gnu/lib");
-TEST4Data
+TEST4AData
 
-TOOLCHAIN_TEST4
-TOOLCHAIN_TEST5
-TOOLCHAIN_TEST6
+TOOLCHAIN_TEST4A
+TOOLCHAIN_TEST5A
+TOOLCHAIN_TEST6A
 BUILD_ZLIB
 BUILD_FILE
 BUILD_BINUTILS
+BUILD_GMP
+BUILD_MPFR
+BUILD_MPC
+BUILD_GCC
+TOOLCHAIN_TEST1B
+
+cat > tlchn_TEST2B.txt << "TEST2BData"
+/usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/crt1.o succeeded
+/usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/crti.o succeeded
+/usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../lib64/crtn.o succeeded
+TEST2BData
+
+TOOLCHAIN_TEST2B
+
+cat > tlchn_TEST3B.txt << "TEST3BData"
+#include <...> search starts here:
+ /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/include
+ /usr/local/include
+ /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/include-fixed
+ /usr/include
+TEST3BData
+
+TOOLCHAIN_TEST3B
+
+cat > tlchn_TEST4B.txt << "TEST4BData"
+SEARCH_DIR("/usr/x86_64-unknown-linux-gnu/lib64")
+SEARCH_DIR("/usr/local/lib64")
+SEARCH_DIR("/lib64")
+SEARCH_DIR("/usr/lib64")
+SEARCH_DIR("/usr/x86_64-unknown-linux-gnu/lib")
+SEARCH_DIR("/usr/local/lib")
+SEARCH_DIR("/lib")
+SEARCH_DIR("/usr/lib");
+TEST4BData
+
+TOOLCHAIN_TEST4B
+
+cat > tlchn_TEST5B.txt << "TEST5BData"
+attempt to open /lib64/libc.so.6 succeeded
+TEST5BData
+
+TOOLCHAIN_TEST5B
+
+cat > tlchn_TEST6B.txt << "TEST6BData"
+found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2
+TEST6BData
+
+TOOLCHAIN_TEST6B
+
+
+
+
+
 
 
 
