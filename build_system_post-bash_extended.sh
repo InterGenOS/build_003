@@ -992,31 +992,168 @@ BUILD_UTIL-LINUX () {
 
 }
 
+BUILD_MAN-DB () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding man-db-2.7.1...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##################
+    ## Man-DB-2.7.1 ##
+    ## ============ ##
+    ##################
 
+    tar xf man-db-2.7.1.src.tar.gz &&
+    cd man-db-2.7.1/
+    ./configure --prefix=/usr                        \
+                --docdir=/usr/share/doc/man-db-2.7.1 \
+                --sysconfdir=/etc                    \
+                --disable-setuid                     \
+                --with-browser=/usr/bin/lynx         \
+                --with-vgrind=/usr/bin/vgrind        \
+                --with-grap=/usr/bin/grap &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/man-db-mkck-log_"$TIMESTAMP"
+    make install &&
+    sed -i "s:man root:root root:g" /usr/lib/tmpfiles.d/man-db.conf
+    cd ..
+    rm -rf man-db-2.7.1/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mman-db-2.7.1 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_TAR () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding tar-1.28...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##############
+    ## Tar-1.28 ##
+    ## ======== ##
+    ##############
 
+    tar xf tar-1.28.src.tar.gz &&
+    cd tar-1.28/
+    FORCE_UNSAFE_CONFIGURE=1  \
+    ./configure --prefix=/usr \
+                --bindir=/bin &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/man-db-mkck-log_"$TIMESTAMP"
+    make install &&
+    make -C doc install-html docdir=/usr/share/doc/tar-1.28 &&
+    cd ..
+    rm -rf tar-1.28/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mtar-1.28 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_TEXINFO () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding texinfo-5.2...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #################
+    ## Texinfo-5.2 ##
+    ## =========== ##
+    #################
 
+    tar xf texinfo-5.2.src.tar.gz &&
+    cd texinfo-5.2/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/texinfo-mkck-log_"$TIMESTAMP"
+    make install &&
+    make TEXMF=/usr/share/texmf install-tex &&
+    cd ..
+    rm -rf texinfo-5.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mtexinfo-5.2 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_VIM () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding vim-7.4...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #############
+    ## Vim-7.4 ##
+    ## ======= ##
+    #############
 
+    tar xf vim-7.4.src.tar.gz &&
+    cd vim-7.4/
+    echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+    ./configure --prefix=/usr &&
+    make &&
+    make -j1 test > /vim-mkck-log_$(date +"%m-%d-%Y_%T") &&
+    make install &&
+    ln -sv vim /usr/bin/vi
+    for L in  /usr/share/man/{,*/}man1/vim.1; do
+        ln -sv vim.1 $(dirname $L)/vi.1
+    done
+    ln -sv ../vim/vim74/doc /usr/share/doc/vim-7.4
+    cd ..
+    rm -rf vim-7.4/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mvim-7.4 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_NANO () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding nano-2.3.6...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ################
+    ## Nano-2.3.6 ##
+    ## ========== ##
+    ################
 
+    tar xf nano-2.3.6.src.tar.gz &&
+    cd nano-2.3.6/
+    ./configure --prefix=/usr     \
+                --sysconfdir=/etc \
+                --enable-utf8     \
+                --enable-nanorc   \
+                --docdir=/usr/share/doc/nano-2.3.6 &&
+    make &&
+    make install &&
+    install -v -m644 doc/nanorc.sample /etc &&
+    install -v -m644 doc/texinfo/nano.html /usr/share/doc/nano-2.3.6 &&
+    cp intergen_nanorc /etc/nanorc
+    cd ..
+    rm -rf nano-2.3.6/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mnano-2.3.6 completed...\e[0m"
+    sleep 2
 
-
+}
 
 #-----------------------------------------------#
 # END - EXTENDED SYSTEM PACKAGE BUILD FUNCTIONS #
@@ -1092,10 +1229,31 @@ Systemd_config
 BUILD_SYSTEMD
 BUILD_D-BUS
 BUILD_UTIL-LINUX
+BUILD_MAN-DB
+BUILD_TAR
+BUILD_TEXINFO
+BUILD_VIM
 
+cat > /etc/vimrc << "EndOfVimConfig"
+" Begin /etc/vimrc
+set nocompatible
+set backspace=2
+syntax on
+if (&term == "iterm") || (&term == "putty")
+  set background=dark
+endif
+" End /etc/vimrc
+EndOfVimConfig
 
+BUILD_NANO
 
-
+DIVIDER
+echo -e "    \e[1m\e[32mCompleted System Package Builds..."
+DIVIDER
+sleep 3
+echo -e "    \e[1m\e[32mReturning to root shell..."
+SPACER
+sleep 3
 
 #######################
 ##-------------------##
