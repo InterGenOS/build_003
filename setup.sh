@@ -29,9 +29,6 @@
 # Sets a start-point timestamp
 TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 
-# Regex check for numbers as choices
-export NUMBER_CHECK='^[0-9]+$'
-
 # Sets build mount point
 export IGos=/mnt/igos
 
@@ -236,8 +233,11 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system.sh -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bash_profile -P "$IGos"
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/home.igos.bashrc -P "$IGos"
-    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
-    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/build_system.sh
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_system_post-bash_extended.sh -P "$IGos"
+    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh \
+        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh
+    chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh      \
+        "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -264,6 +264,8 @@ SETUP_CHROOT () {
     HEADER
     echo -e "\e[32m\e[1mChanging temporary tools directory ownership...\e[0m"
     printf "\n"
+
+    # Set correct ownership
     chown -R root:root "$IGos"/tools
     sleep 1
     printf "\n"
@@ -271,6 +273,7 @@ SETUP_CHROOT () {
     echo -e "\e[32m\e[1mTemp tools directory ownership change comlete\e[0m"
     sleep 2
 
+    # Bind and mount system mounts
     clear
     HEADER
     echo -e "\e[32m\e[1mPreparing Virtual Kernel File Systems...\e[0m"
@@ -283,9 +286,12 @@ SETUP_CHROOT () {
     mount -vt proc proc "$IGos"/proc
     mount -vt sysfs sysfs "$IGos"/sys
     mount -vt tmpfs tmpfs "$IGos"/run
+
+    # Create /dev/shm if it exists on the host
     if [ -h "$IGos"/dev/shm ]; then
       mkdir -pv "$IGos"/$(readlink "$IGos"/dev/shm)
     fi
+
     printf "\n\n"
     sleep 3
     echo -e "\e[32m\e[1mVirtual kernel file preparation complete\e[0m"
@@ -360,3 +366,5 @@ printf "\n\n\n"
 ## END - CORE SCRIPT ##
 ##-------------------##
 #######################
+
+exit 0

@@ -1468,7 +1468,8 @@ BUILD_FLEX () {
     tar xf flex-2.5.39.src.tar.gz &&
     cd flex-2.5.39/
     sed -i -e '/test-bison/d' tests/Makefile.in
-    ./configure --prefix=/usr --docdir=/usr/share/doc/flex-2.5.39 &&
+    ./configure --prefix=/usr \
+        --docdir=/usr/share/doc/flex-2.5.39 &&
     make &&
     make check 2>&1 | tee flex-mkck-log
     make install &&
@@ -1512,11 +1513,104 @@ BUILD_BISON () {
 
 }
 
+BUILD_GREP () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding grep-2.21...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ###############
+    ## Grep-2.21 ##
+    ## ========= ##
+    ###############
 
+    tar xf grep-2.21.src.tar.gz &&
+    cd grep-2.21/
+    sed -i -e '/tp++/a  if (ep <= tp) break;' src/kwset.c
+    ./configure --prefix=/usr \
+        --bindir=/bin &&
+    make &&
+    make check 2>&1 | tee grep-mkck-log
+    make install &&
+    mv grep_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/grep_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf grep-2.21/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgrep-2.21 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_READLINE () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding readline-6.3...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ##################
+    ## Readline-6.3 ##
+    ## ============ ##
+    ##################
+
+    tar xf readline-6.3.src.tar.gz &&
+    cd readline-6.3/
+    patch -Np1 -i ../readline-6.3-upstream_fixes-3.patch &&
+    sed -i '/MV.*old/d' Makefile.in
+    sed -i '/{OLDSUFF}/c:' support/shlib-install
+    ./configure --prefix=/usr \
+        --docdir=/usr/share/doc/readline-6.3 &&
+    make SHLIB_LIBS=-lncurses &&
+    make SHLIB_LIBS=-lncurses install &&
+    mv -v /usr/lib/lib{readline,history}.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libreadline.so) /usr/lib/libreadline.so
+    ln -sfv ../../lib/$(readlink /usr/lib/libhistory.so ) /usr/lib/libhistory.so
+    cd ..
+    rm -rf readline-6.3/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mreadline-6.3 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_BASH () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding bash-4.3.30...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Bash-4.3.30 ##
+    ## =========== ##
+    #################
+
+    tar xf bash-4.3.30.src.tar.gz &&
+    cd bash-4.3.30/
+    patch -Np1 -i ../bash-4.3.30-upstream_fixes-1.patch &&
+    ./configure --prefix=/usr                       \
+                --bindir=/bin                       \
+                --docdir=/usr/share/doc/bash-4.3.30 \
+                --without-bash-malloc               \
+                --with-installed-readline &&
+    make &&
+    chown -Rv nobody .
+    su nobody -s /bin/bash -c "PATH=$PATH make tests" 2>&1 | tee bash_mkck_log
+    make install &&
+    printf "\n\n"
+    echo -e "    \e[1m\e[32mSystem Bash Binary installation complete\e[0m"
+    printf "\n"
+    echo -e "    \e[1m\e[32mPreparing to launch new shell with completed system bash binary..."
+    sleep 3
+    exec /bin/bash --login +h
+
+}
 
 
 
@@ -1698,19 +1792,29 @@ BUILD_IANA-ETC
 BUILD_M4
 BUILD_FLEX
 BUILD_BISON
+BUILD_GREP
+BUILD_READLINE
 
+cat > /root/.bash_profile << "AddExecutable"
+/bin/bash /./build_system_post-bash_extended.sh
+AddExecutable
 
-
-
-
+BUILD_BASH
 
 
 
 
 SPACER
-echo -e "\e[1m\e[32mWORKING AS EXPECTED\e[0m"
+echo -e "\e[1m\e[4m\e[32mWORKING AS EXPECTED\e[0m"
 SPACER
 sleep 5
 
 printf "\n\n\n"
+
+#######################
+##-------------------##
+## END - CORE SCRIPT ##
+##-------------------##
+#######################
+
 exit 0

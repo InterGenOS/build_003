@@ -20,5 +20,14 @@
 # any later version.
 # ------------------
 
+#------------------------------#
+# BEGIN WRAPPER SCRIPT COMMAND #
+#------------------------------#
+
 env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' PATH=/tools/bin:/bin:/usr/bin /bin/bash ./build_temporary_system.sh &&
+
+#----------------------------#
+# END WRAPPER SCRIPT COMMAND #
+#----------------------------#
+
 exit 0

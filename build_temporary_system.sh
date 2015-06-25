@@ -38,9 +38,6 @@ export IGos LC_ALL IGos_TGT PATH
 # Sets a start-point timestamp
 TIMESTAMP="$(date +"%m-%d-%Y_%T")"
 
-# Regex check for numbers as choices
-export NUMBER_CHECK='^[0-9]+$'
-
 # Sets build mount point
 export IGos=/mnt/igos
 
@@ -147,8 +144,8 @@ BUILD_BINUTILS_PASS1 () {
     ## --target=$IGos_TGT --disable-nls --disable-werror && make && case $(uname -m) in \                  ##
     ## x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;; esac && make install; }                   ##
     ## =================================================================================                   ##
-    ## Example results for SBU with the following hardware:                                                ##
-    ## ====================================================                                                ##
+    ## Example results for a single SBU measurement with the following hardware:                           ##
+    ## =========================================================================                           ##
     ## 8GB Memory, Intel Core i3, SSD:                                                                     ##
     ## real - 2m 1.212s                                                                                    ##
     ## user - 1m 32.530s                                                                                   ##
@@ -260,6 +257,7 @@ BUILD_LINUX_API_HEADERS () {
     printf "\n\n"
     sleep 5
 
+    #############################
     ## Updated kernel to 3.19 ###
     #############################
     ## Linux-3.19 API Headers  ##
@@ -514,10 +512,9 @@ BUILD_GCC_PASS2 () {
     ## [igos@Arch gcc-build]$ readelf -l a.out | grep ': /tools'                ##
     ##      [Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2] ##
     ## ======================================================================== ##
-    ## The following script will kill the build if the Sanity Check fails:      ##
-    ## ===================================================================      ##
+    ## The following section will kill the build if the Sanity Check fails:     ##
+    ## ====================================================================     ##
     ##############################################################################
-
 
     echo 'main(){}' > dummy.c
     cc dummy.c
@@ -1227,15 +1224,17 @@ strip --strip-debug /tools/lib/* &&
 /usr/bin/strip --strip-unneeded /tools/{,s}bin/* &&
 rm -rf /tools/{,share}/{info,man,doc} &&
 
+SPACER
+echo -e "\e[1m\e[4m\e[32mTemporary system build complete\e[0m"
+printf "\n\n"
+DIVIDER
+SPACER
+sleep 5
+
 #######################
 ##-------------------##
 ## END - CORE SCRIPT ##
 ##-------------------##
 #######################
 
-SPACER
-echo -e "\e[1m\e[4m\e[32mTemporary system build complete\e[0m"
-printf "\n\n"
-DIVIDER
-sleep 5
 exit 0
