@@ -834,10 +834,90 @@ BUILD_MAKE () {
 
 }
 
+BUILD_PATCH () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding patch-2.7.4...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #################
+    ## Patch-2.7.4 ##
+    ## =========== ##
+    #################
 
+    tar xf patch-2.7.4.src.tar.gz &&
+    cd patch-2.7.4/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/patch-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf patch-2.7.4/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mpatch-2.7.4 completed...\e[0m"
+    sleep 2
 
+}
+
+BUILD_SYSTEMD () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding systemd-219...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Systemd-219 ##
+    ## =========== ##
+    #################
+
+    tar xf systemd-219.src.tar.gz &&
+    cd systemd-219/
+    mv ../config.cache .
+    sed -i "s:blkid/::" $(grep -rl "blkid/blkid.h")
+    patch -Np1 -i ../systemd-219-compat-1.patch
+    sed -i "s:test/udev-test.pl ::g" Makefile.in
+    ./configure --prefix=/usr                                           \
+                --sysconfdir=/etc                                       \
+                --localstatedir=/var                                    \
+                --config-cache                                          \
+                --with-rootprefix=                                      \
+                --with-rootlibdir=/lib                                  \
+                --enable-split-usr                                      \
+                --disable-gudev                                         \
+                --disable-firstboot                                     \
+                --disable-ldconfig                                      \
+                --disable-sysusers                                      \
+                --without-python                                        \
+                --docdir=/usr/share/doc/systemd-219                     \
+                --with-dbuspolicydir=/etc/dbus-1/system.d               \
+                --with-dbussessionservicedir=/usr/share/dbus-1/services \
+                --with-dbussystemservicedir=/usr/share/dbus-1/system-services &&
+    make LIBRARY_PATH=/tools/lib &&
+    make LD_LIBRARY_PATH=/tools/lib install
+    mv -v /usr/lib/libnss_{myhostname,mymachines,resolve}.so.2 /lib &&
+    rm -rfv /usr/lib/rpm &&
+    for system_tool in runlevel reboot shutdown poweroff halt telinit; do
+         ln -sfv ../bin/systemctl /sbin/${system_tool}
+    done
+    ln -sfv ../lib/systemd/systemd /sbin/init
+    sed -i "s:0775 root lock:0755 root root:g" /usr/lib/tmpfiles.d/legacy.conf
+    sed -i "/pam.d/d" /usr/lib/tmpfiles.d/etc.conf
+    systemd-machine-id-setup &&
+    sed -i "s:minix:ext4:g" src/test/test-path-util.c
+    make LD_LIBRARY_PATH=/tools/lib -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/systemd-mkck-log_"$TIMESTAMP"
+    cd ..
+    rm -rf systemd-219/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32msystemd-219 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -927,6 +1007,22 @@ BUILD_KBD
 BUILD_KMOD
 BUILD_LIBPIPELINE
 BUILD_MAKE
+BUILD_PATCH
+
+cat > config.cache << "Systemd_config"
+KILL=/bin/kill
+HAVE_BLKID=1
+BLKID_LIBS="-lblkid"
+BLKID_CFLAGS="-I/tools/include/blkid"
+HAVE_LIBMOUNT=1
+MOUNT_LIBS="-lmount"
+MOUNT_CFLAGS="-I/tools/include/libmount"
+cc_cv_CFLAGS__flto=no
+Systemd_config
+
+BUILD_SYSTEMD
+
+
 
 
 
