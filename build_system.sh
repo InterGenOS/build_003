@@ -976,9 +976,95 @@ BUILD_PKG-CONFIG () {
 
 }
 
+BUILD_NCURSES () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding ncurses-5.9...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #################
+    ## Ncurses-5.9 ##
+    ## =========== ##
+    #################
 
+    tar xf ncurses-5.9.src.tar.gz &&
+    cd ncurses-5.9
+    ./configure --prefix=/usr           \
+                --mandir=/usr/share/man \
+                --with-shared           \
+                --without-debug         \
+                --enable-pc-files       \
+                --enable-widec &&
+    make &&
+    make install &&
+    mv -v /usr/lib/libncursesw.so.5* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libncursesw.so) /usr/lib/libncursesw.so
+    for lib in ncurses form panel menu; do
+        rm -vf                    /usr/lib/lib${lib}.so
+        echo "INPUT(-l${lib}w)" > /usr/lib/lib${lib}.so
+        ln -sfv lib${lib}w.a      /usr/lib/lib${lib}.a
+        ln -sfv ${lib}w.pc        /usr/lib/pkgconfig/${lib}.pc
+    done
+    ln -sfv libncurses++w.a /usr/lib/libncurses++.a
+    rm -vf                     /usr/lib/libcursesw.so
+    echo "INPUT(-lncursesw)" > /usr/lib/libcursesw.so
+    ln -sfv libncurses.so      /usr/lib/libcurses.so
+    ln -sfv libncursesw.a      /usr/lib/libcursesw.a
+    ln -sfv libncurses.a       /usr/lib/libcurses.a
+    mkdir -v       /usr/share/doc/ncurses-5.9
+    cp -v -R doc/* /usr/share/doc/ncurses-5.9
+    make distclean &&
+    ./configure --prefix=/usr    \
+                --with-shared    \
+                --without-normal \
+                --without-debug  \
+                --without-cxx-binding &&
+    make sources libs &&
+    cp -av lib/lib*.so.5* /usr/lib
+    cd ..
+    rm -rf ncurses-5.9
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mncurses-5.9 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_ATTR () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding attr-2.4.47...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Attr 2.4.47 ##
+    ## =========== ##
+    #################
+
+    tar xf attr-2.4.47.src.tar.gz &&
+    cd attr-2.4.47
+    sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+    sed -i -e "/SUBDIRS/s|man2||" man/Makefile
+    ./configure --prefix=/usr &&
+    make
+    make -j1 test root-tests 2>&1 | tee /attr-mkck-log
+    make install install-dev install-lib &&
+    chmod -v 755 /usr/lib/libattr.so
+    mv -v /usr/lib/libattr.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libattr.so) /usr/lib/libattr.so
+    mv attr_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/attr_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf attr-2.4.47
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mattr-2.4.47 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -1138,8 +1224,8 @@ TEST6BData
 TOOLCHAIN_TEST6B
 BUILD_BZIP2
 BUILD_PKG-CONFIG
-
-
+BUILD_NCURSES
+BUILD_ATTR
 
 
 
