@@ -1607,6 +1607,7 @@ BUILD_BASH () {
     echo -e "    \e[1m\e[32mSystem Bash Binary installation complete\e[0m"
     printf "\n"
     echo -e "    \e[1m\e[32mPreparing to launch new shell with completed system bash binary..."
+    SPACER
     sleep 3
     exec /bin/bash --login +h
 
