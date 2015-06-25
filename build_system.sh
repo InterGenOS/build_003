@@ -1051,7 +1051,7 @@ BUILD_ATTR () {
     sed -i -e "/SUBDIRS/s|man2||" man/Makefile
     ./configure --prefix=/usr &&
     make
-    make -j1 test root-tests 2>&1 | tee /attr-mkck-log
+    make -j1 test root-tests 2>&1 | tee attr-mkck-log
     make install install-dev install-lib &&
     chmod -v 755 /usr/lib/libattr.so
     mv -v /usr/lib/libattr.so.* /lib
@@ -1149,7 +1149,7 @@ BUILD_SED () {
         --htmldir=/usr/share/doc/sed-4.2.2
     make &&
     make html &&
-    make -k check 2>&1 | tee /sed-mkck-log
+    make -k check 2>&1 | tee sed-mkck-log
     make install &&
     make -C doc install-html &&
     mv sed_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/sed_mkck_log_"$TIMESTAMP"
@@ -1240,6 +1240,123 @@ BUILD_SHADOW () {
     sleep 2
 
 }
+
+BUILD_PSMISC () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding psmisc-22.21...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ##################
+    ## Psmisc-22.21 ##
+    ## ============ ##
+    ##################
+
+    tar xf psmisc-22.21.src.tar.gz
+    cd psmisc-22.21
+    ./configure --prefix=/usr &&
+    make &&
+    make install &&
+    mv -v /usr/bin/fuser   /bin
+    mv -v /usr/bin/killall /bin
+    cd ..
+    rm -rf psmisc-22.21
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mpsmisc-22.21 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_PROCPS-NG () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding procps-ng-3.3.10...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ######################
+    ## Procps-ng-3.3.10 ##
+    ## ================ ##
+    ######################
+
+    tar xf procps-ng-3.3.10.src.tar.gz &&
+    cd procps-ng-3.3.10
+    ./configure --prefix=/usr                            \
+                --exec-prefix=                           \
+                --libdir=/usr/lib                        \
+                --docdir=/usr/share/doc/procps-ng-3.3.10 \
+                --disable-static                         \
+                --disable-kill &&
+    make &&
+    sed -i -r 's|(pmap_initname)\\\$|\1|' testsuite/pmap.test/pmap.exp
+    make check 2>&1 | tee procps-ng-mkck-log
+    make install &&
+    mv -v /usr/bin/pidof /bin
+    mv -v /usr/lib/libprocps.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so
+    mv procps-ng_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/procps-ng_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf procps-ng-3.3.10
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mprocps-ng-3.3.10 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_E2FSPROGS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding e2fsprogs-1.42.12...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #######################
+    ## E2fsprogs-1.42.12 ##
+    ## ================= ##
+    #######################
+
+    tar xf e2fsprogs-1.42.12.src.tar.gz &&
+    cd e2fsprogs-1.42.12
+    sed -e '/int.*old_desc_blocks/s/int/blk64_t/' \
+        -e '/if (old_desc_blocks/s/super->s_first_meta_bg/desc_blocks/' \
+        -i lib/ext2fs/closefs.c &&
+    mkdir -v build
+    cd build
+    LIBS=-L/tools/lib                    \
+    CFLAGS=-I/tools/include              \
+    PKG_CONFIG_PATH=/tools/lib/pkgconfig \
+    ../configure --prefix=/usr           \
+                 --bindir=/bin           \
+                 --with-root-prefix=""   \
+                 --enable-elf-shlibs     \
+                 --disable-libblkid      \
+                 --disable-libuuid       \
+                 --disable-uuidd         \
+                 --disable-fsck &&
+    make &&
+    ln -sfv /tools/lib/lib{blk,uu}id.so.1 lib
+    make LD_LIBRARY_PATH=/tools/lib check 2>&1 | tee e2fsprogs-mkck-log
+    make install &&
+    make install-libs &&
+    chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
+    gunzip -v /usr/share/info/libext2fs.info.gz
+    install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info &&
+    mv e2fsprogs_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/e2fsprogs_mkck_log_"$TIMESTAMP"
+    cd ../.. && rm -rf e2fsprogs-1.42.12
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32me2fsprogs-1.42.12 completed...\e[0m"
+    sleep 2
+
+}
+
+
 
 
 
@@ -1401,6 +1518,9 @@ BUILD_LIBCAP
 BUILD_SED
 BUILD_CRACKLIB
 BUILD_SHADOW
+BUILD_PSMISC
+BUILD_PROCPS-NG
+BUILD_E2FSPROGS
 
 
 
