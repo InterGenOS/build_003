@@ -1440,7 +1440,7 @@ BUILD_M4 () {
     cd m4-1.4.17
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee /m4-mkck-log
+    make check 2>&1 | tee m4-mkck-log
     make install &&
     mv m4_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/m4_mkck_log_"$TIMESTAMP"
     cd ..
@@ -1451,6 +1451,77 @@ BUILD_M4 () {
     sleep 2
 
 }
+
+BUILD_FLEX () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding flex-2.5.39...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Flex-2.5.39 ##
+    ## =========== ##
+    #################
+
+    tar xf flex-2.5.39.src.tar.gz &&
+    cd flex-2.5.39/
+    sed -i -e '/test-bison/d' tests/Makefile.in
+    ./configure --prefix=/usr --docdir=/usr/share/doc/flex-2.5.39 &&
+    make &&
+    make check 2>&1 | tee flex-mkck-log
+    make install &&
+    ln -sv flex /usr/bin/lex
+    mv flex_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/flex_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf flex-2.5.39/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mflex-2.5.39 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_BISON () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding bison-3.0.4...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Bison-3.0.4 ##
+    ## =========== ##
+    #################
+
+    tar xf bison-3.0.4.src.tar.gz &&
+    cd bison-3.0.4/
+    ./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.0.4 &&
+    make &&
+    make check 2>&1 | tee bison-mkck-log
+    make install &&
+    mv bison_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bison_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf bison-3.0.4/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mbison-3.0.4 completed...\e[0m"
+    sleep 2
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1625,8 +1696,8 @@ BUILD_E2FSPROGS
 BUILD_COREUTILS
 BUILD_IANA-ETC
 BUILD_M4
-
-
+BUILD_FLEX
+BUILD_BISON
 
 
 
