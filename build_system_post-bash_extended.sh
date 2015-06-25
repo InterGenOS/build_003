@@ -447,56 +447,180 @@ BUILD_FINDUTILS () {
 
 }
 
+BUILD_GETTEXT () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gettext-0.19.4...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ####################
+    ## Gettext-0.19.4 ##
+    ## ============== ##
+    ####################
 
+    tar xf gettext-0.19.4.src.tar.gz &&
+    cd gettext-0.19.4/
+    ./configure --prefix=/usr --docdir=/usr/share/doc/gettext-0.19.4 &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gettext-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf gettext-0.19.4/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgettext-0.19.4 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_INTLTOOL () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding intltool-0.50.2...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #####################
+    ## Intltool-0.50.2 ##
+    ## =============== ##
+    #####################
 
+    tar xf intltool-0.50.2.src.tar.gz &&
+    cd intltool-0.50.2/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/intltool-mkck-log_"$TIMESTAMP"
+    make install &&
+    install -v -Dm644 doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO &&
+    cd ..
+    rm -rf intltool-0.50.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mintltool-0.50.2 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_GPERF () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gperf-3.0.4...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #################
+    ## Gperf-3.0.4 ##
+    ## =========== ##
+    #################
 
+    tar xf gperf-3.0.4.tar.gz &&
+    cd gperf-3.0.4/
+    ./configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.0.4 &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gperf-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf gperf-3.0.4/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgperf-3.0.4 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_GROFF () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding groff-1.22.3...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##################
+    ## Groff-1.22.3 ##
+    ## ============ ##
+    ##################
 
+    tar xf groff-1.22.3.src.tar.gz &&
+    cd groff-1.22.3/
+    PAGE=letter ./configure --prefix=/usr &&
+    make &&
+    make install &&
+    cd ..
+    rm -rf groff-1.22.3/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgroff-1.22.3 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_XZ () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding xz-5.2.0...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##############
+    ## Xz-5.2.0 ##
+    ## ======== ##
+    ##############
 
+    tar xf xz-5.2.0.src.tar.gz &&
+    cd xz-5.2.0/
+    ./configure --prefix=/usr \
+        --docdir=/usr/share/doc/xz-5.2.0 &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/xz-mkck-log_"$TIMESTAMP"
+    make install &&
+    mv -v   /usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} /bin
+    mv -v /usr/lib/liblzma.so.* /lib
+    ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) /usr/lib/liblzma.so
+    cd .. && rm -rf xz-5.2.0/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mxz-5.2.0 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_GRUB () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding grub-2.0.2~beta2...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    #####################
+    ## GRUB-2.02~beta2 ##
+    ## =============== ##
+    #####################
 
+    tar xf grub-2.02~beta2.src.tar.gz &&
+    cd grub-2.02~beta2/
+    ./configure --prefix=/usr          \
+                --sbindir=/sbin        \
+                --sysconfdir=/etc      \
+                --disable-grub-emu-usb \
+                --disable-efiemu       \
+                --disable-werror &&
+    make &&
+    make install &&
+    cd ..
+    rm -rf grub-2.02~beta2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgrub-2.0.2~beta2 completed...\e[0m"
+    sleep 2
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 
@@ -588,12 +712,12 @@ BUILD_AUTOMAKE
 BUILD_DIFFUTILS
 BUILD_GAWK
 BUILD_FINDUTILS
-
-
-
-
-
-
+BUILD_GETTEXT
+BUILD_INTLTOOL
+BUILD_GPERF
+BUILD_GROFF
+BUILD_XZ
+BUILD_GRUB
 
 
 
