@@ -622,13 +622,124 @@ BUILD_GRUB () {
 
 }
 
+BUILD_LESS () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding less-458...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##############
+    ## Less-458 ##
+    ## ======== ##
+    ##############
 
+    tar xf less-458.src.tar.gz &&
+    cd less-458/
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc &&
+    make &&
+    make install &&
+    cd ..
+    rm -rf less-458/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mless-458 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_GZIP () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gzip-1.6...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##############
+    ## Gzip-1.6 ##
+    ## ======== ##
+    ##############
+
+    tar xf gzip-1.6.tar.xz &&
+    cd gzip-1.6/
+    ./configure --prefix=/usr \
+        --bindir=/bin &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gzip-mkck-log_"$TIMESTAMP"
+    make install &&
+    mv -v /bin/{gzexe,uncompress,zcmp,zdiff,zegrep} /usr/bin
+    mv -v /bin/{zfgrep,zforce,zgrep,zless,zmore,znew} /usr/bin
+    cd ..
+    rm -rf gzip-1.6/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgzip-1.6 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_IPROUTE2 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding iproute2-3.19.0...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## IPRoute2-3.19.0 ##
+    ## =============== ##
+    #####################
+
+    tar xf iproute2-3.19.0.src.tar.gz &&
+    cd iproute2-3.19.0/
+    sed -i '/^TARGETS/s@arpd@@g' misc/Makefile
+    sed -i /ARPD/d Makefile
+    sed -i 's/arpd.8//' man/man8/Makefile
+    make &&
+    make DOCDIR=/usr/share/doc/iproute2-3.19.0 install &&
+    cd ..
+    rm -rf iproute2-3.19.0/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32miproute2-3.19.0 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_KBD () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding kbd-2.0.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## Kbd-2.0.2 ##
+    ## ========= ##
+    ###############
+
+    tar xf kbd-2.0.2.src.tar.gz &&
+    cd kbd-2.0.2/
+    patch -Np1 -i ../kbd-2.0.2-backspace-1.patch &&
+    sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/g' configure
+    sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in
+    PKG_CONFIG_PATH=/tools/lib/pkgconfig ./configure --prefix=/usr --disable-vlock &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/kbd-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf kbd-2.0.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mkbd-2.0.2 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -718,6 +829,12 @@ BUILD_GPERF
 BUILD_GROFF
 BUILD_XZ
 BUILD_GRUB
+BUILD_LESS
+BUILD_GZIP
+BUILD_IPROUTE2
+BUILD_KBD
+
+
 
 
 
