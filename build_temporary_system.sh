@@ -279,7 +279,7 @@ BUILD_LINUX_API_HEADERS () {
 BUILD_GLIBC () {
     clear
     HEADER
-    echo -e "\e[1m\e[32mBuilding glibc-2.21...e\[0m"
+    echo -e "\e[1m\e[32mBuilding glibc-2.21...\e[0m"
     printf "\n\n"
     sleep 5
 

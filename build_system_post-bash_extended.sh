@@ -174,6 +174,225 @@ BUILD_GDBM () {
 
 }
 
+BUILD_EXPAT () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding expat-2.1.0...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Expat-2.1.0 ##
+    ## =========== ##
+    #################
+
+    tar xf expat-2.1.0.src.tar.gz &&
+    cd expat-2.1.0/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/expat-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf expat-2.1.0/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mexpat-2.1.0 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_INETUTILS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding inetutils-1.9.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## Inetutils-1.9.2 ##
+    ## =============== ##
+    #####################
+
+    tar xf inetutils-1.9.2.src.tar.gz &&
+    cd inetutils-1.9.2/
+    echo '#define PATH_PROCNET_DEV "/proc/net/dev"' >> ifconfig/system/linux.h
+    ./configure --prefix=/usr        \
+                --localstatedir=/var \
+                --disable-logger     \
+                --disable-whois      \
+                --disable-servers &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/inetutils-mkck-log_"$TIMESTAMP"
+    make install &&
+    mv -v /usr/bin/{hostname,ping,ping6,traceroute} /bin &&
+    mv -v /usr/bin/ifconfig /sbin &&
+    cd ..
+    rm -rf inetutils-1.9.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32minetutils-1.9.2 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_PERL () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding perl-5.20.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Perl-5.20.2 ##
+    ## =========== ##
+    #################
+
+    tar xf perl-5.20.2.src.tar.gz &&
+    cd perl-5.20.2/
+    echo "127.0.0.1 localhost $(hostname)" > /etc/hosts
+    export BUILD_ZLIB=False
+    export BUILD_BZIP2=0
+    sh Configure -des -Dprefix=/usr                 \
+                      -Dvendorprefix=/usr           \
+                      -Dman1dir=/usr/share/man/man1 \
+                      -Dman3dir=/usr/share/man/man3 \
+                      -Dpager="/usr/bin/less -isR"  \
+                      -Duseshrplib &&
+    make &&
+    make -k test 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/perl-mkck-log_"$TIMESTAMP"
+    make install &&
+    unset BUILD_ZLIB BUILD_BZIP2
+    cd ..
+    rm -rf perl-5.20.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mperl-5.20.2 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_XML-PARSER () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding xml-parser-2.44...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ######################
+    ## XML::Parser-2.44 ##
+    ## ================ ##
+    ######################
+
+    tar xf XML-Parser-2.44.src.tar.gz &&
+    cd XML-Parser-2.44/
+    perl Makefile.PL &&
+    make &&
+    make test 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/xml_parser-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf XML-Parser-2.44/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mxml-parser-2.44 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_AUTOCONF () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding autoconf-2.69...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Autoconf-2.69 ##
+    ## ============= ##
+    ###################
+
+    tar xf autoconf-2.69.src.tar.gz &&
+    cd autoconf-2.69/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/autoconf-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf autoconf-2.69/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mautoconf-2.69 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_AUTOMAKE () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding automake-1.15...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Automake-1.15 ##
+    ## ============= ##
+    ###################
+
+    tar xf automake-1.15.tar.xz &&
+    cd automake-1.15/
+    ./configure --prefix=/usr \
+        --docdir=/usr/share/doc/automake-1.15 &&
+    make &&
+    sed -i "s:./configure:LEXLIB=/usr/lib/libfl.a &:" t/lex-{clean,depend}-cxx.sh
+    make -j4 check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/automake-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf automake-1.15/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mautomake-1.15 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_DIFFUTILS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding diffutils-3.3...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Diffutils-3.3 ##
+    ## ============= ##
+    ###################
+
+    tar xf diffutils-3.3.src.tar.gz &&
+    cd diffutils-3.3/
+    sed -i 's:= @mkdir_p@:= /bin/mkdir -p:' po/Makefile.in.in
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/diffutils-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf diffutils-3.3/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mdiffutils-3.3 completed...\e[0m"
+    sleep 2
+
+}
+
+
+
+
+
 
 
 #-----------------------------------------------#
@@ -208,6 +427,14 @@ rm -rf bash-4.3.30
 BUILD_BC
 BUILD_LIBTOOL
 BUILD_GDBM
+BUILD_EXPAT
+BUILD_INETUTILS
+BUILD_PERL
+BUILD_XML-PARSER
+BUILD_AUTOCONF
+BUILD_AUTOMAKE
+BUILD_DIFFUTILS
+
 
 
 #######################
