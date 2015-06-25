@@ -246,10 +246,9 @@ BUILD_GLIBC () {
         -i  sysdeps/i386/i686/multiarch/mempcpy_chk.S &&
     mkdir -pv ../glibc-build
     cd ../glibc-build
-    ../glibc-2.21/configure    \
-        --prefix=/usr          \
-        --disable-profile      \
-        --enable-kernel=2.6.32 \
+    ../glibc-2.21/configure --prefix=/usr \
+        --disable-profile                 \
+        --enable-kernel=2.6.32            \
         --enable-obsolete-rpc &&
     make &&
     make check 2>&1 | tee glibc_mkck_log
@@ -574,12 +573,10 @@ BUILD_BINUTILS () {
     ###################
 
     tar xf binutils-2.25.src.tar.gz &&
-    cd binutils-2.25
-    mkdir -v ../binutils-build
-    cd ../binutils-build
-    ../binutils-2.25/configure  \
-        --prefix=/usr           \
-        --enable-shared         \
+    mkdir -v binutils-build
+    cd binutils-build
+    ../binutils-2.25/configure --prefix=/usr \
+        --enable-shared                      \
         --disable-werror &&
     make tooldir=/usr &&
     make -k check 2>&1 | tee binutils-mkck-log
@@ -609,9 +606,8 @@ BUILD_GMP () {
 
     tar xf gmp-6.0.0a.src.tar.gz &&
     cd gmp-6.0.0a
-    ./configure       \
-        --prefix=/usr \
-        --enable-cxx  \
+    ./configure --prefix=/usr \
+        --enable-cxx          \
         --docdir=/usr/share/doc/gmp-6.0.0a &&
     make &&
     make html &&
@@ -647,9 +643,8 @@ BUILD_MPFR () {
     tar xf mpfr-3.1.2.src.tar.gz &&
     cd mpfr-3.1.2
     patch -Np1 -i ../mpfr-3.1.2-upstream_fixes-3.patch &&
-    ./configure              \
-        --prefix=/usr        \
-        --enable-thread-safe \
+    ./configure --prefix=/usr \
+        --enable-thread-safe  \
         --docdir=/usr/share/doc/mpfr-3.1.2 &&
     make &&
     make html &&
@@ -681,8 +676,7 @@ BUILD_MPC () {
 
     tar xf mpc-1.0.2.src.tar.gz &&
     cd mpc-1.0.2
-    ./configure       \
-        --prefix=/usr \
+    ./configure --prefix=/usr \
         --docdir=/usr/share/doc/mpc-1.0.2 &&
     make &&
     make html &&
@@ -913,6 +907,75 @@ TOOLCHAIN_TEST6B () {
 
 }
 
+BUILD_BZIP2 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding bzip2-1.0.6...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Bzip2-1.0.6 ##
+    ## =========== ##
+    #################
+
+    tar xf bzip2-1.0.6.src.tar.gz &&
+    cd bzip2-1.0.6
+    patch -Np1 -i ../bzip2-1.0.6-install_docs-1.patch
+    sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+    sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+    make -f Makefile-libbz2_so &&
+    make clean &&
+    make &&
+    make PREFIX=/usr install
+    cp -v bzip2-shared /bin/bzip2 &&
+    cp -av libbz2.so* /lib &&
+    ln -sv ../../lib/libbz2.so.1.0 /usr/lib/libbz2.so
+    rm -v /usr/bin/{bunzip2,bzcat,bzip2} &&
+    ln -sv bzip2 /bin/bunzip2
+    ln -sv bzip2 /bin/bzcat
+    cd ..
+    rm -rf bzip2-1.0.6
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mbzip2-1.0.6 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_PKG-CONFIG () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding pkg-config-0.28...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## Pkg-config-0.28 ##
+    ## =============== ##
+    #####################
+
+    tar xf pkg-config-0.28.src.tar.gz &&
+    cd pkg-config-0.28
+    ./configure --prefix=/usr \
+        --with-internal-glib  \
+        --disable-host-tool   \
+        --docdir=/usr/share/doc/pkg-config-0.28 &&
+    make &&
+    make -k check 2>&1 | tee pkg-config_mkck_log
+    make install &&
+    mv pkf-config_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/pkg-config_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf pkg-config-0.28
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mpkg-config-0.28 completed...\e[0m"
+    sleep 2
+
+}
+
 
 
 
@@ -1073,8 +1136,8 @@ found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2
 TEST6BData
 
 TOOLCHAIN_TEST6B
-
-
+BUILD_BZIP2
+BUILD_PKG-CONFIG
 
 
 
