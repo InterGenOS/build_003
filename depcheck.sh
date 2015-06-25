@@ -1,5 +1,24 @@
-#!/bin/bash
+#!/usr/bin/bash
 # depcheck.sh
+# -------------------------------------------------------
+# InterGenOS: A Linux from Source Project
+# build: .003
+# URL: http://intergenstudios.com/intergen_os/
+# Github: https://github.com/InterGenOS
+# ---------------------------------------------------
+# InterGenStudios: 6-18-15
+# Copyright (c) 2015: Christopher 'InterGen' Cork  InterGenStudios
+# URL: https://intergenstudios.com
+# --------------------------------
+# License: GPL-2.0+
+# URL: http://opensource.org/licenses/gpl-license.php
+# ---------------------------------------------------
+# InterGenOS is free software:
+# You may redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software
+# Foundation, either version 2 of the License, or (at your discretion)
+# any later version.
+# ------------------
 # Simple script to list version numbers of critical development tools
 
 export LC_ALL=C
@@ -58,3 +77,4 @@ if [ -x dummy ]
        tput sgr0
        printf "\n\n"; fi
 rm -f dummy.c dummy
+exit 0
