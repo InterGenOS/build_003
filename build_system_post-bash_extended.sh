@@ -389,6 +389,158 @@ BUILD_DIFFUTILS () {
 
 }
 
+BUILD_GAWK () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gawk-4.1.1...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ################
+    ## Gawk-4.1.1 ##
+    ## ========== ##
+    ################
+
+    tar xf gawk-4.1.1.src.tar.gz &&
+    cd gawk-4.1.1/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gawk-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf gawk-4.1.1/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgawk-4.1.1 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_FINDUTILS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding findutils-4.4.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## Findutils-4.4.2 ##
+    ## =============== ##
+    #####################
+
+    tar xf findutils-4.4.2.src.tar.gz &&
+    cd findutils-4.4.2/
+    ./configure --prefix=/usr --localstatedir=/var/lib/locate &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/findutils-mkck-log_"$TIMESTAMP"
+    make install &&
+    mv -v /usr/bin/find /bin
+    sed -i 's|find:=${BINDIR}|find:=/bin|' /usr/bin/updatedb
+    cd ..
+    rm -rf findutils-4.4.2/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mfindutils-4.4.2 completed...\e[0m"
+    sleep 2
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -434,6 +586,16 @@ BUILD_XML-PARSER
 BUILD_AUTOCONF
 BUILD_AUTOMAKE
 BUILD_DIFFUTILS
+BUILD_GAWK
+BUILD_FINDUTILS
+
+
+
+
+
+
+
+
 
 
 
