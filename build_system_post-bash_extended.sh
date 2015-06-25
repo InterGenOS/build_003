@@ -919,9 +919,78 @@ BUILD_SYSTEMD () {
 
 }
 
+BUILD_D-BUS () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding d-bus-1.8.16...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ##################
+    ## D-Bus-1.8.16 ##
+    ## ============ ##
+    ##################
 
+    tar xf dbus-1.8.16.src.tar.gz &&
+    cd dbus-1.8.16/
+    ./configure --prefix=/usr                       \
+                --sysconfdir=/etc                   \
+                --localstatedir=/var                \
+                --docdir=/usr/share/doc/dbus-1.8.16 \
+                --with-console-auth-dir=/run/console &&
+    make &&
+    make install &&
+    mv -v /usr/lib/libdbus-1.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libdbus-1.so) /usr/lib/libdbus-1.so
+    ln -sfv /etc/machine-id /var/lib/dbus
+    cd ..
+    rm -rf dbus-1.8.16/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32md-bus-1.8.16 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_UTIL-LINUX () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding util-linux-2.26...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## Util-linux-2.26 ##
+    ## =============== ##
+    #####################
+
+    tar xf util-linux-2.26.src.tar.gz &&
+    cd util-linux-2.26/
+    mkdir -pv /var/lib/hwclock
+    ./configure ADJTIME_PATH=/var/lib/hwclock/adjtime   \
+                --docdir=/usr/share/doc/util-linux-2.26 \
+                --disable-chfn-chsh  \
+                --disable-login      \
+                --disable-nologin    \
+                --disable-su         \
+                --disable-setpriv    \
+                --disable-runuser    \
+                --disable-pylibmount \
+                --without-python &&
+    make &&
+    chown -Rv nobody .
+    su nobody -s /bin/bash -c "PATH=$PATH make -k check" 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/util-linux-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf util-linux-2.26/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mutil-linux-2.26 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -1021,7 +1090,8 @@ cc_cv_CFLAGS__flto=no
 Systemd_config
 
 BUILD_SYSTEMD
-
+BUILD_D-BUS
+BUILD_UTIL-LINUX
 
 
 

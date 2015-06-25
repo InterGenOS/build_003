@@ -353,7 +353,7 @@ TOOLCHAIN_TEST1A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1A \e[1m\e[32mpassed, preparing TEST 2A...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 1A \e[1m\e[32mpassed, preparing TEST 2A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -379,7 +379,7 @@ TOOLCHAIN_TEST2A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2A \e[1m\e[32mpassed, preparing TEST 3A...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 2A \e[1m\e[32mpassed, preparing TEST 3A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -405,7 +405,7 @@ TOOLCHAIN_TEST3A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3A \e[1m\e[32mpassed, preparing TEST 4A...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 3A \e[1m\e[32mpassed, preparing TEST 4A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -431,7 +431,7 @@ TOOLCHAIN_TEST4A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4A \e[1m\e[32mpassed, preparing TEST 5A...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 4A \e[1m\e[32mpassed, preparing TEST 5A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -458,7 +458,7 @@ TOOLCHAIN_TEST5A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5A \e[1m\e[32mpassed, preparing TEST 6A...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 5A \e[1m\e[32mpassed, preparing TEST 6A...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -484,7 +484,7 @@ TOOLCHAIN_TEST6A () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6A \e[1m\e[32mpassed, continuing build...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 6A \e[1m\e[32mpassed, continuing build...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -749,7 +749,7 @@ TOOLCHAIN_TEST1B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 1B \e[1m\e[32mpassed, preparing TEST 2B...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 1B \e[1m\e[32mpassed, preparing TEST 2B...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -775,7 +775,7 @@ TOOLCHAIN_TEST2B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 2B \e[1m\e[32mpassed, preparing TEST 3B...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 2B \e[1m\e[32mpassed, preparing TEST 3B...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -802,7 +802,7 @@ TOOLCHAIN_TEST3B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 3B \e[1m\e[32mpassed, preparing TEST 4B...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 3B \e[1m\e[32mpassed, preparing TEST 4B...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -829,7 +829,7 @@ TOOLCHAIN_TEST4B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 4B \e[1m\e[32mpassed, preparing TEST 5B...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 4B \e[1m\e[32mpassed, preparing TEST 5B...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -856,7 +856,7 @@ TOOLCHAIN_TEST5B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 5B \e[1m\e[32mpassed, preparing TEST 6B...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 5B \e[1m\e[32mpassed, preparing TEST 6B...\e[0m"
         printf "\n\n"
         sleep 3
     fi
@@ -883,7 +883,7 @@ TOOLCHAIN_TEST6B () {
         printf "\n\n"
         exit 1
     else
-        echo -e "\e[1m\e32mToolchain Adjustment \e[1m\e[34mTEST 6B \e[1m\e[32mpassed, continuing build...\e[0m"
+        echo -e "\e[1m\e[32mToolchain Adjustment \e[1m\e[34mTEST 6B \e[1m\e[32mpassed, continuing build...\e[0m"
         printf "\n\n"
         sleep 3
     fi
