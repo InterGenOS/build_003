@@ -107,9 +107,8 @@ BUILD_BC () {
                 --mandir=/usr/share/man \
                 --infodir=/usr/share/info &&
     make &&
-    echo "quit" | ./bc/bc -l Test/checklib.b >> /bc-mkck-log
+    echo "quit" | ./bc/bc -l Test/checklib.b >> /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bc_mkck_log_"$TIMESTAMP"
     make install &&
-    mv bc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bc_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf bc-1.06.95/
     printf "\n\n"
@@ -119,7 +118,61 @@ BUILD_BC () {
 
 }
 
+BUILD_LIBTOOL () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding libtool-2.4.6...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Libtool-2.4.6 ##
+    ## ============= ##
+    ###################
+
+    tar xf libtool-2.4.6.src.tar.gz &&
+    cd libtool-2.4.6/
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/libtool-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf libtool-2.4.6/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mlibtool-2.4.6 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_GDBM () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding gdbm-1.11...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## GDBM-1.11 ##
+    ## ========= ##
+    ###############
+
+    tar xf gdbm-1.11.src.tar.gz &&
+    cd gdbm-1.11/
+    ./configure --prefix=/usr --enable-libgdbm-compat &&
+    make &&
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gdbm-mkck-log_"$TIMESTAMP"
+    make install &&
+    cd ..
+    rm -rf gdbm-1.11/
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mgdbm-1.11 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -149,12 +202,13 @@ sleep 3
 echo \# > /root/.bash_profile
 
 # Tidy up bash-4.3.30 build
-cd /sources/bash-4.3.30
-mv bash_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bash_mkck_log_"$TIMESTAMP"
-cd ..
+cd /sources
 rm -rf bash-4.3.30
 
 BUILD_BC
+BUILD_LIBTOOL
+BUILD_GDBM
+
 
 #######################
 ##-------------------##

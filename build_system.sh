@@ -251,7 +251,7 @@ BUILD_GLIBC () {
         --enable-kernel=2.6.32            \
         --enable-obsolete-rpc &&
     make &&
-    make check 2>&1 | tee glibc_mkck_log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
     touch /etc/ld.so.conf
     make install &&
     cp -v ../glibc-2.21/nscd/nscd.conf /etc/nscd.conf
@@ -318,7 +318,6 @@ BUILD_GLIBC () {
     echo "include /etc/ld.so.conf.d/*.conf" >> /etc/ld.so.conf
     mkdir -pv /etc/ld.so.conf.d
     printf "\n\n"
-    mv glibc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
     sleep 3
     echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
     sleep 2
@@ -516,11 +515,10 @@ BUILD_ZLIB () {
     cd zlib-1.2.8
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee zlib-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/zlib_mkck_log_"$TIMESTAMP"
     make install &&
     mv -v /usr/lib/libz.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
-    mv zlib_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/glibc_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf zlib-1.2.8
     printf "\n\n"
@@ -547,9 +545,8 @@ BUILD_FILE () {
     cd file-5.22
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee file-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/file_mkck_log_"$TIMESTAMP"
     make install &&
-    mv file_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/file_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf file-5.22
     printf "\n\n"
@@ -579,9 +576,8 @@ BUILD_BINUTILS () {
         --enable-shared                      \
         --disable-werror &&
     make tooldir=/usr &&
-    make -k check 2>&1 | tee binutils-mkck-log
+    make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
     make tooldir=/usr install &&
-    mv binutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
@@ -611,13 +607,12 @@ BUILD_GMP () {
         --docdir=/usr/share/doc/gmp-6.0.0a &&
     make &&
     make html &&
-    make check 2>&1 | tee gmp-check-logA
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gmp_mkck_log_"$TIMESTAMP"
     awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-logB
     cat gmp-check-logA >> gmp-mkck-log
     cat gmp-check-logB >> gmp-mkck-log
     make install &&
     make install-html &&
-    mv gmp_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gmp_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf gmp-6.0.0a
     printf "\n\n"
@@ -648,10 +643,9 @@ BUILD_MPFR () {
         --docdir=/usr/share/doc/mpfr-3.1.2 &&
     make &&
     make html &&
-    make check 2>&1 | tee mpfr-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpfr_mkck_log_"$TIMESTAMP"
     make install &&
     make install-html &&
-    mv mpfr_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpfr_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf mpfr-3.1.2
     printf "\n\n"
@@ -680,10 +674,9 @@ BUILD_MPC () {
         --docdir=/usr/share/doc/mpc-1.0.2 &&
     make &&
     make html &&
-    make check 2>&1 | tee mpc-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpc_mkck_log_"$TIMESTAMP"
     make install &&
     make install-html &&
-    mv mpc_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpc_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf mpc-1.0.2
     printf "\n\n"
@@ -964,9 +957,8 @@ BUILD_PKG-CONFIG () {
         --disable-host-tool   \
         --docdir=/usr/share/doc/pkg-config-0.28 &&
     make &&
-    make -k check 2>&1 | tee pkg-config_mkck_log
+    make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/pkg-config_mkck_log_"$TIMESTAMP"
     make install &&
-    mv pkf-config_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/pkg-config_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf pkg-config-0.28
     printf "\n\n"
@@ -1051,12 +1043,11 @@ BUILD_ATTR () {
     sed -i -e "/SUBDIRS/s|man2||" man/Makefile
     ./configure --prefix=/usr &&
     make
-    make -j1 test root-tests 2>&1 | tee attr-mkck-log
+    make -j1 test root-tests 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/attr_mkck_log_"$TIMESTAMP"
     make install install-dev install-lib &&
     chmod -v 755 /usr/lib/libattr.so
     mv -v /usr/lib/libattr.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libattr.so) /usr/lib/libattr.so
-    mv attr_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/attr_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf attr-2.4.47
     printf "\n\n"
@@ -1149,10 +1140,9 @@ BUILD_SED () {
         --htmldir=/usr/share/doc/sed-4.2.2
     make &&
     make html &&
-    make -k check 2>&1 | tee sed-mkck-log
+    make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/sed_mkck_log_"$TIMESTAMP"
     make install &&
     make -C doc install-html &&
-    mv sed_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/sed_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf sed-4.2.2
     printf "\n\n"
@@ -1293,12 +1283,11 @@ BUILD_PROCPS-NG () {
                 --disable-kill &&
     make &&
     sed -i -r 's|(pmap_initname)\\\$|\1|' testsuite/pmap.test/pmap.exp
-    make check 2>&1 | tee procps-ng-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/procps-ng_mkck_log_"$TIMESTAMP"
     make install &&
     mv -v /usr/bin/pidof /bin
     mv -v /usr/lib/libprocps.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so
-    mv procps-ng_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/procps-ng_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf procps-ng-3.3.10
     printf "\n\n"
@@ -1341,13 +1330,12 @@ BUILD_E2FSPROGS () {
                  --disable-fsck &&
     make &&
     ln -sfv /tools/lib/lib{blk,uu}id.so.1 lib
-    make LD_LIBRARY_PATH=/tools/lib check 2>&1 | tee e2fsprogs-mkck-log
+    make LD_LIBRARY_PATH=/tools/lib check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/e2fsprogs_mkck_log_"$TIMESTAMP"
     make install &&
     make install-libs &&
     chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
     gunzip -v /usr/share/info/libext2fs.info.gz
     install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info &&
-    mv e2fsprogs_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/e2fsprogs_mkck_log_"$TIMESTAMP"
     cd ../..
     rm -rf e2fsprogs-1.42.12
     printf "\n\n"
@@ -1378,7 +1366,7 @@ BUILD_COREUTILS () {
                 --prefix=/usr            \
                 --enable-no-install-program=kill,uptime &&
     make &&
-    make NON_ROOT_USERNAME=nobody check-root 2>&1 | tee coreutils-mkck-log
+    make NON_ROOT_USERNAME=nobody check-root 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/coreutils_mkck_log_"$TIMESTAMP"
     make install &&
     mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
     mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin
@@ -1387,7 +1375,6 @@ BUILD_COREUTILS () {
     mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
     sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
     mv -v /usr/bin/{head,sleep,nice,test,[} /bin
-    mv coreutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/coreutils_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf coreutils-8.23
     printf "\n\n"
@@ -1440,9 +1427,8 @@ BUILD_M4 () {
     cd m4-1.4.17
     ./configure --prefix=/usr &&
     make &&
-    make check 2>&1 | tee m4-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/m4_mkck_log_"$TIMESTAMP"
     make install &&
-    mv m4_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/m4_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf m4-1.4.17
     printf "\n\n"
@@ -1471,10 +1457,9 @@ BUILD_FLEX () {
     ./configure --prefix=/usr \
         --docdir=/usr/share/doc/flex-2.5.39 &&
     make &&
-    make check 2>&1 | tee flex-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/flex_mkck_log_"$TIMESTAMP"
     make install &&
     ln -sv flex /usr/bin/lex
-    mv flex_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/flex_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf flex-2.5.39/
     printf "\n\n"
@@ -1501,9 +1486,8 @@ BUILD_BISON () {
     cd bison-3.0.4/
     ./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.0.4 &&
     make &&
-    make check 2>&1 | tee bison-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bison_mkck_log_"$TIMESTAMP"
     make install &&
-    mv bison_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bison_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf bison-3.0.4/
     printf "\n\n"
@@ -1532,9 +1516,8 @@ BUILD_GREP () {
     ./configure --prefix=/usr \
         --bindir=/bin &&
     make &&
-    make check 2>&1 | tee grep-mkck-log
+    make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/grep_mkck_log_"$TIMESTAMP"
     make install &&
-    mv grep_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/grep_mkck_log_"$TIMESTAMP"
     cd ..
     rm -rf grep-2.21/
     printf "\n\n"
@@ -1601,7 +1584,7 @@ BUILD_BASH () {
                 --with-installed-readline &&
     make &&
     chown -Rv nobody .
-    su nobody -s /bin/bash -c "PATH=$PATH make tests" 2>&1 | tee bash_mkck_log
+    su nobody -s /bin/bash -c "PATH=$PATH make tests" 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bash_mkck_log_"$TIMESTAMP"
     make install &&
     printf "\n\n"
     echo -e "    \e[1m\e[32mSystem Bash Binary installation complete\e[0m"
