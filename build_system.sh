@@ -1162,12 +1162,84 @@ BUILD_SED () {
 
 }
 
+BUILD_CRACKLIB () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding cracklig-2.9.1...\e[0m"
+    sleep 3
+    printf "\n\n"
 
+    ####################
+    ## cracklib-2.9.1 ##
+    ## ============== ##
+    ####################
 
+    tar xf cracklib-2.9.1.src.tar.gz &&
+    cd cracklib-2.9.1
+    ./configure --prefix=/usr                     \
+        --with-default-dict=/lib/cracklib/pw_dict \
+        --disable-static &&
+    make &&
+    make install &&
+    mv -v /usr/lib/libcrack.so.* /lib &&
+    ln -sfv ../../lib/$(readlink /usr/lib/libcrack.so) /usr/lib/libcrack.so
+    install -v -m644 -D    ../cracklib-words-20080507.gz           \
+                             /usr/share/dict/cracklib-words.gz     &&
+    gunzip -v                /usr/share/dict/cracklib-words.gz     &&
+    ln -v -sf cracklib-words /usr/share/dict/words                 &&
+    echo $(hostname) >>      /usr/share/dict/cracklib-extra-words  &&
+    install -v -m755 -d      /lib/cracklib                         &&
+    create-cracklib-dict     /usr/share/dict/cracklib-words        \
+                             /usr/share/dict/cracklib-extra-words &&
+    cd ..
+    rm -rf cracklib-2.9.1
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mcracklib-2.9.1 completed...\e[0m"
+    sleep 2
 
+}
 
+BUILD_SHADOW () {
 
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding shadow-4.2.1...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ##################
+    ## Shadow-4.2.1 ##
+    ## ============ ##
+    ##################
+
+    tar xf shadow-4.2.1.src.tar.gz &&
+    cd shadow-4.2.1
+    sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+    find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \; &&
+    sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
+           -e 's@/var/spool/mail@/var/mail@' etc/login.defs
+    sed -i 's@DICTPATH.*@DICTPATH\t/lib/cracklib/pw_dict@' etc/login.defs
+    sed -i 's/1000/999/' etc/useradd
+    ./configure --sysconfdir=/etc       \
+        --with-group-name-max-length=32 \
+        --with-libcrack &&
+    make &&
+    make install &&
+    mv -v /usr/bin/passwd /bin
+    pwconv &&
+    grpconv &&
+    sed -i 's/yes/no/' /etc/default/useradd
+    echo "root:intergenos" | chpasswd &&
+    cd ..
+    rm -rf shadow-4.2.1
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mshadow-4.2.1 completed...\e[0m"
+    sleep 2
+
+}
 
 
 
@@ -1327,8 +1399,8 @@ BUILD_ATTR
 BUILD_ACL
 BUILD_LIBCAP
 BUILD_SED
-
-
+BUILD_CRACKLIB
+BUILD_SHADOW
 
 
 
