@@ -1348,13 +1348,114 @@ BUILD_E2FSPROGS () {
     gunzip -v /usr/share/info/libext2fs.info.gz
     install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info &&
     mv e2fsprogs_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/e2fsprogs_mkck_log_"$TIMESTAMP"
-    cd ../.. && rm -rf e2fsprogs-1.42.12
+    cd ../..
+    rm -rf e2fsprogs-1.42.12
     printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32me2fsprogs-1.42.12 completed...\e[0m"
     sleep 2
 
 }
+
+BUILD_COREUTILS () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding coreutils-8.23...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ####################
+    ## Coreutils-8.23 ##
+    ## ============== ##
+    ####################
+
+    tar xf coreutils-8.23.src.tar.gz &&
+    cd coreutils-8.23
+    patch -Np1 -i ../coreutils-8.23-i18n-1.patch
+    touch Makefile.in
+    FORCE_UNSAFE_CONFIGURE=1 ./configure \
+                --prefix=/usr            \
+                --enable-no-install-program=kill,uptime &&
+    make &&
+    make NON_ROOT_USERNAME=nobody check-root 2>&1 | tee coreutils-mkck-log
+    make install &&
+    mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
+    mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin
+    mv -v /usr/bin/{rmdir,stty,sync,true,uname} /bin
+    mv -v /usr/bin/chroot /usr/sbin
+    mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
+    sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
+    mv -v /usr/bin/{head,sleep,nice,test,[} /bin
+    mv coreutils_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/coreutils_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf coreutils-8.23
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mcoreutils-8.23 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_IANA-ETC () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding iana-etc-2.30...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Iana-Etc-2.30 ##
+    ## ============= ##
+    ###################
+
+    tar xf iana-etc-2.30.src.tar.gz &&
+    cd iana-etc-2.30
+    make &&
+    make install &&
+    cd ..
+    rm -rf iana-etc-2.30
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32miana-etc-2.30 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_M4 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding m4-1.4.17...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## M4-1.4.17 ##
+    ## ========= ##
+    ###############
+
+    tar xf m4-1.4.17.src.tar.gz &&
+    cd m4-1.4.17
+    ./configure --prefix=/usr &&
+    make &&
+    make check 2>&1 | tee /m4-mkck-log
+    make install &&
+    mv m4_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/m4_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf m4-1.4.17
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mm4-1.4.17 completed...\e[0m"
+    sleep 2
+
+}
+
+
+
+
+
 
 
 
@@ -1521,6 +1622,15 @@ BUILD_SHADOW
 BUILD_PSMISC
 BUILD_PROCPS-NG
 BUILD_E2FSPROGS
+BUILD_COREUTILS
+BUILD_IANA-ETC
+BUILD_M4
+
+
+
+
+
+
 
 
 
