@@ -1066,6 +1066,104 @@ BUILD_ATTR () {
 
 }
 
+BUILD_ACL () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding acl-2.2.52...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ################
+    ## Acl-2.2.52 ##
+    ## ========== ##
+    ################
+
+    tar xf acl-2.2.52.src.tar.gz &&
+    cd acl-2.2.52
+    sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+    sed -i "s:| sed.*::g" test/{sbits-restore,cp,misc}.test
+    sed -i -e "/TABS-1;/a if (x > (TABS-1)) x = (TABS-1);" \
+        libacl/__acl_to_any_text.c
+    ./configure --prefix=/usr --libexecdir=/usr/lib &&
+    make &&
+    make install install-dev install-lib &&
+    chmod -v 755 /usr/lib/libacl.so
+    mv -v /usr/lib/libacl.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libacl.so) /usr/lib/libacl.so
+    cd ..
+    rm -rf acl-2.2.52
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32macl-2.2.52 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_LIBCAP () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding libcap-2.24...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #################
+    ## Libcap-2.24 ##
+    ## =========== ##
+    #################
+
+    tar xf libcap-2.24.src.tar.gz &&
+    cd libcap-2.24
+    make &&
+    make RAISE_SETFCAP=no prefix=/usr install &&
+    chmod -v 755 /usr/lib/libcap.so
+    mv -v /usr/lib/libcap.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libcap.so) /usr/lib/libcap.so
+    cd ..
+    rm -rf libcap-2.24
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mlibcap-2.24 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_SED () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding sed-4.2.2...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###############
+    ## Sed-4.2.2 ##
+    ## ========= ##
+    ###############
+
+    tar xf sed-4.2.2.src.tar.gz &&
+    cd sed-4.2.2
+    ./configure --prefix=/usr \
+        --bindir=/bin         \
+        --htmldir=/usr/share/doc/sed-4.2.2
+    make &&
+    make html &&
+    make -k check 2>&1 | tee /sed-mkck-log
+    make install &&
+    make -C doc install-html &&
+    mv sed_mkck_log /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/sed_mkck_log_"$TIMESTAMP"
+    cd ..
+    rm -rf sed-4.2.2
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32msed-4.2.2 completed...\e[0m"
+    sleep 2
+
+}
+
+
+
 
 
 
@@ -1226,6 +1324,12 @@ BUILD_BZIP2
 BUILD_PKG-CONFIG
 BUILD_NCURSES
 BUILD_ATTR
+BUILD_ACL
+BUILD_LIBCAP
+BUILD_SED
+
+
+
 
 
 
