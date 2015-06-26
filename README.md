@@ -9,16 +9,22 @@
 ---
 
 ```
+
 - 6/25/15 Build 003 is now completely automated - Builds are running on 2 separate i3 machines and an older Core2duo
   --The grub configuration routine (more of a 'hack' really) needs to be completely re-worked, but will do for now
   --After any identified automation bugs have been worked out, x11 will be added, followed by both Gnome and KDE
   --Past that, the real fun begins... :)   ...stay tuned.
 
-- 3/11/15 Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical errors are being reported with each
-  run, whether it's done using setup.sh to set the temp system or done manually.  #lfs-support hasn't responded
-  yet, but will post when they do
+- *** 4/16/2015 ***
+  Scripts are building the entire core system now with 0 errors
+  Scripts are being started for base system components (xorg, kde, gnome, etc)
+  Huge thanks are in order- Security aspects will be assessed by recent
+  OSCP grad and pen testing specialist Mr. Tyler Ward.
 
-        sample 'make check' output log: http://intergenstudios.com/Downloads/glibc-2.21_make-check_log.txt
+- *** 4/9/2015 ***
+  Testing results for Glibc and GCC packages
+  Glibc compiled with 0 failures, 3 unexpected successes
+  GCC compiled with 0 failures, 2 unexpected successes
 
 - *** RESPONSE FROM LFS-SUPPORT - 3/12/15 ***
     [10:05] <archetech_> if the linker tests pass move on
@@ -29,16 +35,11 @@
 - *** updated kernel to 3.19, and now glibc-2.21 is compiling with ZERO errors.  On to the rest of the basic
 - *** system packages.  :)
 
-- *** 4/9/2015 ***
-- Testing results for Glibc and GCC packages
-- Glibc compiled with 0 failures, 3 unexpected successes
-- GCC compiled with 0 failures, 2 unexpected successes (results below)
+- 3/11/15 Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical errors are being reported with each
+  run, whether it's done using setup.sh to set the temp system or done manually.  #lfs-support hasn't responded
+  yet, but will post when they do
 
-- *** 4/16/2015 ***
-- Scripts are building the entire core system now with 0 errors
-- Scripts are being started for base system components (xorg, kde, gnome, etc)
-- Huge thanks are in order- Security aspects will be assessed by recent
-- OSCP grad and pen testing specialist Mr. Tyler Ward.
+        sample 'make check' output log: http://intergenstudios.com/Downloads/glibc-2.21_make-check_log.txt
 
 ```
 
