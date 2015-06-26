@@ -1589,7 +1589,7 @@ BUILD_BASH () {
     printf "\n\n"
     echo -e "    \e[1m\e[32mSystem Bash Binary installation complete\e[0m"
     printf "\n"
-    echo -e "    \e[1m\e[32mPreparing to launch new shell with completed system bash binary..."
+    echo -e "    \e[1m\e[32mDropping into Root Shell to launch chroot with completed system bash binary..."
     SPACER
     sleep 3
 
@@ -1769,7 +1769,6 @@ cat > /root/.bash_profile << "AddExecutable"
 AddExecutable
 
 BUILD_BASH
-exec /bin/bash --login +h &&
 
 #######################
 ##-------------------##
@@ -1777,4 +1776,4 @@ exec /bin/bash --login +h &&
 ##-------------------##
 #######################
 
-exit 0
+exit

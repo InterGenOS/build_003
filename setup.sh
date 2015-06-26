@@ -373,12 +373,25 @@ HEADER
 echo -e "     \e[1m\e[32mEntered Root Shell successfully"
 DIVIDER
 sleep 3
+echo -e "     \e[1m\e[32mEntering chroot environment for post-bash package builds..."
+cd "$IGos"
+sleep 3
+sudo -u root ./enter_chroot_post-bash.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_post-bash_log_"$TIMESTAMP" &&
+sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP"
+printf "\n\n"
+
+clear
+HEADER
+echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+DIVIDER
+sleep 3
 echo -e "     \e[1m\e[32mEntering chroot environment for binary and library stripping..."
 cd "$IGos"
 sleep 3
 sudo -u root ./enter_chroot_stripping.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP" &&
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP"
 printf "\n\n"
+
 
 clear
 HEADER
