@@ -177,7 +177,7 @@ BUILD_BINUTILS_PASS1 () {
         x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
     esac &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
     echo -e "\e[1m\e[32mbinutils-2.25 PASS 1 completed...\e[0m"
@@ -244,7 +244,7 @@ BUILD_GCC_PASS1 () {
         --enable-languages=c,c++ &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gcc-4.9.2 gcc-build/
     printf "\n\n"
     echo -e "\e[1m\e[32mgcc-4.9.2 PASS 1 completed...\e[0m"
@@ -271,7 +271,7 @@ BUILD_LINUX_API_HEADERS () {
     make mrproper &&
     make INSTALL_HDR_PATH=dest headers_install &&
     cp -rv dest/include/* /tools/include &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf linux-3.19
     printf "\n\n"
     echo -e "\e[1m\e[32mlinux-3.19 API Headers completed...\e[0m"
@@ -357,7 +357,7 @@ BUILD_GLIBC () {
     DIVIDER
     printf "\n\n\n\n\n\n\n\n\n\n"
     rm -v dummy.c a.out
-    cd /sources
+    cd "$IGos"/sources
     rm -rf glibc-2.21 glibc-build/
     printf "\n\n"
     echo -e "\e[1m\e[32mglibc-2.21 completed...\e[0m"
@@ -393,7 +393,7 @@ BUILD_LIBSTDC () {
         --with-gxx-include-dir=/tools/$IGos_TGT/include/c++/4.9.2 &&
     make &&
     make install
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gcc-4.9.2 gcc-build/
     printf "\n\n"
     echo -e "\e[1m\e[32mlibstdc++-4.9.2 completed...\e[0m"
@@ -441,7 +441,7 @@ BUILD_BINUTILS_PASS2 () {
     echo -e "\e[1m\e[4m\e[32mlinker re-adjustment complete\e[0m"
     DIVIDER
     printf "\n\n\n\n\n\n\n\n\n\n"
-    cd /sources
+    cd "$IGos"/sources
     rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
     echo -e "\e[1m\e[32mbinutils-2.25 PASS 2 completed...\e[0m"
@@ -545,7 +545,7 @@ BUILD_GCC_PASS2 () {
     echo -e "\e[1m\e[32mgcc-4.9.2 completed...\e[0m"
     SPACER
     rm -v dummy.c a.out
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gcc-4.9.2 gcc-build/
     sleep 5
 }
@@ -571,7 +571,7 @@ BUILD_TCL () {
     chmod -v u+w /tools/lib/libtcl8.6.so &&
     make install-private-headers &&
     ln -sv tclsh8.6 /tools/bin/tclsh
-    cd /sources
+    cd "$IGos"/sources
     rm -rf tcl-8.6.3
     printf "\n\n"
     echo -e "\e[1m\e[32mtcl-8.6.3 completed...\e[0m"
@@ -600,7 +600,7 @@ BUILD_EXPECT () {
         --with-tclinclude=/tools/include &&
     make &&
     make SCRIPTS="" install
-    cd /sources
+    cd "$IGos"/sources
     rm -rf expect-5.45
     printf "\n\n"
     echo -e "\e[1m\e[32mexpect-5.45 completed...\e[0m"
@@ -624,7 +624,7 @@ BUILD_DEJAGNU () {
     cd dejagnu-1.5.2/
     ./configure --prefix=/tools &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf dejagnu-1.5.2
     printf "\n\n"
     echo -e "\e[1m\e[32mdejagnu-1.5.2 completed...\e[0m"
@@ -649,7 +649,7 @@ BUILD_CHECK () {
     PKG_CONFIG= ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf check-0.9.14
     printf "\n\n"
     echo -e "\e[1m\e[32mcheck-0.9.14 completed...\e[0m"
@@ -679,7 +679,7 @@ BUILD_NCURSES () {
         --enable-overwrite &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf ncurses-5.9
     printf "\n\n"
     echo -e "\e[1m\e[32mncurses-5.9 completed...\e[0m"
@@ -705,7 +705,7 @@ BUILD_BASH () {
     make &&
     make install &&
     ln -sv bash /tools/bin/sh
-    cd /sources
+    cd "$IGos"/sources
     rm -rf bash-4.3.30
     printf "\n\n"
     echo -e "\e[1m\e[32mbash-4.3.30 completed...\e[0m"
@@ -728,7 +728,7 @@ BUILD_BZIP2 () {
     tar xf bzip2-1.0.6.src.tar.gz &&
     cd bzip2-1.0.6/
     make && make PREFIX=/tools install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf bzip2-1.0.6
     printf "\n\n"
     echo -e "\e[1m\e[32mbzip2-1.0.6 completed...\e[0m"
@@ -753,7 +753,7 @@ BUILD_COREUTILS () {
     ./configure --prefix=/tools --enable-install-program=hostname &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf coreutils-8.23
     printf "\n\n"
     echo -e "\e[1m\e[32mcoreutils-8.23 completed...\e[0m"
@@ -778,7 +778,7 @@ BUILD_DIFFUTILS () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf diffutils-3.3
     printf "\n\n"
     echo -e "\e[1m\e[32mdiffutils-3.3 completed...\e[0m"
@@ -803,7 +803,7 @@ BUILD_FILE () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf file-5.22
     printf "\n\n"
     echo -e "\e[1m\e[32mfile-5.22 completed...\e[0m"
@@ -828,7 +828,7 @@ BUILD_FINDUTILS () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf findutils-4.4.2
     printf "\n\n"
     echo -e "\e[1m\e[32mfindutils-4.4.2 completed...\e[0m"
@@ -853,7 +853,7 @@ BUILD_GAWK () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gawk-4.1.1
     printf "\n\n"
     echo -e "\e[1m\e[32mgawk-4.1.1 completed...\e[0m"
@@ -883,7 +883,7 @@ BUILD_GETTEXT () {
     make -C src msgmerge &&
     make -C src xgettext &&
     cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gettext-0.19.4
     printf "\n\n"
     echo -e "\e[1m\e[32mgettext-0.19.4 completed...\e[0m"
@@ -908,7 +908,7 @@ BUILD_GREP () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf grep-2.21
     printf "\n\n"
     echo -e "\e[1m\e[32mgrep-2.21 completed...\e[0m"
@@ -933,7 +933,7 @@ BUILD_GZIP () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf gzip-1.6
     printf "\n\n"
     echo -e "\e[1m\e[32mgzip-1.6 completed...\e[0m"
@@ -958,7 +958,7 @@ BUILD_M4 () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf m4-1.4.17
     printf "\n\n"
     echo -e "\e[1m\e[32mm4-1.4.17 completed...\e[0m"
@@ -983,7 +983,7 @@ BUILD_MAKE () {
     ./configure --prefix=/tools --without-guile &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf make-4.1
     printf "\n\n"
     echo -e "\e[1m\e[32mmake-4.1 completed...\e[0m"
@@ -1008,7 +1008,7 @@ BUILD_PATCH () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf patch-2.7.4
     printf "\n\n"
     echo -e "\e[1m\e[32mpatch-2.7.4 completed...\e[0m"
@@ -1035,7 +1035,7 @@ BUILD_PERL () {
     cp -v perl cpan/podlators/pod2man /tools/bin
     mkdir -pv /tools/lib/perl5/5.20.2
     cp -Rv lib/* /tools/lib/perl5/5.20.2
-    cd /sources
+    cd "$IGos"/sources
     rm -rf perl-5.20.2
     printf "\n\n"
     echo -e "\e[1m\e[32mperl-5.20.2 completed...\e[0m"
@@ -1060,7 +1060,7 @@ BUILD_SED () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf sed-4.2.2
     printf "\n\n"
     echo -e "\e[1m\e[32msed-4.2.2 completed...\e[0m"
@@ -1085,7 +1085,7 @@ BUILD_TAR () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf tar-1.28
     printf "\n\n"
     echo -e "\e[1m\e[32mtar-1.28 completed...\e[0m"
@@ -1110,7 +1110,7 @@ BUILD_TEXINFO () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf texinfo-5.2
     printf "\n\n"
     echo -e "\e[1m\e[32mtexinfo-5.2 completed...\e[0m"
@@ -1139,7 +1139,7 @@ BUILD_UTIL_LINUX () {
         PKG_CONFIG="" &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf util-linux-2.26
     printf "\n\n"
     echo -e "\e[1m\e[32mutil-linux-2.26 completed...\e[0m"
@@ -1164,7 +1164,7 @@ BUILD_XZ () {
     ./configure --prefix=/tools &&
     make &&
     make install &&
-    cd /sources
+    cd "$IGos"/sources
     rm -rf xz-5.2.0
     printf "\n\n"
     echo -e "\e[1m\e[32mxz-5.2.0 completed...\e[0m"
