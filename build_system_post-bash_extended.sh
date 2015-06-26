@@ -109,7 +109,7 @@ BUILD_BC () {
     make &&
     echo "quit" | ./bc/bc -l Test/checklib.b >> /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bc_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf bc-1.06.95/
     printf "\n\n"
     sleep 3
@@ -137,7 +137,7 @@ BUILD_LIBTOOL () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/libtool-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf libtool-2.4.6/
     printf "\n\n"
     sleep 3
@@ -165,7 +165,7 @@ BUILD_GDBM () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gdbm-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf gdbm-1.11/
     printf "\n\n"
     sleep 3
@@ -193,7 +193,7 @@ BUILD_EXPAT () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/expat-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf expat-2.1.0/
     printf "\n\n"
     sleep 3
@@ -228,7 +228,7 @@ BUILD_INETUTILS () {
     make install &&
     mv -v /usr/bin/{hostname,ping,ping6,traceroute} /bin &&
     mv -v /usr/bin/ifconfig /sbin &&
-    cd ..
+    cd /sources
     rm -rf inetutils-1.9.2/
     printf "\n\n"
     sleep 3
@@ -265,7 +265,7 @@ BUILD_PERL () {
     make -k test 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/perl-mkck-log_"$TIMESTAMP"
     make install &&
     unset BUILD_ZLIB BUILD_BZIP2
-    cd ..
+    cd /sources
     rm -rf perl-5.20.2/
     printf "\n\n"
     sleep 3
@@ -293,7 +293,7 @@ BUILD_XML-PARSER () {
     make &&
     make test 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/xml_parser-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf XML-Parser-2.44/
     printf "\n\n"
     sleep 3
@@ -321,7 +321,7 @@ BUILD_AUTOCONF () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/autoconf-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf autoconf-2.69/
     printf "\n\n"
     sleep 3
@@ -343,7 +343,7 @@ BUILD_AUTOMAKE () {
     ## ============= ##
     ###################
 
-    tar xf automake-1.15.tar.xz &&
+    tar xf automake-1.15.src.tar.gz &&
     cd automake-1.15/
     ./configure --prefix=/usr \
         --docdir=/usr/share/doc/automake-1.15 &&
@@ -351,7 +351,7 @@ BUILD_AUTOMAKE () {
     sed -i "s:./configure:LEXLIB=/usr/lib/libfl.a &:" t/lex-{clean,depend}-cxx.sh
     make -j4 check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/automake-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf automake-1.15/
     printf "\n\n"
     sleep 3
@@ -380,7 +380,7 @@ BUILD_DIFFUTILS () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/diffutils-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf diffutils-3.3/
     printf "\n\n"
     sleep 3
@@ -408,7 +408,7 @@ BUILD_GAWK () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gawk-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf gawk-4.1.1/
     printf "\n\n"
     sleep 3
@@ -438,7 +438,7 @@ BUILD_FINDUTILS () {
     make install &&
     mv -v /usr/bin/find /bin
     sed -i 's|find:=${BINDIR}|find:=/bin|' /usr/bin/updatedb
-    cd ..
+    cd /sources
     rm -rf findutils-4.4.2/
     printf "\n\n"
     sleep 3
@@ -466,7 +466,7 @@ BUILD_GETTEXT () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gettext-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf gettext-0.19.4/
     printf "\n\n"
     sleep 3
@@ -495,7 +495,7 @@ BUILD_INTLTOOL () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/intltool-mkck-log_"$TIMESTAMP"
     make install &&
     install -v -Dm644 doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO &&
-    cd ..
+    cd /sources
     rm -rf intltool-0.50.2/
     printf "\n\n"
     sleep 3
@@ -517,13 +517,13 @@ BUILD_GPERF () {
     ## =========== ##
     #################
 
-    tar xf gperf-3.0.4.tar.gz &&
+    tar xf gperf-3.0.4.src.tar.gz &&
     cd gperf-3.0.4/
     ./configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.0.4 &&
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/gperf-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf gperf-3.0.4/
     printf "\n\n"
     sleep 3
@@ -550,7 +550,7 @@ BUILD_GROFF () {
     PAGE=letter ./configure --prefix=/usr &&
     make &&
     make install &&
-    cd ..
+    cd /sources
     rm -rf groff-1.22.3/
     printf "\n\n"
     sleep 3
@@ -582,7 +582,8 @@ BUILD_XZ () {
     mv -v   /usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} /bin
     mv -v /usr/lib/liblzma.so.* /lib
     ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) /usr/lib/liblzma.so
-    cd .. && rm -rf xz-5.2.0/
+    cd /sources
+    rm -rf xz-5.2.0/
     printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32mxz-5.2.0 completed...\e[0m"
@@ -613,7 +614,7 @@ BUILD_GRUB () {
                 --disable-werror &&
     make &&
     make install &&
-    cd ..
+    cd /sources
     rm -rf grub-2.02~beta2/
     printf "\n\n"
     sleep 3
@@ -641,7 +642,7 @@ BUILD_LESS () {
         --sysconfdir=/etc &&
     make &&
     make install &&
-    cd ..
+    cd /sources
     rm -rf less-458/
     printf "\n\n"
     sleep 3
@@ -663,7 +664,7 @@ BUILD_GZIP () {
     ## ======== ##
     ##############
 
-    tar xf gzip-1.6.tar.xz &&
+    tar xf gzip-1.6.src.tar.gz &&
     cd gzip-1.6/
     ./configure --prefix=/usr \
         --bindir=/bin &&
@@ -672,7 +673,7 @@ BUILD_GZIP () {
     make install &&
     mv -v /bin/{gzexe,uncompress,zcmp,zdiff,zegrep} /usr/bin
     mv -v /bin/{zfgrep,zforce,zgrep,zless,zmore,znew} /usr/bin
-    cd ..
+    cd /sources
     rm -rf gzip-1.6/
     printf "\n\n"
     sleep 3
@@ -701,7 +702,7 @@ BUILD_IPROUTE2 () {
     sed -i 's/arpd.8//' man/man8/Makefile
     make &&
     make DOCDIR=/usr/share/doc/iproute2-3.19.0 install &&
-    cd ..
+    cd /sources
     rm -rf iproute2-3.19.0/
     printf "\n\n"
     sleep 3
@@ -732,7 +733,7 @@ BUILD_KBD () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/kbd-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf kbd-2.0.2/
     printf "\n\n"
     sleep 3
@@ -769,7 +770,7 @@ BUILD_KMOD () {
       ln -sv ../bin/kmod /sbin/$target_mod
     done
     ln -sv kmod /bin/lsmod
-    cd ..
+    cd /sources
     rm -rf kmod-19/
     printf "\n\n"
     sleep 3
@@ -797,7 +798,7 @@ BUILD_LIBPIPELINE () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/libpipeline-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf libpipeline-1.4.0/
     printf "\n\n"
     sleep 3
@@ -825,7 +826,7 @@ BUILD_MAKE () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/make-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf make-4.1/
     printf "\n\n"
     sleep 3
@@ -853,7 +854,7 @@ BUILD_PATCH () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/patch-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf patch-2.7.4/
     printf "\n\n"
     sleep 3
@@ -910,7 +911,7 @@ BUILD_SYSTEMD () {
     systemd-machine-id-setup &&
     sed -i "s:minix:ext4:g" src/test/test-path-util.c
     make LD_LIBRARY_PATH=/tools/lib -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/systemd-mkck-log_"$TIMESTAMP"
-    cd ..
+    cd /sources
     rm -rf systemd-219/
     printf "\n\n"
     sleep 3
@@ -944,7 +945,7 @@ BUILD_D-BUS () {
     mv -v /usr/lib/libdbus-1.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libdbus-1.so) /usr/lib/libdbus-1.so
     ln -sfv /etc/machine-id /var/lib/dbus
-    cd ..
+    cd /sources
     rm -rf dbus-1.8.16/
     printf "\n\n"
     sleep 3
@@ -983,7 +984,7 @@ BUILD_UTIL-LINUX () {
     chown -Rv nobody .
     su nobody -s /bin/bash -c "PATH=$PATH make -k check" 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/util-linux-mkck-log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf util-linux-2.26/
     printf "\n\n"
     sleep 3
@@ -1018,7 +1019,7 @@ BUILD_MAN-DB () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/man-db-mkck-log_"$TIMESTAMP"
     make install &&
     sed -i "s:man root:root root:g" /usr/lib/tmpfiles.d/man-db.conf
-    cd ..
+    cd /sources
     rm -rf man-db-2.7.1/
     printf "\n\n"
     sleep 3
@@ -1049,7 +1050,7 @@ BUILD_TAR () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/man-db-mkck-log_"$TIMESTAMP"
     make install &&
     make -C doc install-html docdir=/usr/share/doc/tar-1.28 &&
-    cd ..
+    cd /sources
     rm -rf tar-1.28/
     printf "\n\n"
     sleep 3
@@ -1078,7 +1079,7 @@ BUILD_TEXINFO () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/texinfo-mkck-log_"$TIMESTAMP"
     make install &&
     make TEXMF=/usr/share/texmf install-tex &&
-    cd ..
+    cd /sources
     rm -rf texinfo-5.2/
     printf "\n\n"
     sleep 3
@@ -1112,7 +1113,7 @@ BUILD_VIM () {
         ln -sv vim.1 $(dirname $L)/vi.1
     done
     ln -sv ../vim/vim74/doc /usr/share/doc/vim-7.4
-    cd ..
+    cd /sources
     rm -rf vim-7.4/
     printf "\n\n"
     sleep 3
@@ -1146,7 +1147,7 @@ BUILD_NANO () {
     install -v -m644 doc/nanorc.sample /etc &&
     install -v -m644 doc/texinfo/nano.html /usr/share/doc/nano-2.3.6 &&
     cp intergen_nanorc /etc/nanorc
-    cd ..
+    cd /sources
     rm -rf nano-2.3.6/
     printf "\n\n"
     sleep 3

@@ -191,7 +191,7 @@ BUILD_LINUX () {
     make INSTALL_HDR_PATH=dest headers_install &&
     find dest/include \( -name .install -o -name ..install.cmd \) -delete &&
     cp -rv dest/include/* /usr/include &&
-    cd ..
+    cd /sources
     rm -rf linux-3.19
     printf "\n\n"
     sleep 3
@@ -216,7 +216,7 @@ BUILD_MAN_PAGES () {
     tar xf man-pages-3.79.src.tar.gz &&
     cd man-pages-3.79
     make install &&
-    cd .. &&
+    cd /sources
     rm -rf man-pages-3.79 &&
     printf "\n\n"
     sleep 3
@@ -489,7 +489,7 @@ TOOLCHAIN_TEST6A () {
         sleep 3
     fi
     rm -v dummy.c a.out dummy.log
-    cd ..
+    cd /sources
     rm -rf glibc-2.21 glibc-build/
     printf "\n\n"
     sleep 3
@@ -502,7 +502,7 @@ BUILD_ZLIB () {
 
     clear
     HEADER
-    echo -e "\e[1m\e[32mBuilding glibc-2.21...\e[0m"
+    echo -e "\e[1m\e[32mBuilding zlib-1.2.8...\e[0m"
     sleep 3
     printf "\n\n"
 
@@ -519,7 +519,7 @@ BUILD_ZLIB () {
     make install &&
     mv -v /usr/lib/libz.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
-    cd ..
+    cd /sources
     rm -rf zlib-1.2.8
     printf "\n\n"
     sleep 3
@@ -547,7 +547,7 @@ BUILD_FILE () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/file_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf file-5.22
     printf "\n\n"
     sleep 3
@@ -560,7 +560,7 @@ BUILD_BINUTILS () {
 
     clear
     HEADER
-    echo -e "\e[1m\e[32mBuilding file-5.22...\e[0m"
+    echo -e "\e[1m\e[32mBuilding binutils-2.25...\e[0m"
     sleep 3
     printf "\n\n"
 
@@ -578,7 +578,7 @@ BUILD_BINUTILS () {
     make tooldir=/usr &&
     make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/binutils_mkck_log_"$TIMESTAMP"
     make tooldir=/usr install &&
-    cd ..
+    cd /sources
     rm -rf binutils-2.25 binutils-build/
     printf "\n\n"
     sleep 3
@@ -613,7 +613,7 @@ BUILD_GMP () {
     cat gmp-check-logB >> gmp-mkck-log
     make install &&
     make install-html &&
-    cd ..
+    cd /sources
     rm -rf gmp-6.0.0a
     printf "\n\n"
     sleep 3
@@ -646,7 +646,7 @@ BUILD_MPFR () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpfr_mkck_log_"$TIMESTAMP"
     make install &&
     make install-html &&
-    cd ..
+    cd /sources
     rm -rf mpfr-3.1.2
     printf "\n\n"
     sleep 3
@@ -677,7 +677,7 @@ BUILD_MPC () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/mpc_mkck_log_"$TIMESTAMP"
     make install &&
     make install-html &&
-    cd ..
+    cd /sources
     rm -rf mpc-1.0.2
     printf "\n\n"
     sleep 3
@@ -690,7 +690,7 @@ BUILD_GCC () {
 
     clear
     HEADER
-    echo -e "\e[1m\e[32mBuilding mpc-1.0.2...\e[0m"
+    echo -e "\e[1m\e[32mBuilding gcc-4.9.2...\e[0m"
     sleep 3
     printf "\n\n"
 
@@ -891,7 +891,7 @@ TOOLCHAIN_TEST6B () {
     rm -v dummy.c a.out dummy.log
     mkdir -pv /usr/share/gdb/auto-load/usr/lib
     mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
-    cd ..
+    cd /sources
     rm -rf gcc-build/ gcc-4.9.2
     printf "\n\n"
     sleep 3
@@ -928,7 +928,7 @@ BUILD_BZIP2 () {
     rm -v /usr/bin/{bunzip2,bzcat,bzip2} &&
     ln -sv bzip2 /bin/bunzip2
     ln -sv bzip2 /bin/bzcat
-    cd ..
+    cd /sources
     rm -rf bzip2-1.0.6
     printf "\n\n"
     sleep 3
@@ -959,7 +959,7 @@ BUILD_PKG-CONFIG () {
     make &&
     make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/pkg-config_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf pkg-config-0.28
     printf "\n\n"
     sleep 3
@@ -1015,7 +1015,7 @@ BUILD_NCURSES () {
                 --without-cxx-binding &&
     make sources libs &&
     cp -av lib/lib*.so.5* /usr/lib
-    cd ..
+    cd /sources
     rm -rf ncurses-5.9
     printf "\n\n"
     sleep 3
@@ -1048,7 +1048,7 @@ BUILD_ATTR () {
     chmod -v 755 /usr/lib/libattr.so
     mv -v /usr/lib/libattr.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libattr.so) /usr/lib/libattr.so
-    cd ..
+    cd /sources
     rm -rf attr-2.4.47
     printf "\n\n"
     sleep 3
@@ -1082,7 +1082,7 @@ BUILD_ACL () {
     chmod -v 755 /usr/lib/libacl.so
     mv -v /usr/lib/libacl.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libacl.so) /usr/lib/libacl.so
-    cd ..
+    cd /sources
     rm -rf acl-2.2.52
     printf "\n\n"
     sleep 3
@@ -1111,7 +1111,7 @@ BUILD_LIBCAP () {
     chmod -v 755 /usr/lib/libcap.so
     mv -v /usr/lib/libcap.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libcap.so) /usr/lib/libcap.so
-    cd ..
+    cd /sources
     rm -rf libcap-2.24
     printf "\n\n"
     sleep 3
@@ -1143,7 +1143,7 @@ BUILD_SED () {
     make -k check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/sed_mkck_log_"$TIMESTAMP"
     make install &&
     make -C doc install-html &&
-    cd ..
+    cd /sources
     rm -rf sed-4.2.2
     printf "\n\n"
     sleep 3
@@ -1156,7 +1156,7 @@ BUILD_CRACKLIB () {
 
     clear
     HEADER
-    echo -e "\e[1m\e[32mBuilding cracklig-2.9.1...\e[0m"
+    echo -e "\e[1m\e[32mBuilding cracklib-2.9.1...\e[0m"
     sleep 3
     printf "\n\n"
 
@@ -1182,7 +1182,7 @@ BUILD_CRACKLIB () {
     install -v -m755 -d      /lib/cracklib                         &&
     create-cracklib-dict     /usr/share/dict/cracklib-words        \
                              /usr/share/dict/cracklib-extra-words &&
-    cd ..
+    cd /sources
     rm -rf cracklib-2.9.1
     printf "\n\n"
     sleep 3
@@ -1222,7 +1222,7 @@ BUILD_SHADOW () {
     grpconv &&
     sed -i 's/yes/no/' /etc/default/useradd
     echo "root:intergenos" | chpasswd &&
-    cd ..
+    cd /sources
     rm -rf shadow-4.2.1
     printf "\n\n"
     sleep 3
@@ -1251,7 +1251,7 @@ BUILD_PSMISC () {
     make install &&
     mv -v /usr/bin/fuser   /bin
     mv -v /usr/bin/killall /bin
-    cd ..
+    cd /sources
     rm -rf psmisc-22.21
     printf "\n\n"
     sleep 3
@@ -1288,7 +1288,7 @@ BUILD_PROCPS-NG () {
     mv -v /usr/bin/pidof /bin
     mv -v /usr/lib/libprocps.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so
-    cd ..
+    cd /sources
     rm -rf procps-ng-3.3.10
     printf "\n\n"
     sleep 3
@@ -1336,7 +1336,7 @@ BUILD_E2FSPROGS () {
     chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
     gunzip -v /usr/share/info/libext2fs.info.gz
     install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info &&
-    cd ../..
+    cd /sources/..
     rm -rf e2fsprogs-1.42.12
     printf "\n\n"
     sleep 3
@@ -1375,7 +1375,7 @@ BUILD_COREUTILS () {
     mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
     sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
     mv -v /usr/bin/{head,sleep,nice,test,[} /bin
-    cd ..
+    cd /sources
     rm -rf coreutils-8.23
     printf "\n\n"
     sleep 3
@@ -1401,7 +1401,7 @@ BUILD_IANA-ETC () {
     cd iana-etc-2.30
     make &&
     make install &&
-    cd ..
+    cd /sources
     rm -rf iana-etc-2.30
     printf "\n\n"
     sleep 3
@@ -1429,7 +1429,7 @@ BUILD_M4 () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/m4_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf m4-1.4.17
     printf "\n\n"
     sleep 3
@@ -1460,7 +1460,7 @@ BUILD_FLEX () {
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/flex_mkck_log_"$TIMESTAMP"
     make install &&
     ln -sv flex /usr/bin/lex
-    cd ..
+    cd /sources
     rm -rf flex-2.5.39/
     printf "\n\n"
     sleep 3
@@ -1488,7 +1488,7 @@ BUILD_BISON () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/bison_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf bison-3.0.4/
     printf "\n\n"
     sleep 3
@@ -1518,7 +1518,7 @@ BUILD_GREP () {
     make &&
     make check 2>&1 | tee /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/grep_mkck_log_"$TIMESTAMP"
     make install &&
-    cd ..
+    cd /sources
     rm -rf grep-2.21/
     printf "\n\n"
     sleep 3
@@ -1552,7 +1552,7 @@ BUILD_READLINE () {
     mv -v /usr/lib/lib{readline,history}.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libreadline.so) /usr/lib/libreadline.so
     ln -sfv ../../lib/$(readlink /usr/lib/libhistory.so ) /usr/lib/libhistory.so
-    cd ..
+    cd /sources
     rm -rf readline-6.3/
     printf "\n\n"
     sleep 3
