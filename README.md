@@ -9,6 +9,14 @@
 ---
 
 ```
+- 6/27/15 Exciting times folks, things are getting good.  Automation is now set to let you pick a build partition,
+  enter your username, and hit 'go'.  Build times are lengthy, averaging 5-6 hours depending on the system hardware.
+  The 'Grub2 Hack' will be going away very shortly- as soon as the grub config script makes it through the
+  the testing phase on several multi-disk, multi-os setups (nifty IntergenOS background and all).  X11 scripts are
+  being put together, and we've opted to make nvidia non-free available for the core as well.  DE scripts will
+  follow suit, along with developing fakeroot scripts for package creation.  Github currently has our repo, but
+  a dedicated server running Scientific is in the works to snag that job shortly.  It's been a long road to this
+  point, but there's still loads more to do-  ...stay tuned.
 
 - 6/25/15 Build 003 is now completely automated - Builds are running on 2 separate i3 machines and an older Core2duo
   --The grub configuration routine (more of a 'hack' really) needs to be completely re-worked, but will do for now
