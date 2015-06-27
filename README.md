@@ -9,8 +9,8 @@
 ---
 
 ```
-- **6/27/15** Exciting times folks, things are getting good.  Automation is now set to let
-  you pick a build partition, enter your username, and hit 'go'.  Build times are
+  **6/27/15** Exciting times folks, things are getting good.  Automation is now set to
+  let you pick a build partition, enter your username, and hit 'go'.  Build times are
   lengthy, averaging 5-6 hours depending on the system hardware. The 'Grub2 Hack' will
   be going away very shortly- as soon as the grub config script makes it through the
   testing phase on several multi-disk, multi-os setups (nifty IntergenOS background and
@@ -20,33 +20,33 @@
   server running Scientific is in the works to snag that job shortly.  It's been a long
   road to this point, but there's still loads more to do-  ...stay tuned.
 
-- **6/25/15** Build 003 is now completely automated - Builds are running on 2 separate i3
-  machines and an older Core2duo.  The grub configuration routine (more of a 'hack'
+  **6/25/15** Build 003 is now completely automated - Builds are running on 2 separate
+  i3 machines and an older Core2duo.  The grub configuration routine (more of a 'hack'
   really) needs to be completely re-worked, but will do for now.  After any identified
   automation bugs have been worked out, x11 will be added, followed by both Gnome and
   KDE- past that, the real fun begins...   :)   ...stay tuned.
 
-- *** 4/16/2015 ***
+  ** 4/16/2015 **
   Scripts are building the entire core system now with 0 errors
   Scripts are being started for base system components (xorg, kde, gnome, etc)
   Huge thanks are in order- Security aspects will be assessed by recent
   OSCP grad and pen testing specialist Mr. Tyler Ward.
 
-- *** 4/9/2015 ***
+  ** 4/9/2015 **
   Testing results for Glibc and GCC packages
   Glibc compiled with 0 failures, 3 unexpected successes
   GCC compiled with 0 failures, 2 unexpected successes
 
-- *** RESPONSE FROM LFS-SUPPORT - 3/12/15 ***
+  ** RESPONSE FROM LFS-SUPPORT - 3/12/15 **
     [10:05] <archetech_> if the linker tests pass move on
     [10:07] <archetech_> stuff will blow out later if it's a bad build
 
     I so love these guys :)
 
-- *** updated kernel to 3.19, and now glibc-2.21 is compiling with ZERO errors.
-  *** On to the rest of the basic system packages.  :)
+  ** updated kernel to 3.19, and now glibc-2.21 is compiling with ZERO errors. **
+  ** On to the rest of the basic system packages.  :) **
 
-- **3/11/15** Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical
+  **3/11/15** Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical
   errors are being reported with each run, whether it's done using setup.sh to set
   the temp system or done manually.  #lfs-support hasn't responded yet, but will
   post when they do
