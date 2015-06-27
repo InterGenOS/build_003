@@ -18,7 +18,7 @@
   available for the core as well.  DE scripts will follow suit, along with developing
   fakeroot scripts for package creation.  Github currently has our repo, but a dedicated
   server running Scientific is in the works to snag that job shortly.  It's been a long
-  road to this point, but there's still loads more to do-  ...stay tuned.
+  road to this point, and there's still loads more to do-  ...stay tuned.
 
   **6/25/15** Build 003 is now completely automated - Builds are running on 2 separate
   i3 machines and an older Core2duo.  The grub configuration routine (more of a 'hack'
