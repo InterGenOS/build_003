@@ -240,7 +240,7 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/finalize_system.sh -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.fstab -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.config -P "$IGos" --no-check-certificate
-    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.grub.config -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.grub.cfg -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_post-bash.sh -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
@@ -250,7 +250,7 @@ SETUP_BUILD () {
     chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chmod +x "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
-    chmod +x "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.
+    chmod +x "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh
     chmod +x "$IGos"/enter_chroot_post-bash.sh
 
     # Copy current grub.cfg for alteration upon build completion
