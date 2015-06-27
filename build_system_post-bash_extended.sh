@@ -1146,7 +1146,6 @@ BUILD_NANO () {
     make install &&
     install -v -m644 doc/nanorc.sample /etc &&
     install -v -m644 doc/texinfo/nano.html /usr/share/doc/nano-2.3.6 &&
-    cp intergen_nanorc /etc/nanorc
     cd /sources
     rm -rf nano-2.3.6/
     printf "\n\n"

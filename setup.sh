@@ -243,15 +243,23 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.grub.cfg -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_post-bash.sh -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/11_linux -P "$IGos" --no-check-certificate
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chown -v igos "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config
     chown -v igos "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh "$IGos"/intergenos.grub.cfg
-    chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc
+    chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc "$IGos"/11_linux
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chmod +x "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chmod +x "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh
-    chmod +x "$IGos"/enter_chroot_post-bash.sh
+    chmod +x "$IGos"/enter_chroot_post-bash.sh "$IGos"/11_linux
+
+    # Set UUID in intergenos.fstab
+    RUUID="$(blkid | grep "$TARGET_PARTITION" | sed 's/"/ /g' | awk '{print $3}')"
+    sed -i -e "s/xxx/$RUUID/" "$IGos"/intergenos.fstab
+
+    # Set Root UUID for use in finalize_system.sh
+    echo "$RUUID" > "$IGos"/rootuuid
 
     # Copy current grub.cfg for alteration upon build completion
     cp /boot/grub/grub.cfg "$IGos"/grub.cfg
@@ -374,10 +382,10 @@ printf "\n\n\n"
 
 clear
 HEADER
-echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+echo -e "     \e[1m\e[32mEntered Root Shell successfully\e[0m"
 DIVIDER
 sleep 3
-echo -e "     \e[1m\e[32mEntering chroot environment for post-bash package builds..."
+echo -e "     \e[1m\e[32mEntering chroot environment for post-bash package builds...\e[0m"
 cd "$IGos"
 sleep 3
 sudo -u root ./enter_chroot_post-bash.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_post-bash_log_"$TIMESTAMP" &&
@@ -386,10 +394,10 @@ printf "\n\n"
 
 clear
 HEADER
-echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+echo -e "     \e[1m\e[32mEntered Root Shell successfully\e[0m"
 DIVIDER
 sleep 3
-echo -e "     \e[1m\e[32mEntering chroot environment for binary and library stripping..."
+echo -e "     \e[1m\e[32mEntering chroot environment for binary and library stripping...\e[0m"
 cd "$IGos"
 sleep 3
 sudo -u root ./enter_chroot_stripping.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_stripping_log_"$TIMESTAMP" &&
@@ -399,10 +407,10 @@ printf "\n\n"
 
 clear
 HEADER
-echo -e "     \e[1m\e[32mEntered Root Shell successfully"
+echo -e "     \e[1m\e[32mEntered Root Shell successfully\e[0m"
 DIVIDER
 sleep 3
-echo -e "     \e[1m\e[32mEntering chroot environment for System Finalization..."
+echo -e "     \e[1m\e[32mEntering chroot environment for System Finalization...\e[0m"
 cd "$IGos"
 sleep 3
 sudo -u root ./enter_chroot_finalize.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs/chroot_finalize_log_"$TIMESTAMP" &&
@@ -423,7 +431,9 @@ echo -e "           \e[1m\e[37mPlease send any submissions to:\e[0m"
 printf "\n\n\n"
 echo -e "           \e[1m\e[34minfo\e[1m\e[37m@\e[1m\e[34mintergenstudios.com\e[0m"
 printf "\n\n\n"
-echo -e "           \e[1m\e[37mYou should now reboot your system and select the InterGenOS from your grub menu\e[0m"
+echo -e "           \e[1m\e[37mYou should now reboot your system and select the InterGenOS\e[0m"
+printf "\n"
+echo -e "           \e[1m\e[37mfrom your grub menu\e[0m"
 printf "\n\n"
 DIVIDER
 sleep 3

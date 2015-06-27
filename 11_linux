@@ -1,0 +1,9 @@
+#!/bin/sh -e
+echo "Installing InterGenOS in GRUB 2 configuration files..."
+cat << EOF
+menuentry "InterGen OS (.003SD)" {
+set root=(hdX,Y)
+search --no-floppy --fs-uuid --set=root UUID
+linux /boot/vmlinuz-3.19-intergen-003-systemd
+}
+EOF

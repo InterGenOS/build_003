@@ -54,10 +54,10 @@ rm -rf /tmp/*
 rm -rf /tools
 
 printf "\n\n\n\n\n\n\n\n\n\n"
-echo -e "    \e[1m\e[32mStripping Binaries and Libraries completed successfully..."
+echo -e "    \e[1m\e[32mStripping Binaries and Libraries completed successfully...\e[0m"
 printf "\n\n"
 sleep 3
-echo -e "    \e[1m\e[32mRe-entering Root Shell..."
+echo -e "    \e[1m\e[32mRe-entering Root Shell...\e[0m"
 sleep 3
 
 #######################

@@ -860,6 +860,7 @@ set cmdheight=2
 EOF
 
 cp ~/.vimrc /etc/skel/.vimrc
+mv /intergenos.nanorc /etc/nanorc
 cp /etc/nanorc ~/.nanorc
 cp /etc/nanorc /etc/skel/.nanorc
 
@@ -880,9 +881,6 @@ sleep 3
 
 # Create /etc/fstab
 mv /intergenos.fstab /etc/fstab
-ROOTMOUNT=$(mount | grep '\/dev\/sd' | awk '{print $1}')
-ROOTUUID=$(blkid $ROOTMOUNT | awk '{print $2}' | cut -d '"' -f 2 | cut -d '"' -f 1)
-sed -i "s/xxx/$ROOTUUID/" /etc/fstab
 
 #---------------------------------------------------------------------------------------#
 
@@ -894,7 +892,7 @@ sleep 3
 
 # Build the kernel
 cd /sources
-tar xf linux-3.19.tar.xz &&
+tar xf linux-3.19.src.tar.gz &&
 cd linux-3.19
 make mrproper &&
 mv /intergenos.config .config
@@ -927,7 +925,14 @@ echo -e "\e[1m\e[32mGenerating GRUB2 configuration...\e[0m"
 printf "\n\n"
 sleep 3
 
+# Setup grub.cfg
+
+mv/11_linux /etc/grub.d/
+
 # Setup grub.cfg - needs to be re-written badly
+ROOTUUID="$(cat /rootuuid)"
+
+
 mv /grub.cfg /sources/linux-3.19/
 sed -i "s/xxx/$ROOTUUID/g" /intergenos.grub.cfg
 GRUBTARGET=$(echo $ROOTMOUNT | sed 's/[0-9]*//g')
@@ -975,7 +980,7 @@ echo .003SD > /etc/igos-release
 # Create /etc/lsb-release
 cat > /etc/lsb-release << "EOF"
 DISTRIB_ID="InterGen OS"
-DISTRIB_RELEASE=".002SD"
+DISTRIB_RELEASE=".003SD"
 DISTRIB_CODENAME="InterGen"
 DISTRIB_DESCRIPTION="InterGen OS"
 EOF
