@@ -9,7 +9,7 @@
 ---
 
 ```
-- 6/27/15 Exciting times folks, things are getting good.  Automation is now set to let
+- **6/27/15** Exciting times folks, things are getting good.  Automation is now set to let
   you pick a build partition, enter your username, and hit 'go'.  Build times are
   lengthy, averaging 5-6 hours depending on the system hardware. The 'Grub2 Hack' will
   be going away very shortly- as soon as the grub config script makes it through the
@@ -20,7 +20,7 @@
   server running Scientific is in the works to snag that job shortly.  It's been a long
   road to this point, but there's still loads more to do-  ...stay tuned.
 
-- 6/25/15 Build 003 is now completely automated - Builds are running on 2 separate i3
+- **6/25/15** Build 003 is now completely automated - Builds are running on 2 separate i3
   machines and an older Core2duo.  The grub configuration routine (more of a 'hack'
   really) needs to be completely re-worked, but will do for now.  After any identified
   automation bugs have been worked out, x11 will be added, followed by both Gnome and
@@ -43,20 +43,20 @@
 
     I so love these guys :)
 
-- *** updated kernel to 3.19, and now glibc-2.21 is compiling with ZERO errors.  On to
-  *** the rest of the basic system packages.  :)
+- *** updated kernel to 3.19, and now glibc-2.21 is compiling with ZERO errors.
+  *** On to the rest of the basic system packages.  :)
 
-- 3/11/15 Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical errors
-  are being reported with each run, whether it's done using setup.sh to set the temp
-  system or done manually.  #lfs-support hasn't responded yet, but will post when they do
+- **3/11/15** Build 002 is seeing 'make check' issues with glibc-2.21.  113 identical
+  errors are being reported with each run, whether it's done using setup.sh to set
+  the temp system or done manually.  #lfs-support hasn't responded yet, but will
+  post when they do
 
     sample 'make check' output log:
       ====>  http://intergenstudios.com/Downloads/glibc-2.21_make-check_log.txt
 
 ```
 
-###After their initial look at the project, followed by their 'Oh, cool!', and 'Sweet!'
-###comments, everyone keeps asking me-
+###After their initial look at the project, followed by their 'Oh, cool!', and 'Sweet!' comments, everyone keeps asking me-
 
 
 "Why make your own distro, though?  That seems like too much work. Why don't you just
