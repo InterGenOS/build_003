@@ -927,8 +927,8 @@ sleep 3
 
 # Setup grub files
 rm /etc/default/grub
-mv/etc.default.grub /etc/default/grub
-mv /InterGenOS_grub_background.png /boot/grub/
+mv /etc.default.grub /etc/default/grub
+mv /InterGenOS_grub_image.png /boot/grub/
 
 # install grub
 grub-install /dev/$(cat /target.drive)

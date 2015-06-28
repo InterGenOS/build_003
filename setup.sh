@@ -243,16 +243,17 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.grub.cfg -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_post-bash.sh -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
-    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/11_linux -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/etc.default.grub -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_002/master/InterGenOS_grub_image.png -P "$IGos" --no-check-certificate
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chown -v igos "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config
     chown -v igos "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh "$IGos"/intergenos.grub.cfg
-    chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc "$IGos"/11_linux
+    chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc "$IGos"/etc.default.grub "$IGos"/InterGenOS_grub_image.png
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chmod +x "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chmod +x "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh
-    chmod +x "$IGos"/enter_chroot_post-bash.sh "$IGos"/11_linux
+    chmod +x "$IGos"/enter_chroot_post-bash.sh
 
     # Set UUID in intergenos.fstab
     RUUID="$(blkid | grep "$TARGET_PARTITION" | sed 's/"/ /g' | awk '{print $3}')"
