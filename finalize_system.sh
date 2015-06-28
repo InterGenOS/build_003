@@ -926,8 +926,9 @@ printf "\n\n"
 sleep 3
 
 # Setup grub files
-rm /etc/default/grub
+mkdir -p /etc/default
 mv /etc.default.grub /etc/default/grub
+mkdir -p /boot/grub
 mv /InterGenOS_grub_image.png /boot/grub/
 
 # install grub
@@ -965,7 +966,7 @@ EOF
 
 clear
 HEADER
-echo -d "\e[1m\e[32mGenerating grub.cfg...\e[0m"
+echo -e "\e[1m\e[32mGenerating grub.cfg...\e[0m"
 printf "\n\n"
 echo -e "\e[1m\e[34m"
 grub-mkconfig -o /boot/grub/grub.cfg
