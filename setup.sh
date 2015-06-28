@@ -244,7 +244,7 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/enter_chroot_post-bash.sh -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/etc.default.grub -P "$IGos" --no-check-certificate
-    wget -q https://raw.githubusercontent.com/InterGenOS/build_002/master/InterGenOS_grub_image.png -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/InterGenOS_grub_image.png -P "$IGos" --no-check-certificate
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chown -v igos "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config
