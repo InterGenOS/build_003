@@ -256,6 +256,7 @@ SETUP_BUILD () {
 
     # Set UUID in intergenos.fstab
     RUUID="$(blkid | grep "$TARGET_PARTITION" | sed 's/"/ /g' | awk '{print $3}')"
+    echo $TARGET_PARTITION | sed 's/[0-9]//' > "$IGos"/target.drive
     sed -i -e "s/xxx/$RUUID/" "$IGos"/intergenos.fstab
 
     # Set Root UUID for use in finalize_system.sh

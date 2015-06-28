@@ -921,41 +921,17 @@ EOF
 
 clear
 HEADER
-echo -e "\e[1m\e[32mGenerating GRUB2 configuration...\e[0m"
+echo -e "\e[1m\e[32mGenerating GRUB2 scripts and installing bootloader...\e[0m"
 printf "\n\n"
 sleep 3
 
-# Setup grub.cfg
+# Setup grub files
+rm /etc/default/grub
+mv/etc.default.grub /etc/default/grub
+mv /InterGenOS_grub_background.png /boot/grub/
 
-mv/11_linux /etc/grub.d/
-
-# Setup grub.cfg - needs to be re-written badly
-ROOTUUID="$(cat /rootuuid)"
-
-
-mv /grub.cfg /sources/linux-3.19/
-sed -i "s/xxx/$ROOTUUID/g" /intergenos.grub.cfg
-GRUBTARGET=$(echo $ROOTMOUNT | sed 's/[0-9]*//g')
-HDNUMBER=$(echo $ROOTMOUNT | cut -d '/' -f 3 | sed 's/[0-9]*//g')
-PARTNUMBER=$(echo $ROOTMOUNT | cut -d '/' -f 3 | sed 's/[^0-9]*//g')
-sed -i "s/vvv/$ROOTMOUNT/g" /intergenos.grub.cfg
-if [ "$HDNUMBER" = sda ]; then
-     sed -i "s/yyy/0/g" /intergenos.grub.cfg
-   elif [ "$HDNUMBER" = sdb ]; then
-     sed -i "s/yyy/1/g" /intergenos.grub.cfg
-   elif [ "$HDNUMBER" = sdc ]; then
-     sed -i "s/yyy/2/g" /intergenos.grub.cfg
-   else
-     sed -i "s/yyy/3/g" /intergenos.grub.cfg
-fi
-sed -i "s/zzz/$PARTNUMBER/g" /intergenos.grub.cfg
-cat <(head -n$(cat -n grub.cfg | grep 'BEGIN /etc/grub.d/40_custom' | awk '{print $1}') grub.cfg) >> grub.new
-cat /intergenos.grub.cfg >> grub.new
-sed -e '1,/END \/etc\/grub.d\/40_custom/d' /grub.cfg >> grub.new
-
-grub-install $GRUBTARGET
-unset ROOTMOUNT ROOTUUID GRUBTARGET PARTNUMBER HDNUMBER
-mv grub.new /boot/grub/grub.cfg
+# install grub
+grub-install /dev/$(cat /target.drive)
 
 #---------------------------------------------------------------------------------------#
 
@@ -984,6 +960,17 @@ DISTRIB_RELEASE=".003SD"
 DISTRIB_CODENAME="InterGen"
 DISTRIB_DESCRIPTION="InterGen OS"
 EOF
+
+#---------------------------------------------------------------------------------------#
+
+clear
+HEADER
+echo -d "\e[1m\e[32mGenerating grub.cfg...\e[0m"
+printf "\n\n"
+echo -e "\e[1m\e[34m"
+grub-mkconfig -o /boot/grub/grub.cfg
+printf "\n\n"
+echo -e "\e[1m\e[32mGrub configuration complete\e[0m"
 
 #---------------------------------------------------------------------------------------#
 
