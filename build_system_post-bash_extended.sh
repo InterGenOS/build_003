@@ -1106,7 +1106,7 @@ BUILD_VIM () {
     echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
     ./configure --prefix=/usr &&
     make &&
-    make -j1 test > /vim-mkck-log_$(date +"%m-%d-%Y_%T") &&
+    make -j1 test > /var/log/InterGenOS/BuildLogs/Sys_Buildlogs/vim-mkck-log_"$TIMESTAMP" &&
     make install &&
     ln -sv vim /usr/bin/vi
     for L in  /usr/share/man/{,*/}man1/vim.1; do
