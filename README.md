@@ -9,6 +9,14 @@
 ---
 
 ```
+  **6/30/15** Grub hack has been replaced with a custom grub configuration:
+
+  ![alt text](https://github.com/InterGenOS/build_003/blob/master/CustomGrubScreen.png "InterGen OSsD")
+
+  Core system scripts have been cleaned up, and will be ready for 'release' once
+  a kernel configuration has been settled on (trying to squeeze every ounce of
+  compatibility out of the kernel that we possibly we can).  More to come...
+
   **6/27/15** Exciting times folks, things are getting good.  Automation is now set to
   let you pick a build partition, enter your username, and hit 'go'.  Build times are
   lengthy, averaging 5-6 hours depending on the system hardware. The 'Grub2 Hack' will
