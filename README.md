@@ -8,6 +8,7 @@
 ### Project Status and notes:
 ---
   Custom Grub Splash
+  
   ![alt text](https://raw.githubusercontent.com/InterGenOS/build_003/master/CustomGrubScreen.png "InterGen OSsD")
 
 ```
