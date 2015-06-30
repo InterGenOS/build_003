@@ -7,12 +7,11 @@
 
 ### Project Status and notes:
 ---
+  Custom Grub Splash
+  ![alt text](https://raw.githubusercontent.com/InterGenOS/build_003/master/CustomGrubScreen.png "InterGen OSsD")
 
 ```
-  **6/30/15** Grub hack has been replaced with a custom grub configuration:
-
-  ![alt text](https://github.com/InterGenOS/build_003/blob/master/CustomGrubScreen.png "InterGen OSsD")
-
+  **6/30/15** Grub hack has been replaced with a custom grub configuration :)
   Core system scripts have been cleaned up, and will be ready for 'release' once
   a kernel configuration has been settled on (trying to squeeze every ounce of
   compatibility out of the kernel that we possibly we can).  More to come...
