@@ -903,6 +903,7 @@ cp -v System.map /boot/System.map-intergen-3.19
 cp -v .config /boot/config-intergen-3.19
 install -d /usr/share/doc/linux-3.19
 cp -r Documentation/* /usr/share/doc/linux-3.19
+# Leaving kernel directory open for re-builds and testing
 
 #---------------------------------------------------------------------------------------#
 
