@@ -7,9 +7,11 @@
 
 ### Project Status and notes:
 ---
-  Custom Grub Splash
+  Custom Grub Splash (Screenshot from Virtualbox build)
   
-  ![alt text](https://raw.githubusercontent.com/InterGenOS/build_003/master/InterGenOS_Grub_Splash.png "InterGen OSsD")
+  
+  ![alt text](https://intergenstudios.com/Downloads/Grub_Splash.png "InterGen OSsD")
+  
 
 ```
   **6/30/15** Grub hack has been replaced with a custom grub configuration :)
