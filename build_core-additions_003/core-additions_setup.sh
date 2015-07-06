@@ -95,11 +95,11 @@ BUILD_OPENSSL () {
     ## ============== ##
     ####################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf openssl-1.0.1i.src.tar.gz &&
     cd openssl-1.0.1i
     COMPILE_OPENSSL () {
-        cd /sources_core_additions/openssl-1.0.1i
+        cd /sources_core-additions/openssl-1.0.1i
         patch -Np1 -i ../openssl-1.0.1i-fix_parallel_build-1.patch &&
         ./config --prefix=/usr    \
             --openssldir=/etc/ssl \
@@ -113,7 +113,7 @@ BUILD_OPENSSL () {
     make MANDIR=/usr/share/man MANSUFFIX=ssl install &&
     install -dv -m755 /usr/share/doc/openssl-1.0.1i  &&
     cp -vfr doc/*     /usr/share/doc/openssl-1.0.1i
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -rf openssl-1.0.1i
     printf "\n\n"
     sleep 3
@@ -135,11 +135,11 @@ BUILD_NETTLE () {
     ## ============ ##
     ##################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf nettle-2.7.1.src.tar.gz &&
     cd nettle-2.7.1
     COMPILE_NETTLE () {
-        cd /sources_core_additions/nettle-2.7.1
+        cd /sources_core-additions/nettle-2.7.1
         ./configure --prefix=/usr &&
         make
         sed -i '/^install-here/ s/install-static//' Makefile
@@ -149,7 +149,7 @@ BUILD_NETTLE () {
     chmod -v 755 /usr/lib/libhogweed.so.2.5 /usr/lib/libnettle.so.4.7 &&
     install -v -m755 -d /usr/share/doc/nettle-2.7.1 &&
     install -v -m644 nettle.html /usr/share/doc/nettle-2.7.1
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -rf nettle-2.7.1
     printf "\n\n"
     sleep 3
@@ -171,11 +171,11 @@ BUILD_WGET () {
     ## ========= ##
     ###############
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf wget-1.15.src.tar.gz &&
     cd wget-1.15
     COMPILE_WGET () {
-        cd /sources_core_additions/wget-1.15
+        cd /sources_core-additions/wget-1.15
         ./configure --prefix=/usr \
             --sysconfdir=/etc     \
             --with-ssl=openssl &&
@@ -183,7 +183,7 @@ BUILD_WGET () {
     }
     sudo -u intergen COMPILE_WGET &&
     make install &&
-    cd /sources_core_additions
+    cd /sources_core-additions
     printf "\n\n"
     sleep 3
     echo -e "\e[1m\e[32mInitial wget-1.15 build completed\e[0m"
@@ -208,9 +208,9 @@ BUILD_CERTIFICATE-AUTHORITY-CERTIFICATES () {
     ## ================================== ##
     ########################################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     COMPILE_CERTIFICATE-AUTHORITY-CERTIFICATES () {
-        cd /sources_core_additions/
+        cd /sources_core-additions/
         URL=http://anduin.linuxfromscratch.org/sources/other/certdata.txt &&
         rm -f certdata.txt &&
         wget $URL          &&
@@ -226,7 +226,7 @@ BUILD_CERTIFICATE-AUTHORITY-CERTIFICATES () {
     install BLFS-ca-bundle*.crt ${SSLDIR}/ca-bundle.crt          &&
     ln -sfv ../ca-bundle.crt ${SSLDIR}/certs/ca-certificates.crt &&
     unset SSLDIR
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -r certs BLFS-ca-bundle*
     printf "\n\n"
     sleep 3
@@ -248,11 +248,11 @@ BUILD_LIBFFI () {
     ## ========== ##
     ################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf libffi-3.1.src.tar.gz &&
     cd libffi-3.1
     COMPILE_LIBFFI () {
-        cd /sources_core_additions/libffi-3.1
+        cd /sources_core-additions/libffi-3.1
         sed -e '/^includesdir/ s:$(libdir)/@PACKAGE_NAME@-@PACKAGE_VERSION@/include:$(includedir):' -i include/Makefile.in &&
         sed -e '/^includedir/ s:${libdir}/@PACKAGE_NAME@-@PACKAGE_VERSION@/include:@includedir@:' -e 's/^Cflags: -I${includedir}/Cflags:/' -i libffi.pc.in &&
         ./configure --prefix=/usr --disable-static &&
@@ -260,7 +260,7 @@ BUILD_LIBFFI () {
     }
     sudo -u intergen COMPILE_LIBFFI &&
     make install &&
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -rf libffi-3.1
     printf "\n\n"
     sleep 3
@@ -282,18 +282,18 @@ BUILD_LIBTASN1 () {
     ## ============ ##
     ##################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf libtasn1-4.1.src.tar.gz &&
     cd libtasn1-4.1
     COMPILE_LIBTASN1 () {
-        cd /sources_core_additions/libtasn1-4.1
+        cd /sources_core-additions/libtasn1-4.1
         ./configure --prefix=/usr --disable-static &&
         make
     }
     sudo -u intergen COMPILE_LIBTASN1 &&
     make install &&
     make -C doc/reference install-data-local
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -rf libtasn1-4.1
     printf "\n\n"
     sleep 3
@@ -315,17 +315,17 @@ BUILD_P11-KIT () {
     ## ============== ##
     ####################
 
-    cd /sources_core_additions
+    cd /sources_core-additions
     tar xf p11-kit-0.20.6.src.tar.gz &&
     cd libtasn1-4.1
     COMPILE_P11-KIT () {
-        cd /sources_core_additions/p11-kit-0.20.6
+        cd /sources_core-additions/p11-kit-0.20.6
         ./configure --prefix=/usr --sysconfdir=/etc &&
         make
     }
     sudo -u intergen COMPILE_P11-KIT &&
     make install &&
-    cd /sources_core_additions
+    cd /sources_core-additions
     rm -rf p11-kit-0.20.6
     printf "\n\n"
     sleep 3
@@ -392,7 +392,7 @@ sleep 3
 useradd -m -g users -s /bin/bash intergen
 
 # Create core additions source directory
-mkdir /sources_core_additions
+mkdir /sources_core-additions
 
 
 # Fetch core addtions source files
@@ -414,9 +414,9 @@ printf "\n\n"
 cd /
 unzip master.zip 2>&1 &&
 rm master.zip
-mv sources_core-additions_003-master/* /sources_core_additions &&
+mv sources_core-additions_003-master/* /sources_core-additions &&
 rm -rf sources_core-additions_003-master
-rm /sources_core_additions/README.md
+rm /sources_core-additions/README.md
 printf "\n\n"
 sleep 3
 echo -e "\e[32m\e[1mSource preparation complete\e[0m"
@@ -432,7 +432,7 @@ HEADER
 echo -e "\e[1m\e[32mCreating CACert scripts...\e[0m"
 printf "\n\n"
 sleep 3
-cd /sources_core_additions
+cd /sources_core-additions
 cat > /usr/bin/make-cert.pl << "EOF"
 #!/usr/bin/perl -w
 
@@ -655,7 +655,7 @@ BUILD_CERTIFICATE-AUTHORITY-CERTIFICATES
 clear
 HEADER
 echo -e "\e[1m\e[32mCleaning up wget-1.15 source directory...\e[0m"
-cd /sources_core_additions
+cd /sources_core-additions
 rm -rf wget-1.15
 sleep 3
 printf "\n\n"

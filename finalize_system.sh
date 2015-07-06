@@ -934,7 +934,7 @@ mv /InterGenOS_grub_image.png /boot/grub/
 
 # install grub
 grub-install /dev/$(cat /target.drive)
-rm target.drive
+rm /target.drive
 
 #---------------------------------------------------------------------------------------#
 

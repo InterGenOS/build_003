@@ -422,6 +422,9 @@ sudo -u root ./enter_chroot_finalize.sh 2>&1 | tee /var/log/InterGenOS/BuildLogs
 sed -i -e 's/[\x01-\x1F\x7F]//g' -e 's|\[1m||g' -e 's|\[32m||g' -e 's|\[34m||g' -e 's|(B\[m||g' -e 's|\[1m\[32m||g' -e 's|\[H\[2J||g' -e 's|\[1m\[31m||g' -e 's|\[1m\[34m||g' -e 's|\[5A\[K||g' -e 's|\[1m\[33m||g' /var/log/InterGenOS/BuildLogs/chroot_finalize_log_"$TIMESTAMP"
 printf "\n\n"
 
+# Cleanup build scripts
+rm /build_system.sh /build_system_post-bash_extended.sh /build_temporary_system.sh /clean_environment.sh /enter_chroot.sh /enter_chroot_finalize.sh /enter_chroot_post-bash.sh /enter_chroot_stripping.sh /finalize_system.sh /strip_binaries-libraries.sh
+
 clear
 HEADER
 echo -e "           \e[1m\e[4m\e[34mInterGenOS v003 Core Build Complete...\e[0m"
