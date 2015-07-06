@@ -82,6 +82,120 @@ CLEARLINE () {
 # BEGIN - CORE ADDITIONS PACKAGE BUILD FUNCTIONS #
 #------------------------------------------------#
 
+BUILD_PAM_1 () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding linux-pam-1.1.8...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    #####################
+    ## Linux-PAM-1.1.8 ##
+    ## =============== ##
+    #####################
+
+    cd /sources_core-additions
+    tar xf Linux-PAM-1.1.8.src.tar.gz &&
+    cd Linux-PAM-1.1.8
+    tar -xf ../Linux-PAM-1.1.8-docs.tar.bz2 --strip-components=1
+    ./configure --prefix=/usr            \
+        --sysconfdir=/etc                \
+        --libdir=/usr/lib                \
+        --enable-securedir=/lib/security \
+        --docdir=/usr/share/doc/Linux-PAM-1.1.8 &&
+    make
+    install -v -m755 -d /etc/pam.d
+}
+
+BUILD_PAM_2 () {
+
+    cd /sources_core-additions/Linux-PAM-1.1.8
+    rm -rfv /etc/pam.d
+    make install &&
+    chmod -v 4755 /sbin/unix_chkpwd &&
+    for file in pam pam_misc pamc; do
+        mv -v /usr/lib/lib${file}.so.* /lib &&
+        ln -sfv ../../lib/$(readlink /usr/lib/lib${file}.so) /usr/lib/lib${file}.so
+    done
+    cd /sources_core-additions
+    rm -rf Linux-PAM-1-1.8
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mlinux-pam-1.1.8 completed...\e[0m"
+    sleep 2
+}
+
+BUILD_SHADOW () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mRebuilding shadow-4.2.1 with linux-pam support...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ##################
+    ## Shadow-4.2.1 ##
+    ## ============ ##
+    ##################
+
+    cd /sources
+    tar xf shadow-4.2.1.src.tar.gz &&
+    cd shadow-4.2.1
+    sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+    find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
+    sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' -e 's@/var/spool/mail@/var/mail@' etc/login.defs
+    sed -i 's@DICTPATH.*@DICTPATH\t/lib/cracklib/pw_dict@' etc/login.defs
+    sed -i 's/1000/999/' etc/useradd
+    ./configure --sysconfdir=/etc --with-group-name-max-length=32
+    make &&
+    make install &&
+    mv -v /usr/bin/passwd /bin
+    pwconv
+    grpconv
+    sed -i 's/yes/no/' /etc/default/useradd
+    echo "root:intergenos" | chpasswd &&
+    cd /sources
+    rm -rf shadow-4.2.1
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32mshadow-4.2.1 completed...\e[0m"
+    sleep 2
+
+}
+
+BUILD_SUDO () {
+
+    clear
+    HEADER
+    echo -e "\e[1m\e[32mBuilding sudo-1.8.10p3 with linux-pam support...\e[0m"
+    sleep 3
+    printf "\n\n"
+
+    ###################
+    ## Sudo-1.8.10p3 ##
+    ## ============= ##
+    ###################
+
+    cd /sources_core-additions
+    tar xf sudo-1.8.10p3.src.tar.gz &&
+    cd sudo-1.8.10p3
+    ./configure --prefix=/usr                 \
+        --libexecdir=/usr/lib                 \
+        --with-all-insults                    \
+        --with-env-editor                     \
+        --docdir=/usr/share/doc/sudo-1.8.10p3 \
+        --with-passprompt="[sudo] password for %p" &&
+    make
+    cd /sources_core-additions
+    rm -rf sudo-1.8.10p3
+    printf "\n\n"
+    sleep 3
+    echo -e "\e[1m\e[32msudo-1.8.10p3 completed...\e[0m"
+    sleep 2
+
+}
+
 BUILD_OPENSSL () {
 
     clear
@@ -385,42 +499,60 @@ fi
 clear
 HEADER
 cd /
-echo -e "\e[1m\e[32mBeggining Core Additions build...\e[0m"
+echo -e "\e[1m\e[32mPreparing core-additions sources for compilation...\e[0m"
 sleep 3
 
 # Create non-priveleged user for compiling
 useradd -m -g users -s /bin/bash intergen
 
-# Create core additions source directory
-mkdir /sources_core-additions
-
-
-# Fetch core addtions source files
-clear
-HEADER
-echo -e "\e[1m\e[32mFetching Source Files    \e[0m(This may take a minute...)"
-wget -q https://github.com/InterGenOS/sources_core-additions_003/archive/master.zip -P "$IGos"
-printf "\n"
-sleep 3
-echo -e "\e[32m\e[1mSource retrieval complete...\e[0m"
+printf "\n\n"
+echo -e "\e[32m\e[1mCore-additions source preparation complete\e[0m"
 sleep 2
 
-# Move core additions source packages into place
-clear
-HEADER
-echo -e "\e[32m\e[1mPreparing sources for compilation...\e[0m"
-sleep 1
-printf "\n\n"
-cd /
-unzip master.zip 2>&1 &&
-rm master.zip
-mv sources_core-additions_003-master/* /sources_core-additions &&
-rm -rf sources_core-additions_003-master
-rm /sources_core-additions/README.md
-printf "\n\n"
-sleep 3
-echo -e "\e[32m\e[1mSource preparation complete\e[0m"
-sleep 2
+BUILD_PAM_1
+
+cat > /etc/pam.d/other << "EOF"
+auth     required       pam_deny.so
+account  required       pam_deny.so
+password required       pam_deny.so
+session  required       pam_deny.so
+EOF
+
+BUILD_PAM_2
+
+cat > /etc/pam.c/other << "EOF"
+# Begin /etc/pam.d/other
+
+auth            required        pam_unix.so     nullok
+account         required        pam_unix.so
+session         required        pam_unix.so
+password        required        pam_unix.so     nullok
+
+# End /etc/pam.d/other
+EOF
+
+BUILD_SHADOW
+
+BUILD_SUDO
+
+cat > /etc/pam.d/sudo << "EOF"
+# Begin /etc/pam.d/sudo
+
+# include the default auth settings
+auth      include     system-auth
+
+# include the default account settings
+account   include     system-account
+
+# Set default environment variables for the service user
+session   required    pam_env.so
+
+# include system session defaults
+session   include     system-session
+
+# End /etc/pam.d/sudo
+EOF
+chmod 644 /etc/pam.d/sudo
 
 BUILD_OPENSSL
 BUILD_NETTLE
