@@ -251,15 +251,16 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/etc.default.grub -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/InterGenOS_grub_image.png -P "$IGos" --no-check-certificate
+    wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/build_core-additions_003/core-additions_setup.sh -P "$IGos" --no-check-certificate
     chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/sources_core-additions/*
     chown -v igos "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
-    chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config
+    chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config "$IGos"/core-additions_setup.sh
     chown -v igos "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh "$IGos"/etc.default.grub
     chown -v igos "$IGos"/enter_chroot_post-bash.sh "$IGos"/intergenos.nanorc "$IGos"/InterGenOS_grub_image.png
     chmod +x "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
     chmod +x "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chmod +x "$IGos"/strip_binaries-libraries.sh "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh
-    chmod +x "$IGos"/enter_chroot_post-bash.sh
+    chmod +x "$IGos"/enter_chroot_post-bash.sh "$IGos"/core-additions_setup.sh
 
     # Set UUID in intergenos.fstab
     RUUID="$(blkid | grep "$TARGET_PARTITION" | sed 's/"/ /g' | awk '{print $3}')"
@@ -423,7 +424,7 @@ printf "\n\n"
 
 clear
 HEADER
-echo -e "           \e[1m\e[4m\e[34mInterGenOS v003 Build Complete...\e[0m"
+echo -e "           \e[1m\e[4m\e[34mInterGenOS v003 Core Build Complete...\e[0m"
 printf "\n\n"
 sleep 3
 printf "\n\n"
@@ -435,9 +436,13 @@ echo -e "           \e[1m\e[37mPlease send any submissions to:\e[0m"
 printf "\n\n\n"
 echo -e "           \e[1m\e[34minfo\e[1m\e[37m@\e[1m\e[34mintergenstudios.com\e[0m"
 printf "\n\n\n"
-echo -e "           \e[1m\e[37mYou should now reboot your system and select the InterGenOS\e[0m"
+echo -e "           \e[1m\e[37mYou should now reboot your system and select InterGenOS\e[0m"
 printf "\n"
 echo -e "           \e[1m\e[37mfrom your grub menu\e[0m"
+printf "\n"
+echo -e "           \e[1m\e[37mYou can then run \e[1m\e[32m/.core-additions_setup.sh \e[1m\e[37mto continue\e[0m"
+printf "\n"
+echo -e "           \e[1m\e[37mbuilding InterGenOS Core-Additions\e[0m"
 printf "\n\n"
 DIVIDER
 sleep 3
