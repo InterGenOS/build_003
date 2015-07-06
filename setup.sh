@@ -179,7 +179,7 @@ SETUP_BUILD () {
     # Move source packages into place
     clear
     HEADER
-    echo -e "\e[32m\e[1mPreparing sources for compilation...\e[0m"
+    echo -e "\e[32m\e[1mFetching core-additions and preparing sources for compilation...\e[0m"
     sleep 1
     printf "\n\n"
     cd "$IGos"
@@ -188,6 +188,13 @@ SETUP_BUILD () {
     mv sources_003-master/* "$IGos"/sources &&
     rm -rf sources_003-master
     rm "$IGos"/sources/README.md
+    mkdir -p "$IGos"/sources_core-additions
+    wget -q https://github.com/InterGenOS/sources_core-additions_003/archive/master.zip -P "$IGos"
+    unzip master.zip 2>&1 &&
+    rm master.zip
+    mv sources_core-additions_003-master/* sources_core-additions/ &&
+    rm -rf sources_core-additions_003-master
+    rm /sources_core-additions/README.md
     mkdir -v "$IGos"/tools
     ln -sv "$IGos"/tools /
     printf "\n\n"
@@ -244,7 +251,7 @@ SETUP_BUILD () {
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/intergenos.nanorc -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/etc.default.grub -P "$IGos" --no-check-certificate
     wget -q https://raw.githubusercontent.com/InterGenOS/build_003/master/InterGenOS_grub_image.png -P "$IGos" --no-check-certificate
-    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh
+    chown -v igos "$IGos"/build_temporary_system.sh "$IGos"/clean_environment.sh "$IGos"/enter_chroot.sh "$IGos"/sources_core-additions/*
     chown -v igos "$IGos"/build_system.sh "$IGos"/build_system_post-bash_extended.sh "$IGos"/enter_chroot_stripping.sh
     chown -v igos "$IGos"/strip_binaries-libraries.sh "$IGos"/intergenos.fstab "$IGos"/intergenos.config
     chown -v igos "$IGos"/enter_chroot_finalize.sh "$IGos"/finalize_system.sh "$IGos"/etc.default.grub
