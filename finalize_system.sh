@@ -940,7 +940,7 @@ rm /target.drive
 
 clear
 HEADER
-echo -e "\e[1m\e[32mCreating OS Identificatins files...\e[0m"
+echo -e "\e[1m\e[32mCreating OS Identification files...\e[0m"
 printf "\n\n"
 sleep 3
 

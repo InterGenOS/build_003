@@ -8,12 +8,22 @@
 ### Project Status and notes:
 ---
   Custom Grub Splash (Screenshot from Virtualbox build)
-  
-  
+
+
   ![alt text](https://intergenstudios.com/Downloads/Grub_Splash.png "InterGen OSsD")
-  
+
 
 ```
+  **1/4/16**  Build 004 will be finished soon, and incorporates some much needed
+  changes:
+    - Dependency and Library checks included in setup
+    - Custom Toolchain comprising binutils and gcc that targets InterGenOS
+    - X11 build automation
+  Dedicated Repository for source packages should be online within the next 30 days
+  or so, and the URL will be sent via the mailing list as well as posted here. Hope
+  everyone enjoyed their holidays, and we're looking forward to making this a great
+  year for InterGenOS!
+
   **6/30/15** Grub hack has been replaced with a custom grub configuration :)
   Core system scripts have been cleaned up, and will be ready for 'release' once
   a kernel configuration has been settled on (trying to squeeze every ounce of
