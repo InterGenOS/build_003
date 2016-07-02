@@ -81,8 +81,7 @@
   the temp system or done manually.  #lfs-support hasn't responded yet, but will
   post when they do
 
-    sample 'make check' output log:
-      ====>  http://intergenstudios.com/Downloads/glibc-2.21_make-check_log.txt
+  
 
 ```
 
