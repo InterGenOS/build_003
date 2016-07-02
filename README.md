@@ -12,8 +12,18 @@
 
   ![alt text](https://intergenstudios.com/Downloads/Grub_Splash.png "InterGen OSsD")
 
+## CHECK OUT OUR NEW REPO URL!!!  
 
+  ===> <a href="http://intergen.us/InterGen/InterGenOS"; target="_blank";>http://intergen.us/InterGen/InterGenOS</a> <===
+
+  Follow the code on InterGen Gitlab!
+  
 ```
+  **6/25/16** Repo is live on our own hardware! Huge 'Thank You!' to Mr. Fowler and Mr.
+  Moon for helping make it happen!
+    ## NEW REPO URL!!! ##
+    ==> http://intergen.us/InterGen/InterGenOS <==
+  
   **1/4/16**  Build 004 will be finished soon, and incorporates some much needed
   changes:
     - Dependency and Library checks included in setup
